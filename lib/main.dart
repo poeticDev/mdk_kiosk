@@ -6,6 +6,8 @@ import 'package:mdk_kiosk/common/util/route/router.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   setOnlyPortrait(); // 디바이스 세로 모드로 고정
+  // 하단 네비게이션 바 숨김 -> 이니셜라이저로 나중에 이동
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(
     ProviderScope(
       child: _KioskApp(),
