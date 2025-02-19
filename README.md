@@ -11,6 +11,9 @@ mdk_kiosk
 - **주요 기능** :
 
 
+다음 할일
+필수 유틸리티 이식 : OSC, Permission Handler, drift, initializer, kiosk_mode
+
 # 주기능
 
 

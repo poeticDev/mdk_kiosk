@@ -19,7 +19,7 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final maxWidth = MediaQuery.of(context).size.width;
     final maxHeight = MediaQuery.of(context).size.height;
-    const double padding = 20.0;
+    const double padding = 60.0;
 
     return Scaffold(
       backgroundColor: backgroundColor ?? BG_COLOR,
@@ -39,18 +39,20 @@ class DefaultLayout extends StatelessWidget {
                 MorphContainer(
                   child: _Header(height: 80.0),
                 ),
-                CustomDivider(),
+                // CustomDivider(),
+                SizedBox(height: padding,),
                 // 2. 시간표
                 Expanded(
                   child: MorphContainer(
                     child: _TimeTable(),
                   ),
                 ),
-                CustomDivider(),
+                // CustomDivider(),
+                SizedBox(height: padding,),
                 // 3. 멀티미디어
                 MorphContainer(
                   child: _MultiMedia(
-                      width: maxWidth - padding * 2,
+                      width: maxWidth - padding * 4,
                       height: (maxWidth - padding * 2) * 9 / 16),
                 ),
                 SizedBox(height: 16.0),
