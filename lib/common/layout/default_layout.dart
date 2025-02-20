@@ -5,6 +5,7 @@ import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
+import 'package:uuid/uuid.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
@@ -128,6 +129,7 @@ class DefaultLayout extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(),
+          Text(Uuid().v4()),
           Text(
             '멀티미디어 뷰\n16 : 9 가로폭에 맞춰 높이 자동 지정',
             textAlign: TextAlign.center,
