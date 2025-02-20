@@ -1,25 +1,45 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- 시스템 오버레이 (예: 화면 위에 표시되는 앱) -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- 설정 변경 권한 (예: 화면 밝기 조절) -->
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
-    <!--
-          Internet access permissions.
-          -->
+
+    <!-- 네트워크 및 위치 권한 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <uses-permission android:name='android:enableOnBackInvokedCallback="true"' />
-    <!--
-      Media access permissions.
-      Android 13 or higher.
-      https://developer.android.com/about/versions/13/behavior-changes-13#granular-media-permissions
-      -->
+    <!-- Android 11 (API 30) 이하에서 파일 접근 -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
+    <!-- Android 13 (API 33) 이상에서 미디어 권한 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
+    <!-- Android 10 (API 29) 이상에서 스코프드 스토리지 관련 권한 -->
+    <uses-permission
+        android:name="android.permission.ACCESS_MEDIA_LOCATION"
+        android:maxSdkVersion="32" />
+
+    <!-- Android 10 이상에서 백그라운드 위치 권한 필요 -->
+    <uses-permission
+        android:name="android.permission.ACCESS_BACKGROUND_LOCATION"
+        android:maxSdkVersion="30" />
+
+    <!-- Android 14 이상에서 포그라운드 서비스 권한 -->
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION"
+        android:minSdkVersion="34" />
     <application
         android:label="WallHub"
         android:name="${applicationName}"
