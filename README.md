@@ -12,7 +12,7 @@ mdk_kiosk
 
 
 다음 할일
-필수 유틸리티 이식 : OSC, MQTT, Permission Handler, drift, initializer, kiosk_mode
+필수 유틸리티 이식 : initializer, kiosk_mode
 
 # 주기능
 

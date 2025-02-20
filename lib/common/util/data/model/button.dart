@@ -46,4 +46,3 @@ class Button extends Table {
   /// 9) 메세지
   TextColumn get message => text().nullable()();
 }
-

@@ -43,13 +43,6 @@ class $BasicInfoTable extends BasicInfo
   late final GeneratedColumn<String> wifiName = GeneratedColumn<String>(
       'wifi_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _myIpMeta = const VerificationMeta('myIp');
-  @override
-  late final GeneratedColumn<String> myIp = GeneratedColumn<String>(
-      'my_ip', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('192.168.11.111'));
   static const VerificationMeta _myOscPortMeta =
       const VerificationMeta('myOscPort');
   @override
@@ -74,24 +67,38 @@ class $BasicInfoTable extends BasicInfo
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant('192.168.11.120'));
-  static const VerificationMeta _oscPortMeta =
-      const VerificationMeta('oscPort');
+  static const VerificationMeta _serverOscPortMeta =
+      const VerificationMeta('serverOscPort');
   @override
-  late final GeneratedColumn<int> oscPort = GeneratedColumn<int>(
-      'osc_port', aliasedName, false,
+  late final GeneratedColumn<int> serverOscPort = GeneratedColumn<int>(
+      'server_osc_port', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultValue: const Constant(12321));
-  static const VerificationMeta _isServerUnder331Meta =
-      const VerificationMeta('isServerUnder331');
+  static const VerificationMeta _serverMqttPortMeta =
+      const VerificationMeta('serverMqttPort');
   @override
-  late final GeneratedColumn<bool> isServerUnder331 = GeneratedColumn<bool>(
-      'is_server_under331', aliasedName, false,
-      type: DriftSqlType.bool,
+  late final GeneratedColumn<int> serverMqttPort = GeneratedColumn<int>(
+      'server_mqtt_port', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_server_under331" IN (0, 1))'),
-      defaultValue: const Constant(false));
+      defaultValue: const Constant(1883));
+  static const VerificationMeta _serverMqttIdMeta =
+      const VerificationMeta('serverMqttId');
+  @override
+  late final GeneratedColumn<String> serverMqttId = GeneratedColumn<String>(
+      'server_mqtt_id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('mdk'));
+  static const VerificationMeta _serverMqttPasswordMeta =
+      const VerificationMeta('serverMqttPassword');
+  @override
+  late final GeneratedColumn<String> serverMqttPassword =
+      GeneratedColumn<String>('server_mqtt_password', aliasedName, false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant('12344321'));
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -107,12 +114,13 @@ class $BasicInfoTable extends BasicInfo
         roomName,
         logoImage,
         wifiName,
-        myIp,
         myOscPort,
         myPassword,
         serverIp,
-        oscPort,
-        isServerUnder331,
+        serverOscPort,
+        serverMqttPort,
+        serverMqttId,
+        serverMqttPassword,
         createdAt
       ];
   @override
@@ -148,10 +156,6 @@ class $BasicInfoTable extends BasicInfo
       context.handle(_wifiNameMeta,
           wifiName.isAcceptableOrUnknown(data['wifi_name']!, _wifiNameMeta));
     }
-    if (data.containsKey('my_ip')) {
-      context.handle(
-          _myIpMeta, myIp.isAcceptableOrUnknown(data['my_ip']!, _myIpMeta));
-    }
     if (data.containsKey('my_osc_port')) {
       context.handle(
           _myOscPortMeta,
@@ -168,15 +172,29 @@ class $BasicInfoTable extends BasicInfo
       context.handle(_serverIpMeta,
           serverIp.isAcceptableOrUnknown(data['server_ip']!, _serverIpMeta));
     }
-    if (data.containsKey('osc_port')) {
-      context.handle(_oscPortMeta,
-          oscPort.isAcceptableOrUnknown(data['osc_port']!, _oscPortMeta));
-    }
-    if (data.containsKey('is_server_under331')) {
+    if (data.containsKey('server_osc_port')) {
       context.handle(
-          _isServerUnder331Meta,
-          isServerUnder331.isAcceptableOrUnknown(
-              data['is_server_under331']!, _isServerUnder331Meta));
+          _serverOscPortMeta,
+          serverOscPort.isAcceptableOrUnknown(
+              data['server_osc_port']!, _serverOscPortMeta));
+    }
+    if (data.containsKey('server_mqtt_port')) {
+      context.handle(
+          _serverMqttPortMeta,
+          serverMqttPort.isAcceptableOrUnknown(
+              data['server_mqtt_port']!, _serverMqttPortMeta));
+    }
+    if (data.containsKey('server_mqtt_id')) {
+      context.handle(
+          _serverMqttIdMeta,
+          serverMqttId.isAcceptableOrUnknown(
+              data['server_mqtt_id']!, _serverMqttIdMeta));
+    }
+    if (data.containsKey('server_mqtt_password')) {
+      context.handle(
+          _serverMqttPasswordMeta,
+          serverMqttPassword.isAcceptableOrUnknown(
+              data['server_mqtt_password']!, _serverMqttPasswordMeta));
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -201,18 +219,20 @@ class $BasicInfoTable extends BasicInfo
           .read(DriftSqlType.blob, data['${effectivePrefix}logo_image'])!,
       wifiName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}wifi_name']),
-      myIp: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}my_ip'])!,
       myOscPort: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}my_osc_port'])!,
       myPassword: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}my_password'])!,
       serverIp: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}server_ip'])!,
-      oscPort: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}osc_port'])!,
-      isServerUnder331: attachedDatabase.typeMapping.read(
-          DriftSqlType.bool, data['${effectivePrefix}is_server_under331'])!,
+      serverOscPort: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}server_osc_port'])!,
+      serverMqttPort: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}server_mqtt_port'])!,
+      serverMqttId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}server_mqtt_id'])!,
+      serverMqttPassword: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}server_mqtt_password'])!,
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
@@ -235,14 +255,15 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
   final String? wifiName;
 
   /// 2. 태블릿
-  final String myIp;
   final int myOscPort;
   final String myPassword;
 
   /// 3. 서버
   final String serverIp;
-  final int oscPort;
-  final bool isServerUnder331;
+  final int serverOscPort;
+  final int serverMqttPort;
+  final String serverMqttId;
+  final String serverMqttPassword;
 
   ///4. 생성일
   final DateTime createdAt;
@@ -252,12 +273,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       required this.roomName,
       required this.logoImage,
       this.wifiName,
-      required this.myIp,
       required this.myOscPort,
       required this.myPassword,
       required this.serverIp,
-      required this.oscPort,
-      required this.isServerUnder331,
+      required this.serverOscPort,
+      required this.serverMqttPort,
+      required this.serverMqttId,
+      required this.serverMqttPassword,
       required this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -269,12 +291,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     if (!nullToAbsent || wifiName != null) {
       map['wifi_name'] = Variable<String>(wifiName);
     }
-    map['my_ip'] = Variable<String>(myIp);
     map['my_osc_port'] = Variable<int>(myOscPort);
     map['my_password'] = Variable<String>(myPassword);
     map['server_ip'] = Variable<String>(serverIp);
-    map['osc_port'] = Variable<int>(oscPort);
-    map['is_server_under331'] = Variable<bool>(isServerUnder331);
+    map['server_osc_port'] = Variable<int>(serverOscPort);
+    map['server_mqtt_port'] = Variable<int>(serverMqttPort);
+    map['server_mqtt_id'] = Variable<String>(serverMqttId);
+    map['server_mqtt_password'] = Variable<String>(serverMqttPassword);
     map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
@@ -288,12 +311,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       wifiName: wifiName == null && nullToAbsent
           ? const Value.absent()
           : Value(wifiName),
-      myIp: Value(myIp),
       myOscPort: Value(myOscPort),
       myPassword: Value(myPassword),
       serverIp: Value(serverIp),
-      oscPort: Value(oscPort),
-      isServerUnder331: Value(isServerUnder331),
+      serverOscPort: Value(serverOscPort),
+      serverMqttPort: Value(serverMqttPort),
+      serverMqttId: Value(serverMqttId),
+      serverMqttPassword: Value(serverMqttPassword),
       createdAt: Value(createdAt),
     );
   }
@@ -307,12 +331,14 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       roomName: serializer.fromJson<String>(json['roomName']),
       logoImage: serializer.fromJson<Uint8List>(json['logoImage']),
       wifiName: serializer.fromJson<String?>(json['wifiName']),
-      myIp: serializer.fromJson<String>(json['myIp']),
       myOscPort: serializer.fromJson<int>(json['myOscPort']),
       myPassword: serializer.fromJson<String>(json['myPassword']),
       serverIp: serializer.fromJson<String>(json['serverIp']),
-      oscPort: serializer.fromJson<int>(json['oscPort']),
-      isServerUnder331: serializer.fromJson<bool>(json['isServerUnder331']),
+      serverOscPort: serializer.fromJson<int>(json['serverOscPort']),
+      serverMqttPort: serializer.fromJson<int>(json['serverMqttPort']),
+      serverMqttId: serializer.fromJson<String>(json['serverMqttId']),
+      serverMqttPassword:
+          serializer.fromJson<String>(json['serverMqttPassword']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -325,12 +351,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       'roomName': serializer.toJson<String>(roomName),
       'logoImage': serializer.toJson<Uint8List>(logoImage),
       'wifiName': serializer.toJson<String?>(wifiName),
-      'myIp': serializer.toJson<String>(myIp),
       'myOscPort': serializer.toJson<int>(myOscPort),
       'myPassword': serializer.toJson<String>(myPassword),
       'serverIp': serializer.toJson<String>(serverIp),
-      'oscPort': serializer.toJson<int>(oscPort),
-      'isServerUnder331': serializer.toJson<bool>(isServerUnder331),
+      'serverOscPort': serializer.toJson<int>(serverOscPort),
+      'serverMqttPort': serializer.toJson<int>(serverMqttPort),
+      'serverMqttId': serializer.toJson<String>(serverMqttId),
+      'serverMqttPassword': serializer.toJson<String>(serverMqttPassword),
       'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
@@ -341,12 +368,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
           String? roomName,
           Uint8List? logoImage,
           Value<String?> wifiName = const Value.absent(),
-          String? myIp,
           int? myOscPort,
           String? myPassword,
           String? serverIp,
-          int? oscPort,
-          bool? isServerUnder331,
+          int? serverOscPort,
+          int? serverMqttPort,
+          String? serverMqttId,
+          String? serverMqttPassword,
           DateTime? createdAt}) =>
       BasicInfoData(
         id: id ?? this.id,
@@ -354,12 +382,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
         roomName: roomName ?? this.roomName,
         logoImage: logoImage ?? this.logoImage,
         wifiName: wifiName.present ? wifiName.value : this.wifiName,
-        myIp: myIp ?? this.myIp,
         myOscPort: myOscPort ?? this.myOscPort,
         myPassword: myPassword ?? this.myPassword,
         serverIp: serverIp ?? this.serverIp,
-        oscPort: oscPort ?? this.oscPort,
-        isServerUnder331: isServerUnder331 ?? this.isServerUnder331,
+        serverOscPort: serverOscPort ?? this.serverOscPort,
+        serverMqttPort: serverMqttPort ?? this.serverMqttPort,
+        serverMqttId: serverMqttId ?? this.serverMqttId,
+        serverMqttPassword: serverMqttPassword ?? this.serverMqttPassword,
         createdAt: createdAt ?? this.createdAt,
       );
   BasicInfoData copyWithCompanion(BasicInfoCompanion data) {
@@ -369,15 +398,22 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       roomName: data.roomName.present ? data.roomName.value : this.roomName,
       logoImage: data.logoImage.present ? data.logoImage.value : this.logoImage,
       wifiName: data.wifiName.present ? data.wifiName.value : this.wifiName,
-      myIp: data.myIp.present ? data.myIp.value : this.myIp,
       myOscPort: data.myOscPort.present ? data.myOscPort.value : this.myOscPort,
       myPassword:
           data.myPassword.present ? data.myPassword.value : this.myPassword,
       serverIp: data.serverIp.present ? data.serverIp.value : this.serverIp,
-      oscPort: data.oscPort.present ? data.oscPort.value : this.oscPort,
-      isServerUnder331: data.isServerUnder331.present
-          ? data.isServerUnder331.value
-          : this.isServerUnder331,
+      serverOscPort: data.serverOscPort.present
+          ? data.serverOscPort.value
+          : this.serverOscPort,
+      serverMqttPort: data.serverMqttPort.present
+          ? data.serverMqttPort.value
+          : this.serverMqttPort,
+      serverMqttId: data.serverMqttId.present
+          ? data.serverMqttId.value
+          : this.serverMqttId,
+      serverMqttPassword: data.serverMqttPassword.present
+          ? data.serverMqttPassword.value
+          : this.serverMqttPassword,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
@@ -390,12 +426,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
           ..write('roomName: $roomName, ')
           ..write('logoImage: $logoImage, ')
           ..write('wifiName: $wifiName, ')
-          ..write('myIp: $myIp, ')
           ..write('myOscPort: $myOscPort, ')
           ..write('myPassword: $myPassword, ')
           ..write('serverIp: $serverIp, ')
-          ..write('oscPort: $oscPort, ')
-          ..write('isServerUnder331: $isServerUnder331, ')
+          ..write('serverOscPort: $serverOscPort, ')
+          ..write('serverMqttPort: $serverMqttPort, ')
+          ..write('serverMqttId: $serverMqttId, ')
+          ..write('serverMqttPassword: $serverMqttPassword, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -408,12 +445,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       roomName,
       $driftBlobEquality.hash(logoImage),
       wifiName,
-      myIp,
       myOscPort,
       myPassword,
       serverIp,
-      oscPort,
-      isServerUnder331,
+      serverOscPort,
+      serverMqttPort,
+      serverMqttId,
+      serverMqttPassword,
       createdAt);
   @override
   bool operator ==(Object other) =>
@@ -424,12 +462,13 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
           other.roomName == this.roomName &&
           $driftBlobEquality.equals(other.logoImage, this.logoImage) &&
           other.wifiName == this.wifiName &&
-          other.myIp == this.myIp &&
           other.myOscPort == this.myOscPort &&
           other.myPassword == this.myPassword &&
           other.serverIp == this.serverIp &&
-          other.oscPort == this.oscPort &&
-          other.isServerUnder331 == this.isServerUnder331 &&
+          other.serverOscPort == this.serverOscPort &&
+          other.serverMqttPort == this.serverMqttPort &&
+          other.serverMqttId == this.serverMqttId &&
+          other.serverMqttPassword == this.serverMqttPassword &&
           other.createdAt == this.createdAt);
 }
 
@@ -439,12 +478,13 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
   final Value<String> roomName;
   final Value<Uint8List> logoImage;
   final Value<String?> wifiName;
-  final Value<String> myIp;
   final Value<int> myOscPort;
   final Value<String> myPassword;
   final Value<String> serverIp;
-  final Value<int> oscPort;
-  final Value<bool> isServerUnder331;
+  final Value<int> serverOscPort;
+  final Value<int> serverMqttPort;
+  final Value<String> serverMqttId;
+  final Value<String> serverMqttPassword;
   final Value<DateTime> createdAt;
   const BasicInfoCompanion({
     this.id = const Value.absent(),
@@ -452,12 +492,13 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     this.roomName = const Value.absent(),
     this.logoImage = const Value.absent(),
     this.wifiName = const Value.absent(),
-    this.myIp = const Value.absent(),
     this.myOscPort = const Value.absent(),
     this.myPassword = const Value.absent(),
     this.serverIp = const Value.absent(),
-    this.oscPort = const Value.absent(),
-    this.isServerUnder331 = const Value.absent(),
+    this.serverOscPort = const Value.absent(),
+    this.serverMqttPort = const Value.absent(),
+    this.serverMqttId = const Value.absent(),
+    this.serverMqttPassword = const Value.absent(),
     this.createdAt = const Value.absent(),
   });
   BasicInfoCompanion.insert({
@@ -466,12 +507,13 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     this.roomName = const Value.absent(),
     required Uint8List logoImage,
     this.wifiName = const Value.absent(),
-    this.myIp = const Value.absent(),
     this.myOscPort = const Value.absent(),
     this.myPassword = const Value.absent(),
     this.serverIp = const Value.absent(),
-    this.oscPort = const Value.absent(),
-    this.isServerUnder331 = const Value.absent(),
+    this.serverOscPort = const Value.absent(),
+    this.serverMqttPort = const Value.absent(),
+    this.serverMqttId = const Value.absent(),
+    this.serverMqttPassword = const Value.absent(),
     this.createdAt = const Value.absent(),
   })  : roomId = Value(roomId),
         logoImage = Value(logoImage);
@@ -481,12 +523,13 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     Expression<String>? roomName,
     Expression<Uint8List>? logoImage,
     Expression<String>? wifiName,
-    Expression<String>? myIp,
     Expression<int>? myOscPort,
     Expression<String>? myPassword,
     Expression<String>? serverIp,
-    Expression<int>? oscPort,
-    Expression<bool>? isServerUnder331,
+    Expression<int>? serverOscPort,
+    Expression<int>? serverMqttPort,
+    Expression<String>? serverMqttId,
+    Expression<String>? serverMqttPassword,
     Expression<DateTime>? createdAt,
   }) {
     return RawValuesInsertable({
@@ -495,12 +538,14 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       if (roomName != null) 'room_name': roomName,
       if (logoImage != null) 'logo_image': logoImage,
       if (wifiName != null) 'wifi_name': wifiName,
-      if (myIp != null) 'my_ip': myIp,
       if (myOscPort != null) 'my_osc_port': myOscPort,
       if (myPassword != null) 'my_password': myPassword,
       if (serverIp != null) 'server_ip': serverIp,
-      if (oscPort != null) 'osc_port': oscPort,
-      if (isServerUnder331 != null) 'is_server_under331': isServerUnder331,
+      if (serverOscPort != null) 'server_osc_port': serverOscPort,
+      if (serverMqttPort != null) 'server_mqtt_port': serverMqttPort,
+      if (serverMqttId != null) 'server_mqtt_id': serverMqttId,
+      if (serverMqttPassword != null)
+        'server_mqtt_password': serverMqttPassword,
       if (createdAt != null) 'created_at': createdAt,
     });
   }
@@ -511,12 +556,13 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       Value<String>? roomName,
       Value<Uint8List>? logoImage,
       Value<String?>? wifiName,
-      Value<String>? myIp,
       Value<int>? myOscPort,
       Value<String>? myPassword,
       Value<String>? serverIp,
-      Value<int>? oscPort,
-      Value<bool>? isServerUnder331,
+      Value<int>? serverOscPort,
+      Value<int>? serverMqttPort,
+      Value<String>? serverMqttId,
+      Value<String>? serverMqttPassword,
       Value<DateTime>? createdAt}) {
     return BasicInfoCompanion(
       id: id ?? this.id,
@@ -524,12 +570,13 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       roomName: roomName ?? this.roomName,
       logoImage: logoImage ?? this.logoImage,
       wifiName: wifiName ?? this.wifiName,
-      myIp: myIp ?? this.myIp,
       myOscPort: myOscPort ?? this.myOscPort,
       myPassword: myPassword ?? this.myPassword,
       serverIp: serverIp ?? this.serverIp,
-      oscPort: oscPort ?? this.oscPort,
-      isServerUnder331: isServerUnder331 ?? this.isServerUnder331,
+      serverOscPort: serverOscPort ?? this.serverOscPort,
+      serverMqttPort: serverMqttPort ?? this.serverMqttPort,
+      serverMqttId: serverMqttId ?? this.serverMqttId,
+      serverMqttPassword: serverMqttPassword ?? this.serverMqttPassword,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -552,9 +599,6 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     if (wifiName.present) {
       map['wifi_name'] = Variable<String>(wifiName.value);
     }
-    if (myIp.present) {
-      map['my_ip'] = Variable<String>(myIp.value);
-    }
     if (myOscPort.present) {
       map['my_osc_port'] = Variable<int>(myOscPort.value);
     }
@@ -564,11 +608,17 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     if (serverIp.present) {
       map['server_ip'] = Variable<String>(serverIp.value);
     }
-    if (oscPort.present) {
-      map['osc_port'] = Variable<int>(oscPort.value);
+    if (serverOscPort.present) {
+      map['server_osc_port'] = Variable<int>(serverOscPort.value);
     }
-    if (isServerUnder331.present) {
-      map['is_server_under331'] = Variable<bool>(isServerUnder331.value);
+    if (serverMqttPort.present) {
+      map['server_mqtt_port'] = Variable<int>(serverMqttPort.value);
+    }
+    if (serverMqttId.present) {
+      map['server_mqtt_id'] = Variable<String>(serverMqttId.value);
+    }
+    if (serverMqttPassword.present) {
+      map['server_mqtt_password'] = Variable<String>(serverMqttPassword.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -584,12 +634,13 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
           ..write('roomName: $roomName, ')
           ..write('logoImage: $logoImage, ')
           ..write('wifiName: $wifiName, ')
-          ..write('myIp: $myIp, ')
           ..write('myOscPort: $myOscPort, ')
           ..write('myPassword: $myPassword, ')
           ..write('serverIp: $serverIp, ')
-          ..write('oscPort: $oscPort, ')
-          ..write('isServerUnder331: $isServerUnder331, ')
+          ..write('serverOscPort: $serverOscPort, ')
+          ..write('serverMqttPort: $serverMqttPort, ')
+          ..write('serverMqttId: $serverMqttId, ')
+          ..write('serverMqttPassword: $serverMqttPassword, ')
           ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
@@ -1703,12 +1754,13 @@ typedef $$BasicInfoTableCreateCompanionBuilder = BasicInfoCompanion Function({
   Value<String> roomName,
   required Uint8List logoImage,
   Value<String?> wifiName,
-  Value<String> myIp,
   Value<int> myOscPort,
   Value<String> myPassword,
   Value<String> serverIp,
-  Value<int> oscPort,
-  Value<bool> isServerUnder331,
+  Value<int> serverOscPort,
+  Value<int> serverMqttPort,
+  Value<String> serverMqttId,
+  Value<String> serverMqttPassword,
   Value<DateTime> createdAt,
 });
 typedef $$BasicInfoTableUpdateCompanionBuilder = BasicInfoCompanion Function({
@@ -1717,12 +1769,13 @@ typedef $$BasicInfoTableUpdateCompanionBuilder = BasicInfoCompanion Function({
   Value<String> roomName,
   Value<Uint8List> logoImage,
   Value<String?> wifiName,
-  Value<String> myIp,
   Value<int> myOscPort,
   Value<String> myPassword,
   Value<String> serverIp,
-  Value<int> oscPort,
-  Value<bool> isServerUnder331,
+  Value<int> serverOscPort,
+  Value<int> serverMqttPort,
+  Value<String> serverMqttId,
+  Value<String> serverMqttPassword,
   Value<DateTime> createdAt,
 });
 
@@ -1750,9 +1803,6 @@ class $$BasicInfoTableFilterComposer
   ColumnFilters<String> get wifiName => $composableBuilder(
       column: $table.wifiName, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get myIp => $composableBuilder(
-      column: $table.myIp, builder: (column) => ColumnFilters(column));
-
   ColumnFilters<int> get myOscPort => $composableBuilder(
       column: $table.myOscPort, builder: (column) => ColumnFilters(column));
 
@@ -1762,11 +1812,18 @@ class $$BasicInfoTableFilterComposer
   ColumnFilters<String> get serverIp => $composableBuilder(
       column: $table.serverIp, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get oscPort => $composableBuilder(
-      column: $table.oscPort, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get serverOscPort => $composableBuilder(
+      column: $table.serverOscPort, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<bool> get isServerUnder331 => $composableBuilder(
-      column: $table.isServerUnder331,
+  ColumnFilters<int> get serverMqttPort => $composableBuilder(
+      column: $table.serverMqttPort,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get serverMqttId => $composableBuilder(
+      column: $table.serverMqttId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get serverMqttPassword => $composableBuilder(
+      column: $table.serverMqttPassword,
       builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
@@ -1797,9 +1854,6 @@ class $$BasicInfoTableOrderingComposer
   ColumnOrderings<String> get wifiName => $composableBuilder(
       column: $table.wifiName, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get myIp => $composableBuilder(
-      column: $table.myIp, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<int> get myOscPort => $composableBuilder(
       column: $table.myOscPort, builder: (column) => ColumnOrderings(column));
 
@@ -1809,11 +1863,20 @@ class $$BasicInfoTableOrderingComposer
   ColumnOrderings<String> get serverIp => $composableBuilder(
       column: $table.serverIp, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get oscPort => $composableBuilder(
-      column: $table.oscPort, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get serverOscPort => $composableBuilder(
+      column: $table.serverOscPort,
+      builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<bool> get isServerUnder331 => $composableBuilder(
-      column: $table.isServerUnder331,
+  ColumnOrderings<int> get serverMqttPort => $composableBuilder(
+      column: $table.serverMqttPort,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get serverMqttId => $composableBuilder(
+      column: $table.serverMqttId,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get serverMqttPassword => $composableBuilder(
+      column: $table.serverMqttPassword,
       builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
@@ -1844,9 +1907,6 @@ class $$BasicInfoTableAnnotationComposer
   GeneratedColumn<String> get wifiName =>
       $composableBuilder(column: $table.wifiName, builder: (column) => column);
 
-  GeneratedColumn<String> get myIp =>
-      $composableBuilder(column: $table.myIp, builder: (column) => column);
-
   GeneratedColumn<int> get myOscPort =>
       $composableBuilder(column: $table.myOscPort, builder: (column) => column);
 
@@ -1856,11 +1916,17 @@ class $$BasicInfoTableAnnotationComposer
   GeneratedColumn<String> get serverIp =>
       $composableBuilder(column: $table.serverIp, builder: (column) => column);
 
-  GeneratedColumn<int> get oscPort =>
-      $composableBuilder(column: $table.oscPort, builder: (column) => column);
+  GeneratedColumn<int> get serverOscPort => $composableBuilder(
+      column: $table.serverOscPort, builder: (column) => column);
 
-  GeneratedColumn<bool> get isServerUnder331 => $composableBuilder(
-      column: $table.isServerUnder331, builder: (column) => column);
+  GeneratedColumn<int> get serverMqttPort => $composableBuilder(
+      column: $table.serverMqttPort, builder: (column) => column);
+
+  GeneratedColumn<String> get serverMqttId => $composableBuilder(
+      column: $table.serverMqttId, builder: (column) => column);
+
+  GeneratedColumn<String> get serverMqttPassword => $composableBuilder(
+      column: $table.serverMqttPassword, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -1897,12 +1963,13 @@ class $$BasicInfoTableTableManager extends RootTableManager<
             Value<String> roomName = const Value.absent(),
             Value<Uint8List> logoImage = const Value.absent(),
             Value<String?> wifiName = const Value.absent(),
-            Value<String> myIp = const Value.absent(),
             Value<int> myOscPort = const Value.absent(),
             Value<String> myPassword = const Value.absent(),
             Value<String> serverIp = const Value.absent(),
-            Value<int> oscPort = const Value.absent(),
-            Value<bool> isServerUnder331 = const Value.absent(),
+            Value<int> serverOscPort = const Value.absent(),
+            Value<int> serverMqttPort = const Value.absent(),
+            Value<String> serverMqttId = const Value.absent(),
+            Value<String> serverMqttPassword = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
           }) =>
               BasicInfoCompanion(
@@ -1911,12 +1978,13 @@ class $$BasicInfoTableTableManager extends RootTableManager<
             roomName: roomName,
             logoImage: logoImage,
             wifiName: wifiName,
-            myIp: myIp,
             myOscPort: myOscPort,
             myPassword: myPassword,
             serverIp: serverIp,
-            oscPort: oscPort,
-            isServerUnder331: isServerUnder331,
+            serverOscPort: serverOscPort,
+            serverMqttPort: serverMqttPort,
+            serverMqttId: serverMqttId,
+            serverMqttPassword: serverMqttPassword,
             createdAt: createdAt,
           ),
           createCompanionCallback: ({
@@ -1925,12 +1993,13 @@ class $$BasicInfoTableTableManager extends RootTableManager<
             Value<String> roomName = const Value.absent(),
             required Uint8List logoImage,
             Value<String?> wifiName = const Value.absent(),
-            Value<String> myIp = const Value.absent(),
             Value<int> myOscPort = const Value.absent(),
             Value<String> myPassword = const Value.absent(),
             Value<String> serverIp = const Value.absent(),
-            Value<int> oscPort = const Value.absent(),
-            Value<bool> isServerUnder331 = const Value.absent(),
+            Value<int> serverOscPort = const Value.absent(),
+            Value<int> serverMqttPort = const Value.absent(),
+            Value<String> serverMqttId = const Value.absent(),
+            Value<String> serverMqttPassword = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
           }) =>
               BasicInfoCompanion.insert(
@@ -1939,12 +2008,13 @@ class $$BasicInfoTableTableManager extends RootTableManager<
             roomName: roomName,
             logoImage: logoImage,
             wifiName: wifiName,
-            myIp: myIp,
             myOscPort: myOscPort,
             myPassword: myPassword,
             serverIp: serverIp,
-            oscPort: oscPort,
-            isServerUnder331: isServerUnder331,
+            serverOscPort: serverOscPort,
+            serverMqttPort: serverMqttPort,
+            serverMqttId: serverMqttId,
+            serverMqttPassword: serverMqttPassword,
             createdAt: createdAt,
           ),
           withReferenceMapper: (p0) => p0
