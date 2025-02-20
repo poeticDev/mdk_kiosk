@@ -122,23 +122,43 @@ flutter:
   fonts:
     - family: Pretendard
       fonts:
-        - asset: asset/fonts/Pretendard-Black.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Black.ttf
           weight: 900
-        - asset: asset/fonts/Pretendard-ExtraBold.ttf
+        - asset: asset/fonts/pretendard/Pretendard-ExtraBold.ttf
           weight: 800
-        - asset: asset/fonts/Pretendard-Bold.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Bold.ttf
           weight: 700
-        - asset: asset/fonts/Pretendard-SemiBold.ttf
+        - asset: asset/fonts/pretendard/Pretendard-SemiBold.ttf
           weight: 600
-        - asset: asset/fonts/Pretendard-Medium.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Medium.ttf
           weight: 500
-        - asset: asset/fonts/Pretendard-Regular.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Regular.ttf
           weight: 400
-        - asset: asset/fonts/Pretendard-Light.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Light.ttf
           weight: 300
-        - asset: asset/fonts/Pretendard-ExtraLight.ttf
+        - asset: asset/fonts/pretendard/Pretendard-ExtraLight.ttf
           weight: 200
-        - asset: asset/fonts/Pretendard-Thin.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Thin.ttf
+          weight: 100
+    - family: Paperlogy
+      fonts:
+        - asset: asset/fonts/paperlogy/Paperlogy-9Black.ttf
+          weight: 900
+        - asset: asset/fonts/paperlogy/Paperlogy-8ExtraBold.ttf
+          weight: 800
+        - asset: asset/fonts/paperlogy/Paperlogy-7Bold.ttf
+          weight: 700
+        - asset: asset/fonts/paperlogy/Paperlogy-6SemiBold.ttf
+          weight: 600
+        - asset: asset/fonts/paperlogy/Paperlogy-5Medium.ttf
+          weight: 500
+        - asset: asset/fonts/paperlogy/Paperlogy-4Regular.ttf
+          weight: 400
+        - asset: asset/fonts/paperlogy/Paperlogy-3Light.ttf
+          weight: 300
+        - asset: asset/fonts/paperlogy/Paperlogy-2ExtraLight.ttf
+          weight: 200
+        - asset: asset/fonts/paperlogy/paperlogy-1Thin.ttf
           weight: 100
 
   # For details regarding fonts from package dependencies,

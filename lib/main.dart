@@ -19,7 +19,7 @@ class _KioskApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       theme: ThemeData(
-        fontFamily: 'Pretendard',
+        fontFamily: 'Paperlogy',
       ),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
