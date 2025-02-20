@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
-import 'package:mdk_kiosk/common/component/custom_divider.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
@@ -9,7 +10,9 @@ class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
   final Widget? child;
 
-  const DefaultLayout({
+  late WebSocket? ws;
+
+  DefaultLayout({
     this.backgroundColor,
     this.child,
     super.key,
@@ -17,8 +20,14 @@ class DefaultLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxWidth = MediaQuery.of(context).size.width;
-    final maxHeight = MediaQuery.of(context).size.height;
+    final maxWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final maxHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     const double padding = 60.0;
 
     return Scaffold(
@@ -55,7 +64,7 @@ class DefaultLayout extends StatelessWidget {
                       width: maxWidth - padding * 4,
                       height: (maxWidth - padding * 2) * 9 / 16),
                 ),
-                SizedBox(height: 16.0),
+                SizedBox(height: padding,),
                 // 4. 로고
                 Container(
                   color: Colors.white60,
@@ -132,7 +141,7 @@ class DefaultLayout extends StatelessWidget {
               children: [
                 Container(
                   decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: DOT_COLOR),
+                  BoxDecoration(shape: BoxShape.circle, color: DOT_COLOR),
                   width: 16.0,
                   height: 16.0,
                 ),

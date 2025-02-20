@@ -47,8 +47,9 @@ class MorphContainer extends StatelessWidget {
           BorderRadius.circular(32.0),
         ),
         color: COMPONENT_BG_COLOR,
-        depth: 28,
-        intensity: 0.7,
+        shadowLightColor: Color(0xFFF9F9FF),
+        depth: 8,
+        intensity: 0.68,
       ),
 
       child: child,

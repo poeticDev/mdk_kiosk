@@ -32,7 +32,12 @@ dependencies:
     sdk: flutter
 
   ### Network
-  osc: ^1.0.0
+  osc:
+    git:
+      url: https://github.com/poeticDev/osc.git
+      ref: master
+  mqtt_client: ^10.5.1
+  uuid: ^4.5.1
   network_info_plus: ^6.1.1
   dart_ping: ^9.0.1
 
