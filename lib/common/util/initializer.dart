@@ -46,6 +46,8 @@ class AppInitializer {
     await permissionHandler.requestSystemAlertWindowPermission();
     print('미디어 접근 권한 요청 중');
     await permissionHandler.requestMediaPermissions();
+    print('설정 변경 권한 요청 중');
+    await permissionHandler.requestWriteSettingsPermission();
   }
 
   /// 1.2 세로 모드 고정
