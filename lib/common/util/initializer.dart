@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/util/custom_permission_handler.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'package:mdk_kiosk/common/util/data/initial/initial_basic_info.dart';
+import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 
 class AppInitializer {
@@ -16,7 +17,10 @@ class AppInitializer {
     await _setOnlyPortrait();
 
     /// 1.3 하단 네비게이션 바 숨김
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    KioskModeManager.hideNavigationBar();
+
+    /// 1.4 키오스크 모드
+    KioskModeManager.enableKioskMode();
 
     /// 2. Data
     /// 2.1. GetIt 세팅
