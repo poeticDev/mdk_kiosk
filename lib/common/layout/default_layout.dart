@@ -9,26 +9,24 @@ import 'package:uuid/uuid.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
-  final Widget? child;
+  final Widget? cover;
+  final Widget? midChild;
+  final List<Widget>? mediaList;
 
   late WebSocket? ws;
 
   DefaultLayout({
     this.backgroundColor,
-    this.child,
+    this.cover,
+    this.midChild,
+    this.mediaList,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final maxWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    final maxHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    final maxWidth = MediaQuery.of(context).size.width;
+    final maxHeight = MediaQuery.of(context).size.height;
     const double padding = 60.0;
 
     return Scaffold(
@@ -50,7 +48,9 @@ class DefaultLayout extends StatelessWidget {
                   child: _Header(height: 80.0),
                 ),
                 // CustomDivider(),
-                SizedBox(height: padding,),
+                SizedBox(
+                  height: padding,
+                ),
                 // 2. 시간표
                 Expanded(
                   child: MorphContainer(
@@ -58,25 +58,24 @@ class DefaultLayout extends StatelessWidget {
                   ),
                 ),
                 // CustomDivider(),
-                SizedBox(height: padding,),
+                SizedBox(
+                  height: padding,
+                ),
                 // 3. 멀티미디어
                 MorphContainer(
                   child: _MultiMedia(
                       width: maxWidth - padding * 4,
                       height: (maxWidth - padding * 2) * 9 / 16),
                 ),
-                SizedBox(height: padding,),
+                SizedBox(
+                  height: padding,
+                ),
                 // 4. 로고
                 Container(
-                  color: Colors.white60,
+                  color: Colors.transparent,
                   height: 90,
                   width: 160,
-                  child: Center(
-                    child: Text(
-                      'GNU LOGO',
-                      style: TITLE_TEXT_STYLE,
-                    ),
-                  ),
+                  child: Image.asset('asset/img/gnu_logo.png'),
                 )
               ],
             ),
@@ -129,7 +128,6 @@ class DefaultLayout extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(),
-          Text(Uuid().v4()),
           Text(
             '멀티미디어 뷰\n16 : 9 가로폭에 맞춰 높이 자동 지정',
             textAlign: TextAlign.center,
@@ -143,7 +141,7 @@ class DefaultLayout extends StatelessWidget {
               children: [
                 Container(
                   decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: DOT_COLOR),
+                      BoxDecoration(shape: BoxShape.circle, color: DOT_COLOR),
                   width: 16.0,
                   height: 16.0,
                 ),

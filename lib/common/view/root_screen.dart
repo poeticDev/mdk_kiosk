@@ -7,7 +7,7 @@ class RootScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
-      child: Center(
+      midChild: Center(
         child: Text('RootScreen'),
       ),
     );
