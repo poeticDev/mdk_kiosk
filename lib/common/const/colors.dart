@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 /// 주색상
 /// 배경색
 const BG_COLOR = Color(0xFFDEEBF7);
-const COMPONENT_BG_COLOR = Color(0xFFDEEBF7);
+// const COMPONENT_BG_COLOR = Color(0xFFDEEBF7);
+const COMPONENT_BG_COLOR = Color(0xFFEFF5F8);
 const COMPONENT_SHADDOW_COLOR = Color(0xFFCCE3FA);
 // const COMPONENT_SHADDOW_COLOR = Color(0xFFB6D2ED);
 

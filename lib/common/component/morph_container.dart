@@ -46,7 +46,7 @@ class MorphContainer extends StatelessWidget {
         boxShape: NeumorphicBoxShape.roundRect(
           BorderRadius.circular(32.0),
         ),
-        color: COMPONENT_BG_COLOR,
+        color: Color(0xFFEFF5F8),
         shadowLightColor: Color(0xFFF9F9FF),
         depth: 8,
         intensity: 0.68,
