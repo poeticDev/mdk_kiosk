@@ -1,10 +1,13 @@
 
-/// 주석 처리된 부분은 default 값으로 생성됨
+/// 주석 처리된 부분은
+/// 자주 사용하여 디폴트로 만들어둔 값으로
+/// 변경할 필요가 있을 때만 주석 해제하여 작성함
 /// 1. 강의실 정보
-const int initialRoomId = 999;
-const String initialRoomName = '건물번호-강의실번호';
+const int initialRoomId = 00040111;
+const String initialRoomName = '4동 111호';
 const String initialImagePath = 'asset/img/gnu_logo.png';
 const String initialWifiName ='U+Net2054_5G';
+// const String initialWifiName ='mdk';
 
 /// 2. 기기 정보
 // const int initialMyOscPort = 3000;

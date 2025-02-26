@@ -2,7 +2,25 @@
 
 mdk_kiosk
 
+# 다음 할일
+## DB 초기화
+## 네트워크 연결
+
 ## Getting Started
+### **BasicInfo 설정하기**
+- 다음은 기본 정보값으로 굵은 글씨 항목은 현장 세팅 시 필수로 변경해주도록 한다.
+- **roomId** : 경상대의 경우, 8자리(공백구분자 1자리+건물번호 3자리+강의실번호 4자리)숫자로 한다
+  ex)01210101 -> 121동 0101호 강의실
+- **roomName**: 000동 0000호
+- logoImage: asset/img/dau.jpg
+- **wifiName**: mdk
+- myOscPort: 3000
+- myPassword: 12344321!
+- serverIp: 192.168.11.120
+- serverOscPort: 12321
+- serverMqttPort: 1883
+- serverMqttId: mdk
+- serverMqttPassword: 12344321
 
 
 # Release
@@ -11,8 +29,7 @@ mdk_kiosk
 - **주요 기능** :
 
 
-다음 할일
-필수 유틸리티 이식 :
+
 
 # 주기능
 
