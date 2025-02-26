@@ -98,6 +98,7 @@ class AppInitializer {
             roomName: const Value(initialRoomName),
             wifiName: const Value(initialWifiName),
             logoImage: Value(imageList),
+            titleText: const Value(initialTitleText),
             serverIp: const Value(initialServerIp),
           ),
         );

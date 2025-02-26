@@ -43,6 +43,14 @@ class $BasicInfoTable extends BasicInfo
   late final GeneratedColumn<String> wifiName = GeneratedColumn<String>(
       'wifi_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _titleTextMeta =
+      const VerificationMeta('titleText');
+  @override
+  late final GeneratedColumn<String> titleText = GeneratedColumn<String>(
+      'title_text', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('Wall Hub'));
   static const VerificationMeta _myOscPortMeta =
       const VerificationMeta('myOscPort');
   @override
@@ -114,6 +122,7 @@ class $BasicInfoTable extends BasicInfo
         roomName,
         logoImage,
         wifiName,
+        titleText,
         myOscPort,
         myPassword,
         serverIp,
@@ -155,6 +164,10 @@ class $BasicInfoTable extends BasicInfo
     if (data.containsKey('wifi_name')) {
       context.handle(_wifiNameMeta,
           wifiName.isAcceptableOrUnknown(data['wifi_name']!, _wifiNameMeta));
+    }
+    if (data.containsKey('title_text')) {
+      context.handle(_titleTextMeta,
+          titleText.isAcceptableOrUnknown(data['title_text']!, _titleTextMeta));
     }
     if (data.containsKey('my_osc_port')) {
       context.handle(
@@ -219,6 +232,8 @@ class $BasicInfoTable extends BasicInfo
           .read(DriftSqlType.blob, data['${effectivePrefix}logo_image'])!,
       wifiName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}wifi_name']),
+      titleText: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title_text'])!,
       myOscPort: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}my_osc_port'])!,
       myPassword: attachedDatabase.typeMapping
@@ -253,6 +268,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
   final String roomName;
   final Uint8List logoImage;
   final String? wifiName;
+  final String titleText;
 
   /// 2. 태블릿
   final int myOscPort;
@@ -273,6 +289,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       required this.roomName,
       required this.logoImage,
       this.wifiName,
+      required this.titleText,
       required this.myOscPort,
       required this.myPassword,
       required this.serverIp,
@@ -291,6 +308,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     if (!nullToAbsent || wifiName != null) {
       map['wifi_name'] = Variable<String>(wifiName);
     }
+    map['title_text'] = Variable<String>(titleText);
     map['my_osc_port'] = Variable<int>(myOscPort);
     map['my_password'] = Variable<String>(myPassword);
     map['server_ip'] = Variable<String>(serverIp);
@@ -311,6 +329,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       wifiName: wifiName == null && nullToAbsent
           ? const Value.absent()
           : Value(wifiName),
+      titleText: Value(titleText),
       myOscPort: Value(myOscPort),
       myPassword: Value(myPassword),
       serverIp: Value(serverIp),
@@ -331,6 +350,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       roomName: serializer.fromJson<String>(json['roomName']),
       logoImage: serializer.fromJson<Uint8List>(json['logoImage']),
       wifiName: serializer.fromJson<String?>(json['wifiName']),
+      titleText: serializer.fromJson<String>(json['titleText']),
       myOscPort: serializer.fromJson<int>(json['myOscPort']),
       myPassword: serializer.fromJson<String>(json['myPassword']),
       serverIp: serializer.fromJson<String>(json['serverIp']),
@@ -351,6 +371,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       'roomName': serializer.toJson<String>(roomName),
       'logoImage': serializer.toJson<Uint8List>(logoImage),
       'wifiName': serializer.toJson<String?>(wifiName),
+      'titleText': serializer.toJson<String>(titleText),
       'myOscPort': serializer.toJson<int>(myOscPort),
       'myPassword': serializer.toJson<String>(myPassword),
       'serverIp': serializer.toJson<String>(serverIp),
@@ -368,6 +389,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
           String? roomName,
           Uint8List? logoImage,
           Value<String?> wifiName = const Value.absent(),
+          String? titleText,
           int? myOscPort,
           String? myPassword,
           String? serverIp,
@@ -382,6 +404,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
         roomName: roomName ?? this.roomName,
         logoImage: logoImage ?? this.logoImage,
         wifiName: wifiName.present ? wifiName.value : this.wifiName,
+        titleText: titleText ?? this.titleText,
         myOscPort: myOscPort ?? this.myOscPort,
         myPassword: myPassword ?? this.myPassword,
         serverIp: serverIp ?? this.serverIp,
@@ -398,6 +421,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       roomName: data.roomName.present ? data.roomName.value : this.roomName,
       logoImage: data.logoImage.present ? data.logoImage.value : this.logoImage,
       wifiName: data.wifiName.present ? data.wifiName.value : this.wifiName,
+      titleText: data.titleText.present ? data.titleText.value : this.titleText,
       myOscPort: data.myOscPort.present ? data.myOscPort.value : this.myOscPort,
       myPassword:
           data.myPassword.present ? data.myPassword.value : this.myPassword,
@@ -426,6 +450,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
           ..write('roomName: $roomName, ')
           ..write('logoImage: $logoImage, ')
           ..write('wifiName: $wifiName, ')
+          ..write('titleText: $titleText, ')
           ..write('myOscPort: $myOscPort, ')
           ..write('myPassword: $myPassword, ')
           ..write('serverIp: $serverIp, ')
@@ -445,6 +470,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       roomName,
       $driftBlobEquality.hash(logoImage),
       wifiName,
+      titleText,
       myOscPort,
       myPassword,
       serverIp,
@@ -462,6 +488,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
           other.roomName == this.roomName &&
           $driftBlobEquality.equals(other.logoImage, this.logoImage) &&
           other.wifiName == this.wifiName &&
+          other.titleText == this.titleText &&
           other.myOscPort == this.myOscPort &&
           other.myPassword == this.myPassword &&
           other.serverIp == this.serverIp &&
@@ -478,6 +505,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
   final Value<String> roomName;
   final Value<Uint8List> logoImage;
   final Value<String?> wifiName;
+  final Value<String> titleText;
   final Value<int> myOscPort;
   final Value<String> myPassword;
   final Value<String> serverIp;
@@ -492,6 +520,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     this.roomName = const Value.absent(),
     this.logoImage = const Value.absent(),
     this.wifiName = const Value.absent(),
+    this.titleText = const Value.absent(),
     this.myOscPort = const Value.absent(),
     this.myPassword = const Value.absent(),
     this.serverIp = const Value.absent(),
@@ -507,6 +536,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     this.roomName = const Value.absent(),
     required Uint8List logoImage,
     this.wifiName = const Value.absent(),
+    this.titleText = const Value.absent(),
     this.myOscPort = const Value.absent(),
     this.myPassword = const Value.absent(),
     this.serverIp = const Value.absent(),
@@ -523,6 +553,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     Expression<String>? roomName,
     Expression<Uint8List>? logoImage,
     Expression<String>? wifiName,
+    Expression<String>? titleText,
     Expression<int>? myOscPort,
     Expression<String>? myPassword,
     Expression<String>? serverIp,
@@ -538,6 +569,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       if (roomName != null) 'room_name': roomName,
       if (logoImage != null) 'logo_image': logoImage,
       if (wifiName != null) 'wifi_name': wifiName,
+      if (titleText != null) 'title_text': titleText,
       if (myOscPort != null) 'my_osc_port': myOscPort,
       if (myPassword != null) 'my_password': myPassword,
       if (serverIp != null) 'server_ip': serverIp,
@@ -556,6 +588,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       Value<String>? roomName,
       Value<Uint8List>? logoImage,
       Value<String?>? wifiName,
+      Value<String>? titleText,
       Value<int>? myOscPort,
       Value<String>? myPassword,
       Value<String>? serverIp,
@@ -570,6 +603,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       roomName: roomName ?? this.roomName,
       logoImage: logoImage ?? this.logoImage,
       wifiName: wifiName ?? this.wifiName,
+      titleText: titleText ?? this.titleText,
       myOscPort: myOscPort ?? this.myOscPort,
       myPassword: myPassword ?? this.myPassword,
       serverIp: serverIp ?? this.serverIp,
@@ -598,6 +632,9 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     }
     if (wifiName.present) {
       map['wifi_name'] = Variable<String>(wifiName.value);
+    }
+    if (titleText.present) {
+      map['title_text'] = Variable<String>(titleText.value);
     }
     if (myOscPort.present) {
       map['my_osc_port'] = Variable<int>(myOscPort.value);
@@ -634,6 +671,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
           ..write('roomName: $roomName, ')
           ..write('logoImage: $logoImage, ')
           ..write('wifiName: $wifiName, ')
+          ..write('titleText: $titleText, ')
           ..write('myOscPort: $myOscPort, ')
           ..write('myPassword: $myPassword, ')
           ..write('serverIp: $serverIp, ')
@@ -1754,6 +1792,7 @@ typedef $$BasicInfoTableCreateCompanionBuilder = BasicInfoCompanion Function({
   Value<String> roomName,
   required Uint8List logoImage,
   Value<String?> wifiName,
+  Value<String> titleText,
   Value<int> myOscPort,
   Value<String> myPassword,
   Value<String> serverIp,
@@ -1769,6 +1808,7 @@ typedef $$BasicInfoTableUpdateCompanionBuilder = BasicInfoCompanion Function({
   Value<String> roomName,
   Value<Uint8List> logoImage,
   Value<String?> wifiName,
+  Value<String> titleText,
   Value<int> myOscPort,
   Value<String> myPassword,
   Value<String> serverIp,
@@ -1802,6 +1842,9 @@ class $$BasicInfoTableFilterComposer
 
   ColumnFilters<String> get wifiName => $composableBuilder(
       column: $table.wifiName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get titleText => $composableBuilder(
+      column: $table.titleText, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get myOscPort => $composableBuilder(
       column: $table.myOscPort, builder: (column) => ColumnFilters(column));
@@ -1853,6 +1896,9 @@ class $$BasicInfoTableOrderingComposer
 
   ColumnOrderings<String> get wifiName => $composableBuilder(
       column: $table.wifiName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get titleText => $composableBuilder(
+      column: $table.titleText, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get myOscPort => $composableBuilder(
       column: $table.myOscPort, builder: (column) => ColumnOrderings(column));
@@ -1906,6 +1952,9 @@ class $$BasicInfoTableAnnotationComposer
 
   GeneratedColumn<String> get wifiName =>
       $composableBuilder(column: $table.wifiName, builder: (column) => column);
+
+  GeneratedColumn<String> get titleText =>
+      $composableBuilder(column: $table.titleText, builder: (column) => column);
 
   GeneratedColumn<int> get myOscPort =>
       $composableBuilder(column: $table.myOscPort, builder: (column) => column);
@@ -1963,6 +2012,7 @@ class $$BasicInfoTableTableManager extends RootTableManager<
             Value<String> roomName = const Value.absent(),
             Value<Uint8List> logoImage = const Value.absent(),
             Value<String?> wifiName = const Value.absent(),
+            Value<String> titleText = const Value.absent(),
             Value<int> myOscPort = const Value.absent(),
             Value<String> myPassword = const Value.absent(),
             Value<String> serverIp = const Value.absent(),
@@ -1978,6 +2028,7 @@ class $$BasicInfoTableTableManager extends RootTableManager<
             roomName: roomName,
             logoImage: logoImage,
             wifiName: wifiName,
+            titleText: titleText,
             myOscPort: myOscPort,
             myPassword: myPassword,
             serverIp: serverIp,
@@ -1993,6 +2044,7 @@ class $$BasicInfoTableTableManager extends RootTableManager<
             Value<String> roomName = const Value.absent(),
             required Uint8List logoImage,
             Value<String?> wifiName = const Value.absent(),
+            Value<String> titleText = const Value.absent(),
             Value<int> myOscPort = const Value.absent(),
             Value<String> myPassword = const Value.absent(),
             Value<String> serverIp = const Value.absent(),
@@ -2008,6 +2060,7 @@ class $$BasicInfoTableTableManager extends RootTableManager<
             roomName: roomName,
             logoImage: logoImage,
             wifiName: wifiName,
+            titleText: titleText,
             myOscPort: myOscPort,
             myPassword: myPassword,
             serverIp: serverIp,

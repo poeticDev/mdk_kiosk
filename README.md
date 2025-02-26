@@ -13,6 +13,7 @@ mdk_kiosk
 - **roomName**: 000동 0000호
 - logoImage: asset/img/dau.jpg
 - **wifiName**: mdk
+- titleText: 자율전공학부
 - myOscPort: 3000
 - myPassword: 12344321!
 - serverIp: 192.168.11.120

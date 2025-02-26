@@ -5,6 +5,7 @@ import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
+import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:uuid/uuid.dart';
 
 class DefaultLayout extends StatelessWidget {
@@ -94,15 +95,11 @@ class DefaultLayout extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '00동-000호 강의시간표',
+              globalData.roomName,
               style: TITLE_TEXT_STYLE,
             ),
             Text(
-              '높이 80 픽셀',
-              style: TITLE_TEXT_STYLE,
-            ),
-            Text(
-              '자율전공학부',
+              globalData.titleText,
               style: TITLE_TEXT_STYLE,
             ),
           ],

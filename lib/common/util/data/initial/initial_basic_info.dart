@@ -7,6 +7,7 @@ const int initialRoomId = 00040111;
 const String initialRoomName = '4동 111호';
 const String initialImagePath = 'asset/img/gnu_logo.png';
 const String initialWifiName ='U+Net2054_5G';
+const String initialTitleText = "자율전공학부";
 // const String initialWifiName ='mdk';
 
 /// 2. 기기 정보

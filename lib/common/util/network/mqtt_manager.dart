@@ -13,6 +13,9 @@ Future<void> openMqttManager() async {
 
   mqttManager = MqttManager(
     broker: globalData.serverIp,
+    port: globalData.serverMqttPort,
+    userName: globalData.serverMqttId,
+    password: globalData.serverMqttPassword,
     clientId: Uuid().v4(),
   );
 
