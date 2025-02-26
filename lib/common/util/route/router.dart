@@ -15,7 +15,10 @@ final router = GoRouter(
           path: 'splash',
           builder: (context, state) => SplashScreen(),
         ),
-        GoRoute(path: 'home', builder: (context, state) => RootScreen()),
+        GoRoute(
+          path: 'home',
+          builder: (context, state) => RootScreen(),
+        ),
       ],
     ),
   ],

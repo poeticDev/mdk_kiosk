@@ -6,15 +6,12 @@ import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
-import 'package:uuid/uuid.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
   final Widget? cover;
   final Widget? midChild;
   final List<Widget>? mediaList;
-
-  late WebSocket? ws;
 
   DefaultLayout({
     this.backgroundColor,
@@ -55,7 +52,7 @@ class DefaultLayout extends StatelessWidget {
                 // 2. 시간표
                 Expanded(
                   child: MorphContainer(
-                    child: _TimeTable(),
+                    child: _MidChild(),
                   ),
                 ),
                 // CustomDivider(),
@@ -108,12 +105,9 @@ class DefaultLayout extends StatelessWidget {
     );
   }
 
-  Widget _TimeTable() {
+  Widget _MidChild() {
     return Center(
-      child: Text(
-        '시간표 : 나머지 공간 최대 차지',
-        style: TITLE_TEXT_STYLE,
-      ),
+      child: midChild,
     );
   }
 
