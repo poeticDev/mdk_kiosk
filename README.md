@@ -3,8 +3,7 @@
 mdk_kiosk
 
 # 다음 할일
-## DB 초기화
-## 네트워크 연결
+## 
 
 ## Getting Started
 ### **BasicInfo 설정하기**

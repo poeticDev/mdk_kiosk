@@ -2,9 +2,7 @@ import 'dart:typed_data';
 
 import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
-import 'package:mdk_kiosk/common/util/data/initial/initial_basic_info.dart';
 
 class GlobalData {
   /// Basic Info

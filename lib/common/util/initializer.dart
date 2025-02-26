@@ -9,6 +9,7 @@ import 'package:mdk_kiosk/common/util/data/initial/default_pages.dart';
 import 'package:mdk_kiosk/common/util/data/initial/initial_basic_info.dart';
 import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
+import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
 
 class AppInitializer {
   static Future<void> initialize() async {
@@ -43,7 +44,10 @@ class AppInitializer {
 
     /// 3. Network
     /// 3.1 OSC
+    openOscManager();
+
     /// 3.2 MQTT
+    openMqttManager();
   }
 
   /// 1. 하드웨어 세팅
