@@ -9,6 +9,7 @@ final router = GoRouter(
       path: '/',
       builder: (context, state) => SplashScreen(
         onSplashing: AppInitializer.initialize,
+        nextPagePath: '/home',
       ),
       routes: [
         GoRoute(

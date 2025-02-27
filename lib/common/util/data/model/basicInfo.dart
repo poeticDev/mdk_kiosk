@@ -5,7 +5,7 @@ class BasicInfo extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   /// 1. 강의실 정보
-  IntColumn get roomId => integer()();
+  TextColumn get roomId => text()();
   TextColumn get roomName => text().withDefault(const Constant('건물번호-강의실번호'))();
   BlobColumn get logoImage => blob()();
   TextColumn get wifiName => text().nullable()();

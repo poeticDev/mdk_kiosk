@@ -20,9 +20,9 @@ class $BasicInfoTable extends BasicInfo
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
   static const VerificationMeta _roomIdMeta = const VerificationMeta('roomId');
   @override
-  late final GeneratedColumn<int> roomId = GeneratedColumn<int>(
+  late final GeneratedColumn<String> roomId = GeneratedColumn<String>(
       'room_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _roomNameMeta =
       const VerificationMeta('roomName');
   @override
@@ -225,7 +225,7 @@ class $BasicInfoTable extends BasicInfo
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       roomId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}room_id'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}room_id'])!,
       roomName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}room_name'])!,
       logoImage: attachedDatabase.typeMapping
@@ -264,7 +264,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
   final int id;
 
   /// 1. 강의실 정보
-  final int roomId;
+  final String roomId;
   final String roomName;
   final Uint8List logoImage;
   final String? wifiName;
@@ -302,7 +302,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['room_id'] = Variable<int>(roomId);
+    map['room_id'] = Variable<String>(roomId);
     map['room_name'] = Variable<String>(roomName);
     map['logo_image'] = Variable<Uint8List>(logoImage);
     if (!nullToAbsent || wifiName != null) {
@@ -346,7 +346,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return BasicInfoData(
       id: serializer.fromJson<int>(json['id']),
-      roomId: serializer.fromJson<int>(json['roomId']),
+      roomId: serializer.fromJson<String>(json['roomId']),
       roomName: serializer.fromJson<String>(json['roomName']),
       logoImage: serializer.fromJson<Uint8List>(json['logoImage']),
       wifiName: serializer.fromJson<String?>(json['wifiName']),
@@ -367,7 +367,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'roomId': serializer.toJson<int>(roomId),
+      'roomId': serializer.toJson<String>(roomId),
       'roomName': serializer.toJson<String>(roomName),
       'logoImage': serializer.toJson<Uint8List>(logoImage),
       'wifiName': serializer.toJson<String?>(wifiName),
@@ -385,7 +385,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
 
   BasicInfoData copyWith(
           {int? id,
-          int? roomId,
+          String? roomId,
           String? roomName,
           Uint8List? logoImage,
           Value<String?> wifiName = const Value.absent(),
@@ -501,7 +501,7 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
 
 class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
   final Value<int> id;
-  final Value<int> roomId;
+  final Value<String> roomId;
   final Value<String> roomName;
   final Value<Uint8List> logoImage;
   final Value<String?> wifiName;
@@ -532,7 +532,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
   });
   BasicInfoCompanion.insert({
     this.id = const Value.absent(),
-    required int roomId,
+    required String roomId,
     this.roomName = const Value.absent(),
     required Uint8List logoImage,
     this.wifiName = const Value.absent(),
@@ -549,7 +549,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
         logoImage = Value(logoImage);
   static Insertable<BasicInfoData> custom({
     Expression<int>? id,
-    Expression<int>? roomId,
+    Expression<String>? roomId,
     Expression<String>? roomName,
     Expression<Uint8List>? logoImage,
     Expression<String>? wifiName,
@@ -584,7 +584,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
 
   BasicInfoCompanion copyWith(
       {Value<int>? id,
-      Value<int>? roomId,
+      Value<String>? roomId,
       Value<String>? roomName,
       Value<Uint8List>? logoImage,
       Value<String?>? wifiName,
@@ -622,7 +622,7 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       map['id'] = Variable<int>(id.value);
     }
     if (roomId.present) {
-      map['room_id'] = Variable<int>(roomId.value);
+      map['room_id'] = Variable<String>(roomId.value);
     }
     if (roomName.present) {
       map['room_name'] = Variable<String>(roomName.value);
@@ -1788,7 +1788,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 typedef $$BasicInfoTableCreateCompanionBuilder = BasicInfoCompanion Function({
   Value<int> id,
-  required int roomId,
+  required String roomId,
   Value<String> roomName,
   required Uint8List logoImage,
   Value<String?> wifiName,
@@ -1804,7 +1804,7 @@ typedef $$BasicInfoTableCreateCompanionBuilder = BasicInfoCompanion Function({
 });
 typedef $$BasicInfoTableUpdateCompanionBuilder = BasicInfoCompanion Function({
   Value<int> id,
-  Value<int> roomId,
+  Value<String> roomId,
   Value<String> roomName,
   Value<Uint8List> logoImage,
   Value<String?> wifiName,
@@ -1831,7 +1831,7 @@ class $$BasicInfoTableFilterComposer
   ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get roomId => $composableBuilder(
+  ColumnFilters<String> get roomId => $composableBuilder(
       column: $table.roomId, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get roomName => $composableBuilder(
@@ -1885,7 +1885,7 @@ class $$BasicInfoTableOrderingComposer
   ColumnOrderings<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get roomId => $composableBuilder(
+  ColumnOrderings<String> get roomId => $composableBuilder(
       column: $table.roomId, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get roomName => $composableBuilder(
@@ -1941,7 +1941,7 @@ class $$BasicInfoTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<int> get roomId =>
+  GeneratedColumn<String> get roomId =>
       $composableBuilder(column: $table.roomId, builder: (column) => column);
 
   GeneratedColumn<String> get roomName =>
@@ -2008,7 +2008,7 @@ class $$BasicInfoTableTableManager extends RootTableManager<
               $$BasicInfoTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            Value<int> roomId = const Value.absent(),
+            Value<String> roomId = const Value.absent(),
             Value<String> roomName = const Value.absent(),
             Value<Uint8List> logoImage = const Value.absent(),
             Value<String?> wifiName = const Value.absent(),
@@ -2040,7 +2040,7 @@ class $$BasicInfoTableTableManager extends RootTableManager<
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            required int roomId,
+            required String roomId,
             Value<String> roomName = const Value.absent(),
             required Uint8List logoImage,
             Value<String?> wifiName = const Value.absent(),

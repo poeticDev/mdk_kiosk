@@ -52,8 +52,6 @@ class _SplashScreenState extends State<SplashScreen> {
       context.go(widget.nextPagePath!);
     } else if (widget.nextPageName != null) {
       context.goNamed(widget.nextPageName!);
-    } else {
-      context.go('/home');
     }
   }
 
@@ -75,10 +73,13 @@ class _SplashScreenState extends State<SplashScreen> {
                 fit: StackFit.expand,
                 children: [
                   if (widget.isLogoOn)
-                    Image.asset(
-                      'asset/img/gnu_logo.png',
-                      width: circleSize - 32,
-                      height: circleSize - 32,
+                    SizedBox(
+                      width: circleSize / 2,
+                      height: circleSize / 2,
+                      child: Image.asset(
+                        'asset/img/gnu_logo.png',
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   CircularProgressIndicator(
                     strokeWidth: 6,

@@ -3,7 +3,7 @@
 /// 자주 사용하여 디폴트로 만들어둔 값으로
 /// 변경할 필요가 있을 때만 주석 해제하여 작성함
 /// 1. 강의실 정보
-const int initialRoomId = 00040111;
+const String initialRoomId = '0-004-0111';
 const String initialRoomName = '4동 111호';
 const String initialImagePath = 'asset/img/gnu_logo.png';
 const String initialWifiName ='U+Net2054_5G';

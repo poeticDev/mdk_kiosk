@@ -9,7 +9,7 @@ class LectureBox extends StatelessWidget {
   final double headerHeight;
   final String lectureName;
   final String instructorName;
-  final String weekday;
+  // final String weekday;
   final TimeOfDay startAt;
   final TimeOfDay endAt;
   final int colorIndex;
@@ -21,7 +21,7 @@ class LectureBox extends StatelessWidget {
     required this.headerHeight,
     required this.lectureName,
     required this.instructorName,
-    required this.weekday,
+    // required this.weekday,
     required this.startAt,
     required this.endAt,
     this.colorIndex = 0,
@@ -41,7 +41,8 @@ class LectureBox extends StatelessWidget {
       instructorName: lecture.instructorName,
       startAt: lecture.startAt,
       endAt: lecture.endAt,
-      weekday: lecture.getWeekdayInKR(),
+      colorIndex: lecture.colorIndex,
+      // weekday: lecture.getWeekdayInKR(),
     );
   }
 
@@ -49,30 +50,37 @@ class LectureBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Positioned(
       top: height * (startAt.hour - 9 + startAt.minute / 60) +
-          headerHeight +
-          0.5,
+          headerHeight + 1,
       left: 1,
       child: Container(
         width: width,
         height: height *
             ((endAt.hour + endAt.minute / 60) -
-                (startAt.hour + startAt.minute / 60)),
+                (startAt.hour + startAt.minute / 60)) - 1,
         color: LECTURE_BG_COLORS[colorIndex],
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                lectureName,
-                style:
-                    LECTURE_TITLE_TEXT_STYLE.copyWith(fontSize: height * 0.45),
-              ),
-              Text(
-                instructorName,
-                style: LECTURE_SUBTITLE_TEXT_STYLE.copyWith(
-                    fontSize: height * 0.4),
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  lectureName,
+                  style:
+                      LECTURE_TITLE_TEXT_STYLE.copyWith(fontSize: height * 0.3),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  instructorName,
+                  style: LECTURE_SUBTITLE_TEXT_STYLE.copyWith(
+                      fontSize: height * 0.3),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
         ),
       ),

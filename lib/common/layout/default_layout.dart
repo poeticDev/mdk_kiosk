@@ -43,7 +43,7 @@ class DefaultLayout extends StatelessWidget {
               children: [
                 // 1. 헤더
                 MorphContainer(
-                  child: _Header(height: 72.0),
+                  child: _Header(height: maxHeight * 0.035),
                 ),
                 // CustomDivider(),
                 SizedBox(
@@ -93,11 +93,11 @@ class DefaultLayout extends StatelessWidget {
           children: [
             Text(
               globalData.roomName,
-              style: TITLE_TEXT_STYLE,
+              style: TITLE_TEXT_STYLE.copyWith(fontSize: (height ?? 80) * 0.36),
             ),
             Text(
               globalData.titleText,
-              style: TITLE_TEXT_STYLE,
+              style: TITLE_TEXT_STYLE.copyWith(fontSize: (height ?? 80) * 0.36),
             ),
           ],
         ),

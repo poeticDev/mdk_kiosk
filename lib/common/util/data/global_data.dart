@@ -10,7 +10,7 @@ class GlobalData {
   late int id;
 
   /// 1. 강의실 정보
-  late int roomId;
+  late String roomId;
   late String roomName;
   late Uint8List logoImage;
   late String? wifiName;

@@ -56,6 +56,7 @@ dependencies:
   image_picker: ^1.1.2
   path_provider: ^2.1.4
   excel: ^4.0.6
+  gsheets: ^0.5.0
 #  syncfusion_flutter_datagrid: ^28.2.7
 
   ### device settings
@@ -110,6 +111,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - asset/img/
+    - asset/env/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

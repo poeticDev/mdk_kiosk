@@ -10,6 +10,7 @@ import 'package:mdk_kiosk/common/util/data/initial/initial_basic_info.dart';
 import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
+import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
 
 class AppInitializer {
   static Future<void> initialize() async {
@@ -48,6 +49,12 @@ class AppInitializer {
 
     /// 3.2 MQTT
     openMqttManager();
+
+    /// 4. 시간표 연결
+    final gSheet = GoogleSheets(sheetName: globalData.roomId);
+    await gSheet.initialize();
+    GetIt.I.registerSingleton<GoogleSheets>(gSheet);
+
   }
 
   /// 1. 하드웨어 세팅
@@ -61,8 +68,8 @@ class AppInitializer {
     await permissionHandler.requestSystemAlertWindowPermission();
     print('미디어 접근 권한 요청 중');
     await permissionHandler.requestMediaPermissions();
-    print('설정 변경 권한 요청 중');
-    await permissionHandler.requestWriteSettingsPermission();
+    // print('설정 변경 권한 요청 중');
+    // await permissionHandler.requestWriteSettingsPermission();
   }
 
   /// 1.2 세로 모드 고정
