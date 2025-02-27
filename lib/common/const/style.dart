@@ -10,3 +10,11 @@ const TITLE_TEXT_STYLE = TextStyle(
   fontWeight: FontWeight.w500,
   color: TEXT_COLOR,
 );
+
+
+/// timetable
+const TIME_TITLE_TEXT_STYLE = TextStyle(
+  // fontSize: headerHeight * 0.66,
+  fontWeight: FontWeight.w600,
+  color: TEXT_COLOR,
+);

@@ -43,7 +43,7 @@ class DefaultLayout extends StatelessWidget {
               children: [
                 // 1. 헤더
                 MorphContainer(
-                  child: _Header(height: 80.0),
+                  child: _Header(height: 72.0),
                 ),
                 // CustomDivider(),
                 SizedBox(
@@ -62,8 +62,8 @@ class DefaultLayout extends StatelessWidget {
                 // 3. 멀티미디어
                 MorphContainer(
                   child: _MultiMedia(
-                      width: maxWidth - padding * 4,
-                      height: (maxWidth - padding * 2) * 9 / 16),
+                      width: maxWidth - padding * 3.5,
+                      height: (maxWidth - padding * 3.5) * 9 / 16),
                 ),
                 SizedBox(
                   height: padding,

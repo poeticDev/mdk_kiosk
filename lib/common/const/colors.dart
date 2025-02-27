@@ -19,7 +19,7 @@ const WHITE_TEXT_COLOR = Color(0xFFFDF8F8);
 
 /// 시간표
 // 구분선 컬러
-const DIVIDER_COLOR = Color(0xffb2b2e1);
+const DIVIDER_COLOR = Color(0xFF485157);
 
 
 /// 멀티미디어

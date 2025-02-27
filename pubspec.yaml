@@ -77,6 +77,8 @@ dependencies:
   #### alert
   fluttertoast: ^8.2.8
 
+  dotted_line: ^3.2.3
+
 
 dev_dependencies:
   flutter_test:
