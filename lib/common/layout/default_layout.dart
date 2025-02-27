@@ -6,6 +6,7 @@ import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
+import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
 
 class DefaultLayout extends StatelessWidget {
   final Color? backgroundColor;
@@ -50,11 +51,12 @@ class DefaultLayout extends StatelessWidget {
                   height: padding,
                 ),
                 // 2. 시간표
-                Expanded(
-                  child: MorphContainer(
-                    child: _MidChild(),
+                if (midChild != null)
+                  Expanded(
+                    child: MorphContainer(
+                      child: midChild!,
+                    ),
                   ),
-                ),
                 // CustomDivider(),
                 SizedBox(
                   height: padding,
@@ -105,54 +107,11 @@ class DefaultLayout extends StatelessWidget {
     );
   }
 
-  Widget _MidChild() {
-    return Center(
-      child: midChild,
-    );
-  }
-
   Widget _MultiMedia({required double height, double? width}) {
-    return Container(
+    return SizedBox(
       height: height,
       width: width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          SizedBox(),
-          Text(
-            '멀티미디어 뷰\n16 : 9 가로폭에 맞춰 높이 자동 지정',
-            textAlign: TextAlign.center,
-            style: TITLE_TEXT_STYLE,
-          ),
-          SizedBox(
-            width: 160,
-            height: 40,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                  decoration:
-                      BoxDecoration(shape: BoxShape.circle, color: DOT_COLOR),
-                  width: 16.0,
-                  height: 16.0,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: DIVIDER_COLOR),
-                  width: 16.0,
-                  height: 16.0,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: DIVIDER_COLOR),
-                  width: 16.0,
-                  height: 16.0,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+      child: MultimediaLayout(),
     );
   }
 }

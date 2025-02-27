@@ -15,14 +15,12 @@ const weekendRowLengths = {
 };
 
 class TimetableLayout extends StatelessWidget {
-  double? padding;
   int columnLength;
   WeekendOption weekendOption;
   final List<Lecture> lectures;
 
   TimetableLayout({
     this.columnLength = 10,
-    this.padding,
     this.weekendOption = WeekendOption.none,
     super.key,
     required this.lectures,

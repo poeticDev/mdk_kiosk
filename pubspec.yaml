@@ -67,8 +67,9 @@ dependencies:
   #### 아이콘
   cupertino_icons: ^1.0.8
   flutter_octicons: ^1.45.0
-  #### 모피즘 테마
+  #### 테마 & 순수 디자인 요소
   flutter_neumorphic_plus: ^3.4.0
+  dotted_line: ^3.2.3
   #### 토글
   animated_toggle_switch: ^0.8.3
   #### 액션 슬라이더
@@ -77,8 +78,10 @@ dependencies:
   loading_indicator: ^3.1.1
   #### alert
   fluttertoast: ^8.2.8
+  #### 캐러슬 슬라이더(멀티미디어)
+  carousel_slider: ^5.0.0
 
-  dotted_line: ^3.2.3
+
 
 
 dev_dependencies:
