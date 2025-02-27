@@ -32,5 +32,4 @@ const LECTURE_BG_COLORS = [
 ];
 
 /// 멀티미디어
-
-const DOT_COLOR = TEXT_COLOR;
+const ICON_COLOR = Color(0xCC3A3A3A);
