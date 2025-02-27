@@ -18,3 +18,13 @@ const TIME_TITLE_TEXT_STYLE = TextStyle(
   fontWeight: FontWeight.w600,
   color: TEXT_COLOR,
 );
+
+const LECTURE_TITLE_TEXT_STYLE = TextStyle(
+  fontWeight: FontWeight.w600,
+  color: TEXT_COLOR,
+);
+
+const LECTURE_SUBTITLE_TEXT_STYLE = TextStyle(
+  fontWeight: FontWeight.w500,
+  color: TEXT_COLOR,
+);

@@ -110,36 +110,51 @@ class TimetableLayout extends StatelessWidget {
       ),
       Expanded(
         flex: 3,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: headerHeight,
-                  child: Text(
-                    weekdays[weekdayIndex],
-                    style: TIME_TITLE_TEXT_STYLE.copyWith(
-                      fontSize: headerHeight * 0.65,
-                    ),
-                  ),
-                ),
-                ...List.generate(timeLength * 2, (index) {
-                  if (index % 2 == 0) {
-                    return DottedLine(
-                      dashColor: DIVIDER_COLOR,
-                      dashGapLength: index == 0 ? 0 : 4,
-                      lineThickness: 1,
-                    );
-                  }
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final boxWidth = constraints.maxWidth - 2;
 
-                  return SizedBox(
-                    height: boxHeight - 1,
-                    child: Container(),
-                  );
-                }),
+            return Stack(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      height: headerHeight,
+                      child: Text(
+                        weekdays[weekdayIndex],
+                        style: TIME_TITLE_TEXT_STYLE.copyWith(
+                          fontSize: headerHeight * 0.65,
+                        ),
+                      ),
+                    ),
+                    ...List.generate(timeLength * 2, (index) {
+                      if (index % 2 == 0) {
+                        return DottedLine(
+                          dashColor: DIVIDER_COLOR,
+                          dashGapLength: index == 0 ? 0 : 4,
+                          lineThickness: 1,
+                        );
+                      }
+
+                      return SizedBox(
+                        height: boxHeight - 1,
+                        child: Container(),
+                      );
+                    }),
+                  ],
+                ),
+                // LectureBox(
+                //   width: boxWidth,
+                //   height: boxHeight,
+                //   startAt: TimeOfDay(hour: 10, minute: 0),
+                //   endAt: TimeOfDay(hour: 14, minute: 0),
+                //   weekday: '월',
+                //   headerHeight: headerHeight,
+                //   colorIndex: 0,
+                // ),
               ],
-            ),
-          ],
+            );
+          }
         ),
       ),
     ];
