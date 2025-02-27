@@ -70,19 +70,24 @@ class _SplashScreenState extends State<SplashScreen> {
               width: circleSize,
               height: circleSize,
               child: Stack(
-                fit: StackFit.expand,
                 children: [
                   if (widget.isLogoOn)
-                    SizedBox(
-                      width: circleSize / 2,
-                      height: circleSize / 2,
+                    Align(
+                      alignment: Alignment.center,
                       child: Image.asset(
                         'asset/img/gnu_logo.png',
+                        width: circleSize * 0.7,
+                        height: circleSize * 0.7,
                         fit: BoxFit.contain,
                       ),
                     ),
-                  CircularProgressIndicator(
-                    strokeWidth: 6,
+                  SizedBox(
+                    width: circleSize,
+                    height: circleSize,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 6,
+                      color: Colors.indigo,
+                    ),
                   ),
                 ],
               ),

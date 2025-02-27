@@ -60,26 +60,29 @@ class LectureBox extends StatelessWidget {
         color: LECTURE_BG_COLORS[colorIndex],
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  lectureName,
-                  style:
-                      LECTURE_TITLE_TEXT_STYLE.copyWith(fontSize: height * 0.3),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  instructorName,
-                  style: LECTURE_SUBTITLE_TEXT_STYLE.copyWith(
-                      fontSize: height * 0.3),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    lectureName,
+                    style:
+                        LECTURE_TITLE_TEXT_STYLE.copyWith(fontSize: height * 0.22),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    instructorName,
+                    style: LECTURE_SUBTITLE_TEXT_STYLE.copyWith(
+                        fontSize: height * 0.2),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

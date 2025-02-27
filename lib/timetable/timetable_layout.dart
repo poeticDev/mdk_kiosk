@@ -120,13 +120,20 @@ class TimetableLayout extends StatelessWidget {
               );
             }
 
+            final String string = (index ~/ 2 + 9) < 13 ? (index ~/ 2 + 9).toString() : (index ~/ 2 - 3).toString()
+
+
+
+
+            ;
+
             return SizedBox(
               height: boxHeight - 1,
               child: Center(
                 child: Text(
-                  '${index ~/ 2 + 9}',
+                  string,
                   style: TIME_TITLE_TEXT_STYLE.copyWith(
-                    fontSize: (boxHeight - 1) * 0.3,
+                    fontSize: (boxHeight - 1) * 0.22,
                   ),
                 ),
               ),
