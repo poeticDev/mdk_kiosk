@@ -29,21 +29,27 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
       final mHeight = constraints.maxHeight;
       final iconSize = mHeight * 0.08;
 
+      print('mWidth in builder : $mWidth');
+      print('mHeight in builder : $mHeight');
+
       return Stack(
         children: [
+          // 슬라이더
           CarouselSlider(
             carouselController: carouselSliderController,
             options: CarouselOptions(
+              aspectRatio: 16 / 9,
               height: mHeight,
               autoPlay: isAutoPlaying,
               autoPlayInterval: Duration(seconds: 5),
+              viewportFraction: 1
             ),
             items: [1, 2, 3, 4, 5].map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
                       width: mWidth,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      // margin: EdgeInsets.symmetric(horizontal: 4.0),
                       decoration: BoxDecoration(color: LECTURE_BG_COLORS[i]),
                       child: Center(
                         child: Text(

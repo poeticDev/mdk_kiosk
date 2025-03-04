@@ -28,6 +28,10 @@ class DefaultLayout extends StatelessWidget {
     final maxHeight = MediaQuery.of(context).size.height;
     const double padding = 60.0;
 
+    print('maxWidth - padding * 3.5 : ${maxWidth - padding * 3.5}');
+    print(
+        'maxWidth - padding * 3.5) * 9 / 16 : ${(maxWidth - padding * 3.5) * 9 / 16}');
+
     return Scaffold(
       backgroundColor: backgroundColor ?? BG_COLOR,
       resizeToAvoidBottomInset: false,
