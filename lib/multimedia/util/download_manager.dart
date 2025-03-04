@@ -35,21 +35,19 @@ class DownloadManager {
         return 'https://drive.google.com/uc?export=download&id=$fileId';
       }
     }
-    throw Exception('잘못된 구글 드라이브 URL입니다: $gDriveUrl');
+    throw Exception('잘못된 다운로드 URL입니다: $gDriveUrl');
   }
 
   /// ✅ 이미지 파일 다운로드 (중복 처리 포함)
-  Future<File> downloadImage(String imgUrl, String fileName,
+  Future<File> downloadImage(String imgUrl, String? fileName,
       {bool overwrite = false}) async {
-    final downloadUrl = convertToDownloadUrl(imgUrl);
-    return await _downloadFile(downloadUrl, fileName, overwrite: overwrite);
+    return await _downloadFile(imgUrl, fileName, overwrite: overwrite);
   }
 
   /// ✅ 동영상 파일 다운로드 (중복 처리 포함)
   Future<File> downloadVideo(String videoUrl, String? fileName,
       {bool overwrite = false}) async {
-    final downloadUrl = convertToDownloadUrl(videoUrl);
-    return await _downloadFile(downloadUrl, fileName, overwrite: overwrite);
+    return await _downloadFile(videoUrl, fileName, overwrite: overwrite);
   }
 
   /// ✅ 파일 다운로드 (기존 파일 체크 & 덮어쓰기 옵션 추가)
