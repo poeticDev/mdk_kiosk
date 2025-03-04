@@ -66,58 +66,64 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
               );
             }).toList(),
           ),
-          Positioned(
-            bottom: 20,
-            left: 0,
-            right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    carouselSliderController.previousPage();
-                  },
-                  icon: Icon(
-                    CupertinoIcons.arrow_left_circle,
-                    size: iconSize,
-                    color: iconColor,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (isAutoPlaying) {
-                        carouselSliderController.stopAutoPlay();
-                      } else {
-                        carouselSliderController.startAutoPlay();
-                        carouselSliderController.nextPage();
-                      }
-                      isAutoPlaying = !isAutoPlaying; // ✅ 상태 업데이트
-                    });
-                  },
-                  icon: Icon(
-                    isAutoPlaying
-                        ? CupertinoIcons.pause_circle
-                        : CupertinoIcons.play_circle,
-                    size: iconSize,
-                    color: iconColor,
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    carouselSliderController.nextPage();
-                  },
-                  icon: Icon(
-                    CupertinoIcons.arrow_right_circle,
-                    size: iconSize,
-                    color: iconColor,
-                  ),
-                ),
-              ],
-            ),
-          )
+          // 컨트롤 버튼
+          // _RenderCarouselController(iconSize: iconSize),
         ],
       );
     });
+  }
+
+  /// 슬라이더 컨트롤 버튼
+  Widget _RenderCarouselController({required double iconSize}) {
+    return Positioned(
+      bottom: 20,
+      left: 0,
+      right: 0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            onPressed: () {
+              carouselSliderController.previousPage();
+            },
+            icon: Icon(
+              CupertinoIcons.arrow_left_circle,
+              size: iconSize,
+              color: iconColor,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                if (isAutoPlaying) {
+                  carouselSliderController.stopAutoPlay();
+                } else {
+                  carouselSliderController.startAutoPlay();
+                  carouselSliderController.nextPage();
+                }
+                isAutoPlaying = !isAutoPlaying; // ✅ 상태 업데이트
+              });
+            },
+            icon: Icon(
+              isAutoPlaying
+                  ? CupertinoIcons.pause_circle
+                  : CupertinoIcons.play_circle,
+              size: iconSize,
+              color: iconColor,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              carouselSliderController.nextPage();
+            },
+            icon: Icon(
+              CupertinoIcons.arrow_right_circle,
+              size: iconSize,
+              color: iconColor,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
