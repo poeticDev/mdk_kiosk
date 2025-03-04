@@ -65,15 +65,15 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
               return Builder(
                 builder: (BuildContext context) {
                   if (i == 1) {
-                    return ItemVideo(
-                      downloadUrl: videoUrlFromGDrive,
+                    return ItemVideo.fromGDrive(
+                      url: videoUrlFromGDrive,
                       onPlayStart: _handleVideoPlayStarted,
                       onPlayEnd: _handleVideoPlayEnded,
                     );
                   }
 
                   if (i == 2) {
-                    return ItemImage(url: imageUrlFromWeb);
+                    return ItemImage(downloadUrl: imageUrlFromWeb);
                   }
 
                   if (i == 3) {
