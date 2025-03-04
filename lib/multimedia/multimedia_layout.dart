@@ -33,6 +33,7 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
   void _handleVideoPlayEnded() {
     setState(() {
       isAutoPlaying = true;
+      carouselSliderController.nextPage();
     });
   }
 
