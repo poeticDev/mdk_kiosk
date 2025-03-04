@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/multimedia/component/item_image.dart';
+import 'package:mdk_kiosk/multimedia/component/item_video.dart';
 
 class MultimediaLayout extends StatefulWidget {
   final List<Widget>? items;
@@ -23,6 +24,18 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
   bool isAutoPlaying = true;
   Color iconColor = ICON_COLOR;
 
+  void _handleVideoPlayStarted() {
+    setState(() {
+      isAutoPlaying = false;
+    });
+  }
+
+  void _handleVideoPlayEnded() {
+    setState(() {
+      isAutoPlaying = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -36,14 +49,29 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
           CarouselSlider(
             carouselController: carouselSliderController,
             options: CarouselOptions(
-                aspectRatio: 16 / 9,
-                height: mHeight,
-                autoPlay: isAutoPlaying,
-                autoPlayInterval: Duration(seconds: 5),
-                viewportFraction: 1),
+              aspectRatio: 16 / 9,
+              height: mHeight,
+              autoPlay: isAutoPlaying,
+              autoPlayInterval: Duration(seconds: 5),
+              viewportFraction: 1,
+              onPageChanged: (index, reason) {
+                if (reason == CarouselPageChangedReason.manual) {
+                  // 수동 슬라이드 넘김 → autoPlay 재개
+                  _handleVideoPlayEnded();
+                }
+              },
+            ),
             items: [1, 2, 3].map((i) {
               return Builder(
                 builder: (BuildContext context) {
+                  if (i == 1) {
+                    return ItemVideo(
+                      downloadUrl: videoUrlFromGDrive,
+                      onPlayStart: _handleVideoPlayStarted,
+                      onPlayEnd: _handleVideoPlayEnded,
+                    );
+                  }
+
                   if (i == 2) {
                     return ItemImage(url: imageUrlFromWeb);
                   }
