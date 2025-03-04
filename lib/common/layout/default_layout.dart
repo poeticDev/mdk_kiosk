@@ -28,10 +28,6 @@ class DefaultLayout extends StatelessWidget {
     final maxHeight = MediaQuery.of(context).size.height;
     const double padding = 60.0;
 
-    print('maxWidth - padding * 3.5 : ${maxWidth - padding * 3.5}');
-    print(
-        'maxWidth - padding * 3.5) * 9 / 16 : ${(maxWidth - padding * 3.5) * 9 / 16}');
-
     return Scaffold(
       backgroundColor: backgroundColor ?? BG_COLOR,
       resizeToAvoidBottomInset: false,
@@ -68,17 +64,17 @@ class DefaultLayout extends StatelessWidget {
                 // 3. 멀티미디어
                 MorphContainer(
                   child: _MultiMedia(
-                      width: maxWidth - padding * 3.5,
-                      height: (maxWidth - padding * 3.5) * 9 / 16),
+                      width: maxWidth,
+                      height: (maxWidth) * 9 / 16),
                 ),
                 SizedBox(
-                  height: padding,
+                  height: padding * 0.7,
                 ),
                 // 4. 로고
                 Container(
                   color: Colors.transparent,
-                  height: 90,
-                  width: 160,
+                  height: 72,
+                  width: 138,
                   child: Image.asset('asset/img/gnu_logo.png'),
                 )
               ],

@@ -28,3 +28,9 @@ const LECTURE_SUBTITLE_TEXT_STYLE = TextStyle(
   fontWeight: FontWeight.w500,
   color: TEXT_COLOR,
 );
+
+/// media view
+const BODY_TEXT_STYLE = TextStyle(
+  fontWeight: FontWeight.w500,
+  color: TEXT_COLOR,
+);

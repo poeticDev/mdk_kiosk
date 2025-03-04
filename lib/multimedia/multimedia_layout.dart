@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
+import 'package:mdk_kiosk/multimedia/component/item_image.dart';
 
 class MultimediaLayout extends StatefulWidget {
   final List<Widget>? items;
@@ -29,24 +30,28 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
       final mHeight = constraints.maxHeight;
       final iconSize = mHeight * 0.08;
 
-      print('mWidth in builder : $mWidth');
-      print('mHeight in builder : $mHeight');
-
       return Stack(
         children: [
           // 슬라이더
           CarouselSlider(
             carouselController: carouselSliderController,
             options: CarouselOptions(
-              aspectRatio: 16 / 9,
-              height: mHeight,
-              autoPlay: isAutoPlaying,
-              autoPlayInterval: Duration(seconds: 5),
-              viewportFraction: 1
-            ),
-            items: [1, 2, 3, 4, 5].map((i) {
+                aspectRatio: 16 / 9,
+                height: mHeight,
+                autoPlay: isAutoPlaying,
+                autoPlayInterval: Duration(seconds: 5),
+                viewportFraction: 1),
+            items: [1, 2, 3].map((i) {
               return Builder(
                 builder: (BuildContext context) {
+                  if (i == 2) {
+                    return ItemImage(url: imageUrlFromWeb);
+                  }
+
+                  if (i == 3) {
+                    return ItemImage.fromGDrive(
+                        url: imageUrlFromGDrive, fit: BoxFit.contain);
+                  }
                   return Container(
                       width: mWidth,
                       // margin: EdgeInsets.symmetric(horizontal: 4.0),
