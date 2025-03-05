@@ -26,9 +26,22 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 30
         compileSdk = 35
-        targetSdk = 30
+        targetSdk = 33
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    flavorDimensions "version"
+
+    productFlavors {
+        kiosk {
+            dimension "version"
+            targetSdkVersion 30 // 키오스크용은 30
+        }
+        playstore {
+            dimension "version"
+            targetSdkVersion 34 // 플레이스토어용은 최신 정책 준수
+        }
     }
 
     buildTypes {
