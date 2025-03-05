@@ -685,363 +685,6 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
   }
 }
 
-class $TimetableTable extends Timetable
-    with TableInfo<$TimetableTable, TimetableData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $TimetableTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _educatorMeta =
-      const VerificationMeta('educator');
-  @override
-  late final GeneratedColumn<String> educator = GeneratedColumn<String>(
-      'educator', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _courseNameMeta =
-      const VerificationMeta('courseName');
-  @override
-  late final GeneratedColumn<String> courseName = GeneratedColumn<String>(
-      'course_name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _startAtMeta =
-      const VerificationMeta('startAt');
-  @override
-  late final GeneratedColumn<DateTime> startAt = GeneratedColumn<DateTime>(
-      'start_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _endAtMeta = const VerificationMeta('endAt');
-  @override
-  late final GeneratedColumn<DateTime> endAt = GeneratedColumn<DateTime>(
-      'end_at', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
-  static const VerificationMeta _weekDayMeta =
-      const VerificationMeta('weekDay');
-  @override
-  late final GeneratedColumnWithTypeConverter<Weekday, String> weekDay =
-      GeneratedColumn<String>('week_day', aliasedName, false,
-              type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<Weekday>($TimetableTable.$converterweekDay);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, educator, courseName, startAt, endAt, weekDay];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'timetable';
-  @override
-  VerificationContext validateIntegrity(Insertable<TimetableData> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('educator')) {
-      context.handle(_educatorMeta,
-          educator.isAcceptableOrUnknown(data['educator']!, _educatorMeta));
-    }
-    if (data.containsKey('course_name')) {
-      context.handle(
-          _courseNameMeta,
-          courseName.isAcceptableOrUnknown(
-              data['course_name']!, _courseNameMeta));
-    } else if (isInserting) {
-      context.missing(_courseNameMeta);
-    }
-    if (data.containsKey('start_at')) {
-      context.handle(_startAtMeta,
-          startAt.isAcceptableOrUnknown(data['start_at']!, _startAtMeta));
-    } else if (isInserting) {
-      context.missing(_startAtMeta);
-    }
-    if (data.containsKey('end_at')) {
-      context.handle(
-          _endAtMeta, endAt.isAcceptableOrUnknown(data['end_at']!, _endAtMeta));
-    } else if (isInserting) {
-      context.missing(_endAtMeta);
-    }
-    context.handle(_weekDayMeta, const VerificationResult.success());
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  TimetableData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TimetableData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      educator: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}educator']),
-      courseName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}course_name'])!,
-      startAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_at'])!,
-      endAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_at'])!,
-      weekDay: $TimetableTable.$converterweekDay.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}week_day'])!),
-    );
-  }
-
-  @override
-  $TimetableTable createAlias(String alias) {
-    return $TimetableTable(attachedDatabase, alias);
-  }
-
-  static JsonTypeConverter2<Weekday, String, String> $converterweekDay =
-      const EnumNameConverter<Weekday>(Weekday.values);
-}
-
-class TimetableData extends DataClass implements Insertable<TimetableData> {
-  /// 1) 식별 아이디
-  final int id;
-
-  /// 2) 강의자
-  final String? educator;
-
-  /// 3) 강의명
-  final String courseName;
-
-  /// 4) 시작 시간
-  final DateTime startAt;
-
-  /// 5) 종료 시간
-  final DateTime endAt;
-
-  /// 6) 강의 요일
-  final Weekday weekDay;
-  const TimetableData(
-      {required this.id,
-      this.educator,
-      required this.courseName,
-      required this.startAt,
-      required this.endAt,
-      required this.weekDay});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    if (!nullToAbsent || educator != null) {
-      map['educator'] = Variable<String>(educator);
-    }
-    map['course_name'] = Variable<String>(courseName);
-    map['start_at'] = Variable<DateTime>(startAt);
-    map['end_at'] = Variable<DateTime>(endAt);
-    {
-      map['week_day'] =
-          Variable<String>($TimetableTable.$converterweekDay.toSql(weekDay));
-    }
-    return map;
-  }
-
-  TimetableCompanion toCompanion(bool nullToAbsent) {
-    return TimetableCompanion(
-      id: Value(id),
-      educator: educator == null && nullToAbsent
-          ? const Value.absent()
-          : Value(educator),
-      courseName: Value(courseName),
-      startAt: Value(startAt),
-      endAt: Value(endAt),
-      weekDay: Value(weekDay),
-    );
-  }
-
-  factory TimetableData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TimetableData(
-      id: serializer.fromJson<int>(json['id']),
-      educator: serializer.fromJson<String?>(json['educator']),
-      courseName: serializer.fromJson<String>(json['courseName']),
-      startAt: serializer.fromJson<DateTime>(json['startAt']),
-      endAt: serializer.fromJson<DateTime>(json['endAt']),
-      weekDay: $TimetableTable.$converterweekDay
-          .fromJson(serializer.fromJson<String>(json['weekDay'])),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'educator': serializer.toJson<String?>(educator),
-      'courseName': serializer.toJson<String>(courseName),
-      'startAt': serializer.toJson<DateTime>(startAt),
-      'endAt': serializer.toJson<DateTime>(endAt),
-      'weekDay': serializer
-          .toJson<String>($TimetableTable.$converterweekDay.toJson(weekDay)),
-    };
-  }
-
-  TimetableData copyWith(
-          {int? id,
-          Value<String?> educator = const Value.absent(),
-          String? courseName,
-          DateTime? startAt,
-          DateTime? endAt,
-          Weekday? weekDay}) =>
-      TimetableData(
-        id: id ?? this.id,
-        educator: educator.present ? educator.value : this.educator,
-        courseName: courseName ?? this.courseName,
-        startAt: startAt ?? this.startAt,
-        endAt: endAt ?? this.endAt,
-        weekDay: weekDay ?? this.weekDay,
-      );
-  TimetableData copyWithCompanion(TimetableCompanion data) {
-    return TimetableData(
-      id: data.id.present ? data.id.value : this.id,
-      educator: data.educator.present ? data.educator.value : this.educator,
-      courseName:
-          data.courseName.present ? data.courseName.value : this.courseName,
-      startAt: data.startAt.present ? data.startAt.value : this.startAt,
-      endAt: data.endAt.present ? data.endAt.value : this.endAt,
-      weekDay: data.weekDay.present ? data.weekDay.value : this.weekDay,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('TimetableData(')
-          ..write('id: $id, ')
-          ..write('educator: $educator, ')
-          ..write('courseName: $courseName, ')
-          ..write('startAt: $startAt, ')
-          ..write('endAt: $endAt, ')
-          ..write('weekDay: $weekDay')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(id, educator, courseName, startAt, endAt, weekDay);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is TimetableData &&
-          other.id == this.id &&
-          other.educator == this.educator &&
-          other.courseName == this.courseName &&
-          other.startAt == this.startAt &&
-          other.endAt == this.endAt &&
-          other.weekDay == this.weekDay);
-}
-
-class TimetableCompanion extends UpdateCompanion<TimetableData> {
-  final Value<int> id;
-  final Value<String?> educator;
-  final Value<String> courseName;
-  final Value<DateTime> startAt;
-  final Value<DateTime> endAt;
-  final Value<Weekday> weekDay;
-  const TimetableCompanion({
-    this.id = const Value.absent(),
-    this.educator = const Value.absent(),
-    this.courseName = const Value.absent(),
-    this.startAt = const Value.absent(),
-    this.endAt = const Value.absent(),
-    this.weekDay = const Value.absent(),
-  });
-  TimetableCompanion.insert({
-    this.id = const Value.absent(),
-    this.educator = const Value.absent(),
-    required String courseName,
-    required DateTime startAt,
-    required DateTime endAt,
-    required Weekday weekDay,
-  })  : courseName = Value(courseName),
-        startAt = Value(startAt),
-        endAt = Value(endAt),
-        weekDay = Value(weekDay);
-  static Insertable<TimetableData> custom({
-    Expression<int>? id,
-    Expression<String>? educator,
-    Expression<String>? courseName,
-    Expression<DateTime>? startAt,
-    Expression<DateTime>? endAt,
-    Expression<String>? weekDay,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (educator != null) 'educator': educator,
-      if (courseName != null) 'course_name': courseName,
-      if (startAt != null) 'start_at': startAt,
-      if (endAt != null) 'end_at': endAt,
-      if (weekDay != null) 'week_day': weekDay,
-    });
-  }
-
-  TimetableCompanion copyWith(
-      {Value<int>? id,
-      Value<String?>? educator,
-      Value<String>? courseName,
-      Value<DateTime>? startAt,
-      Value<DateTime>? endAt,
-      Value<Weekday>? weekDay}) {
-    return TimetableCompanion(
-      id: id ?? this.id,
-      educator: educator ?? this.educator,
-      courseName: courseName ?? this.courseName,
-      startAt: startAt ?? this.startAt,
-      endAt: endAt ?? this.endAt,
-      weekDay: weekDay ?? this.weekDay,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (educator.present) {
-      map['educator'] = Variable<String>(educator.value);
-    }
-    if (courseName.present) {
-      map['course_name'] = Variable<String>(courseName.value);
-    }
-    if (startAt.present) {
-      map['start_at'] = Variable<DateTime>(startAt.value);
-    }
-    if (endAt.present) {
-      map['end_at'] = Variable<DateTime>(endAt.value);
-    }
-    if (weekDay.present) {
-      map['week_day'] = Variable<String>(
-          $TimetableTable.$converterweekDay.toSql(weekDay.value));
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('TimetableCompanion(')
-          ..write('id: $id, ')
-          ..write('educator: $educator, ')
-          ..write('courseName: $courseName, ')
-          ..write('startAt: $startAt, ')
-          ..write('endAt: $endAt, ')
-          ..write('weekDay: $weekDay')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $PageTable extends Page with TableInfo<$PageTable, PageData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -1759,19 +1402,419 @@ class ButtonCompanion extends UpdateCompanion<ButtonData> {
   }
 }
 
+class $MediaItemTable extends MediaItem
+    with TableInfo<$MediaItemTable, MediaItemData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MediaItemTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumnWithTypeConverter<MediaType, String> type =
+      GeneratedColumn<String>('type', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<MediaType>($MediaItemTable.$convertertype);
+  static const VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String> url = GeneratedColumn<String>(
+      'url', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _fileNameMeta =
+      const VerificationMeta('fileName');
+  @override
+  late final GeneratedColumn<String> fileName = GeneratedColumn<String>(
+      'file_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _fromMeta = const VerificationMeta('from');
+  @override
+  late final GeneratedColumnWithTypeConverter<MediaFrom, String> from =
+      GeneratedColumn<String>('from', aliasedName, false,
+              type: DriftSqlType.string,
+              requiredDuringInsert: false,
+              defaultValue: const Constant('gDrive'))
+          .withConverter<MediaFrom>($MediaItemTable.$converterfrom);
+  static const VerificationMeta _fitMeta = const VerificationMeta('fit');
+  @override
+  late final GeneratedColumnWithTypeConverter<BoxFit?, String> fit =
+      GeneratedColumn<String>('fit', aliasedName, true,
+              type: DriftSqlType.string, requiredDuringInsert: false)
+          .withConverter<BoxFit?>($MediaItemTable.$converterfitn);
+  static const VerificationMeta _orderNumMeta =
+      const VerificationMeta('orderNum');
+  @override
+  late final GeneratedColumn<int> orderNum = GeneratedColumn<int>(
+      'order_num', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, type, url, fileName, from, fit, orderNum];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'media_item';
+  @override
+  VerificationContext validateIntegrity(Insertable<MediaItemData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    context.handle(_typeMeta, const VerificationResult.success());
+    if (data.containsKey('url')) {
+      context.handle(
+          _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('file_name')) {
+      context.handle(_fileNameMeta,
+          fileName.isAcceptableOrUnknown(data['file_name']!, _fileNameMeta));
+    }
+    context.handle(_fromMeta, const VerificationResult.success());
+    context.handle(_fitMeta, const VerificationResult.success());
+    if (data.containsKey('order_num')) {
+      context.handle(_orderNumMeta,
+          orderNum.isAcceptableOrUnknown(data['order_num']!, _orderNumMeta));
+    } else if (isInserting) {
+      context.missing(_orderNumMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MediaItemData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MediaItemData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      type: $MediaItemTable.$convertertype.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!),
+      url: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}url'])!,
+      fileName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}file_name']),
+      from: $MediaItemTable.$converterfrom.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}from'])!),
+      fit: $MediaItemTable.$converterfitn.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}fit'])),
+      orderNum: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}order_num'])!,
+    );
+  }
+
+  @override
+  $MediaItemTable createAlias(String alias) {
+    return $MediaItemTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<MediaType, String, String> $convertertype =
+      const EnumNameConverter<MediaType>(MediaType.values);
+  static JsonTypeConverter2<MediaFrom, String, String> $converterfrom =
+      const EnumNameConverter<MediaFrom>(MediaFrom.values);
+  static JsonTypeConverter2<BoxFit, String, String> $converterfit =
+      const EnumNameConverter<BoxFit>(BoxFit.values);
+  static JsonTypeConverter2<BoxFit?, String?, String?> $converterfitn =
+      JsonTypeConverter2.asNullable($converterfit);
+}
+
+class MediaItemData extends DataClass implements Insertable<MediaItemData> {
+  /// 1) 식별 아이디
+  final int id;
+
+  /// 2) 미디어 타입
+  final MediaType type;
+
+  /// 3) 주소
+  final String url;
+
+  /// 4) 파일명
+  /// - 없으면 url 마지막 부분에서 파일명 추출
+  final String? fileName;
+
+  /// 5) 저장위치
+  final MediaFrom from;
+
+  /// 6) 미디어 표출 방식
+  /// - cover(기본): 꽉 채움
+  /// - contain: 여백이 있더라도 다 나오게)
+  final BoxFit? fit;
+
+  /// 7) 표출 순서 : 기본 생성순
+  final int orderNum;
+  const MediaItemData(
+      {required this.id,
+      required this.type,
+      required this.url,
+      this.fileName,
+      required this.from,
+      this.fit,
+      required this.orderNum});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    {
+      map['type'] =
+          Variable<String>($MediaItemTable.$convertertype.toSql(type));
+    }
+    map['url'] = Variable<String>(url);
+    if (!nullToAbsent || fileName != null) {
+      map['file_name'] = Variable<String>(fileName);
+    }
+    {
+      map['from'] =
+          Variable<String>($MediaItemTable.$converterfrom.toSql(from));
+    }
+    if (!nullToAbsent || fit != null) {
+      map['fit'] = Variable<String>($MediaItemTable.$converterfitn.toSql(fit));
+    }
+    map['order_num'] = Variable<int>(orderNum);
+    return map;
+  }
+
+  MediaItemCompanion toCompanion(bool nullToAbsent) {
+    return MediaItemCompanion(
+      id: Value(id),
+      type: Value(type),
+      url: Value(url),
+      fileName: fileName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fileName),
+      from: Value(from),
+      fit: fit == null && nullToAbsent ? const Value.absent() : Value(fit),
+      orderNum: Value(orderNum),
+    );
+  }
+
+  factory MediaItemData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MediaItemData(
+      id: serializer.fromJson<int>(json['id']),
+      type: $MediaItemTable.$convertertype
+          .fromJson(serializer.fromJson<String>(json['type'])),
+      url: serializer.fromJson<String>(json['url']),
+      fileName: serializer.fromJson<String?>(json['fileName']),
+      from: $MediaItemTable.$converterfrom
+          .fromJson(serializer.fromJson<String>(json['from'])),
+      fit: $MediaItemTable.$converterfitn
+          .fromJson(serializer.fromJson<String?>(json['fit'])),
+      orderNum: serializer.fromJson<int>(json['orderNum']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'type': serializer
+          .toJson<String>($MediaItemTable.$convertertype.toJson(type)),
+      'url': serializer.toJson<String>(url),
+      'fileName': serializer.toJson<String?>(fileName),
+      'from': serializer
+          .toJson<String>($MediaItemTable.$converterfrom.toJson(from)),
+      'fit': serializer
+          .toJson<String?>($MediaItemTable.$converterfitn.toJson(fit)),
+      'orderNum': serializer.toJson<int>(orderNum),
+    };
+  }
+
+  MediaItemData copyWith(
+          {int? id,
+          MediaType? type,
+          String? url,
+          Value<String?> fileName = const Value.absent(),
+          MediaFrom? from,
+          Value<BoxFit?> fit = const Value.absent(),
+          int? orderNum}) =>
+      MediaItemData(
+        id: id ?? this.id,
+        type: type ?? this.type,
+        url: url ?? this.url,
+        fileName: fileName.present ? fileName.value : this.fileName,
+        from: from ?? this.from,
+        fit: fit.present ? fit.value : this.fit,
+        orderNum: orderNum ?? this.orderNum,
+      );
+  MediaItemData copyWithCompanion(MediaItemCompanion data) {
+    return MediaItemData(
+      id: data.id.present ? data.id.value : this.id,
+      type: data.type.present ? data.type.value : this.type,
+      url: data.url.present ? data.url.value : this.url,
+      fileName: data.fileName.present ? data.fileName.value : this.fileName,
+      from: data.from.present ? data.from.value : this.from,
+      fit: data.fit.present ? data.fit.value : this.fit,
+      orderNum: data.orderNum.present ? data.orderNum.value : this.orderNum,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MediaItemData(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('url: $url, ')
+          ..write('fileName: $fileName, ')
+          ..write('from: $from, ')
+          ..write('fit: $fit, ')
+          ..write('orderNum: $orderNum')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, type, url, fileName, from, fit, orderNum);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MediaItemData &&
+          other.id == this.id &&
+          other.type == this.type &&
+          other.url == this.url &&
+          other.fileName == this.fileName &&
+          other.from == this.from &&
+          other.fit == this.fit &&
+          other.orderNum == this.orderNum);
+}
+
+class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
+  final Value<int> id;
+  final Value<MediaType> type;
+  final Value<String> url;
+  final Value<String?> fileName;
+  final Value<MediaFrom> from;
+  final Value<BoxFit?> fit;
+  final Value<int> orderNum;
+  const MediaItemCompanion({
+    this.id = const Value.absent(),
+    this.type = const Value.absent(),
+    this.url = const Value.absent(),
+    this.fileName = const Value.absent(),
+    this.from = const Value.absent(),
+    this.fit = const Value.absent(),
+    this.orderNum = const Value.absent(),
+  });
+  MediaItemCompanion.insert({
+    this.id = const Value.absent(),
+    required MediaType type,
+    required String url,
+    this.fileName = const Value.absent(),
+    this.from = const Value.absent(),
+    this.fit = const Value.absent(),
+    required int orderNum,
+  })  : type = Value(type),
+        url = Value(url),
+        orderNum = Value(orderNum);
+  static Insertable<MediaItemData> custom({
+    Expression<int>? id,
+    Expression<String>? type,
+    Expression<String>? url,
+    Expression<String>? fileName,
+    Expression<String>? from,
+    Expression<String>? fit,
+    Expression<int>? orderNum,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (type != null) 'type': type,
+      if (url != null) 'url': url,
+      if (fileName != null) 'file_name': fileName,
+      if (from != null) 'from': from,
+      if (fit != null) 'fit': fit,
+      if (orderNum != null) 'order_num': orderNum,
+    });
+  }
+
+  MediaItemCompanion copyWith(
+      {Value<int>? id,
+      Value<MediaType>? type,
+      Value<String>? url,
+      Value<String?>? fileName,
+      Value<MediaFrom>? from,
+      Value<BoxFit?>? fit,
+      Value<int>? orderNum}) {
+    return MediaItemCompanion(
+      id: id ?? this.id,
+      type: type ?? this.type,
+      url: url ?? this.url,
+      fileName: fileName ?? this.fileName,
+      from: from ?? this.from,
+      fit: fit ?? this.fit,
+      orderNum: orderNum ?? this.orderNum,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (type.present) {
+      map['type'] =
+          Variable<String>($MediaItemTable.$convertertype.toSql(type.value));
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (fileName.present) {
+      map['file_name'] = Variable<String>(fileName.value);
+    }
+    if (from.present) {
+      map['from'] =
+          Variable<String>($MediaItemTable.$converterfrom.toSql(from.value));
+    }
+    if (fit.present) {
+      map['fit'] =
+          Variable<String>($MediaItemTable.$converterfitn.toSql(fit.value));
+    }
+    if (orderNum.present) {
+      map['order_num'] = Variable<int>(orderNum.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MediaItemCompanion(')
+          ..write('id: $id, ')
+          ..write('type: $type, ')
+          ..write('url: $url, ')
+          ..write('fileName: $fileName, ')
+          ..write('from: $from, ')
+          ..write('fit: $fit, ')
+          ..write('orderNum: $orderNum')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $BasicInfoTable basicInfo = $BasicInfoTable(this);
-  late final $TimetableTable timetable = $TimetableTable(this);
   late final $PageTable page = $PageTable(this);
   late final $ButtonTable button = $ButtonTable(this);
+  late final $MediaItemTable mediaItem = $MediaItemTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [basicInfo, timetable, page, button];
+      [basicInfo, page, button, mediaItem];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
@@ -2091,188 +2134,6 @@ typedef $$BasicInfoTableProcessedTableManager = ProcessedTableManager<
       BaseReferences<_$AppDatabase, $BasicInfoTable, BasicInfoData>
     ),
     BasicInfoData,
-    PrefetchHooks Function()>;
-typedef $$TimetableTableCreateCompanionBuilder = TimetableCompanion Function({
-  Value<int> id,
-  Value<String?> educator,
-  required String courseName,
-  required DateTime startAt,
-  required DateTime endAt,
-  required Weekday weekDay,
-});
-typedef $$TimetableTableUpdateCompanionBuilder = TimetableCompanion Function({
-  Value<int> id,
-  Value<String?> educator,
-  Value<String> courseName,
-  Value<DateTime> startAt,
-  Value<DateTime> endAt,
-  Value<Weekday> weekDay,
-});
-
-class $$TimetableTableFilterComposer
-    extends Composer<_$AppDatabase, $TimetableTable> {
-  $$TimetableTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get educator => $composableBuilder(
-      column: $table.educator, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get courseName => $composableBuilder(
-      column: $table.courseName, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<DateTime> get startAt => $composableBuilder(
-      column: $table.startAt, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<DateTime> get endAt => $composableBuilder(
-      column: $table.endAt, builder: (column) => ColumnFilters(column));
-
-  ColumnWithTypeConverterFilters<Weekday, Weekday, String> get weekDay =>
-      $composableBuilder(
-          column: $table.weekDay,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
-}
-
-class $$TimetableTableOrderingComposer
-    extends Composer<_$AppDatabase, $TimetableTable> {
-  $$TimetableTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get educator => $composableBuilder(
-      column: $table.educator, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get courseName => $composableBuilder(
-      column: $table.courseName, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<DateTime> get startAt => $composableBuilder(
-      column: $table.startAt, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<DateTime> get endAt => $composableBuilder(
-      column: $table.endAt, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get weekDay => $composableBuilder(
-      column: $table.weekDay, builder: (column) => ColumnOrderings(column));
-}
-
-class $$TimetableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $TimetableTable> {
-  $$TimetableTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get educator =>
-      $composableBuilder(column: $table.educator, builder: (column) => column);
-
-  GeneratedColumn<String> get courseName => $composableBuilder(
-      column: $table.courseName, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get startAt =>
-      $composableBuilder(column: $table.startAt, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get endAt =>
-      $composableBuilder(column: $table.endAt, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<Weekday, String> get weekDay =>
-      $composableBuilder(column: $table.weekDay, builder: (column) => column);
-}
-
-class $$TimetableTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $TimetableTable,
-    TimetableData,
-    $$TimetableTableFilterComposer,
-    $$TimetableTableOrderingComposer,
-    $$TimetableTableAnnotationComposer,
-    $$TimetableTableCreateCompanionBuilder,
-    $$TimetableTableUpdateCompanionBuilder,
-    (
-      TimetableData,
-      BaseReferences<_$AppDatabase, $TimetableTable, TimetableData>
-    ),
-    TimetableData,
-    PrefetchHooks Function()> {
-  $$TimetableTableTableManager(_$AppDatabase db, $TimetableTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$TimetableTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$TimetableTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$TimetableTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String?> educator = const Value.absent(),
-            Value<String> courseName = const Value.absent(),
-            Value<DateTime> startAt = const Value.absent(),
-            Value<DateTime> endAt = const Value.absent(),
-            Value<Weekday> weekDay = const Value.absent(),
-          }) =>
-              TimetableCompanion(
-            id: id,
-            educator: educator,
-            courseName: courseName,
-            startAt: startAt,
-            endAt: endAt,
-            weekDay: weekDay,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String?> educator = const Value.absent(),
-            required String courseName,
-            required DateTime startAt,
-            required DateTime endAt,
-            required Weekday weekDay,
-          }) =>
-              TimetableCompanion.insert(
-            id: id,
-            educator: educator,
-            courseName: courseName,
-            startAt: startAt,
-            endAt: endAt,
-            weekDay: weekDay,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ));
-}
-
-typedef $$TimetableTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $TimetableTable,
-    TimetableData,
-    $$TimetableTableFilterComposer,
-    $$TimetableTableOrderingComposer,
-    $$TimetableTableAnnotationComposer,
-    $$TimetableTableCreateCompanionBuilder,
-    $$TimetableTableUpdateCompanionBuilder,
-    (
-      TimetableData,
-      BaseReferences<_$AppDatabase, $TimetableTable, TimetableData>
-    ),
-    TimetableData,
     PrefetchHooks Function()>;
 typedef $$PageTableCreateCompanionBuilder = PageCompanion Function({
   Value<int?> id,
@@ -2807,15 +2668,216 @@ typedef $$ButtonTableProcessedTableManager = ProcessedTableManager<
     (ButtonData, $$ButtonTableReferences),
     ButtonData,
     PrefetchHooks Function({bool page})>;
+typedef $$MediaItemTableCreateCompanionBuilder = MediaItemCompanion Function({
+  Value<int> id,
+  required MediaType type,
+  required String url,
+  Value<String?> fileName,
+  Value<MediaFrom> from,
+  Value<BoxFit?> fit,
+  required int orderNum,
+});
+typedef $$MediaItemTableUpdateCompanionBuilder = MediaItemCompanion Function({
+  Value<int> id,
+  Value<MediaType> type,
+  Value<String> url,
+  Value<String?> fileName,
+  Value<MediaFrom> from,
+  Value<BoxFit?> fit,
+  Value<int> orderNum,
+});
+
+class $$MediaItemTableFilterComposer
+    extends Composer<_$AppDatabase, $MediaItemTable> {
+  $$MediaItemTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<MediaType, MediaType, String> get type =>
+      $composableBuilder(
+          column: $table.type,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get url => $composableBuilder(
+      column: $table.url, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get fileName => $composableBuilder(
+      column: $table.fileName, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<MediaFrom, MediaFrom, String> get from =>
+      $composableBuilder(
+          column: $table.from,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<BoxFit?, BoxFit, String> get fit =>
+      $composableBuilder(
+          column: $table.fit,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<int> get orderNum => $composableBuilder(
+      column: $table.orderNum, builder: (column) => ColumnFilters(column));
+}
+
+class $$MediaItemTableOrderingComposer
+    extends Composer<_$AppDatabase, $MediaItemTable> {
+  $$MediaItemTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get url => $composableBuilder(
+      column: $table.url, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get fileName => $composableBuilder(
+      column: $table.fileName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get from => $composableBuilder(
+      column: $table.from, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get fit => $composableBuilder(
+      column: $table.fit, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get orderNum => $composableBuilder(
+      column: $table.orderNum, builder: (column) => ColumnOrderings(column));
+}
+
+class $$MediaItemTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MediaItemTable> {
+  $$MediaItemTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<MediaType, String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get url =>
+      $composableBuilder(column: $table.url, builder: (column) => column);
+
+  GeneratedColumn<String> get fileName =>
+      $composableBuilder(column: $table.fileName, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<MediaFrom, String> get from =>
+      $composableBuilder(column: $table.from, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<BoxFit?, String> get fit =>
+      $composableBuilder(column: $table.fit, builder: (column) => column);
+
+  GeneratedColumn<int> get orderNum =>
+      $composableBuilder(column: $table.orderNum, builder: (column) => column);
+}
+
+class $$MediaItemTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $MediaItemTable,
+    MediaItemData,
+    $$MediaItemTableFilterComposer,
+    $$MediaItemTableOrderingComposer,
+    $$MediaItemTableAnnotationComposer,
+    $$MediaItemTableCreateCompanionBuilder,
+    $$MediaItemTableUpdateCompanionBuilder,
+    (
+      MediaItemData,
+      BaseReferences<_$AppDatabase, $MediaItemTable, MediaItemData>
+    ),
+    MediaItemData,
+    PrefetchHooks Function()> {
+  $$MediaItemTableTableManager(_$AppDatabase db, $MediaItemTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MediaItemTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MediaItemTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MediaItemTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<MediaType> type = const Value.absent(),
+            Value<String> url = const Value.absent(),
+            Value<String?> fileName = const Value.absent(),
+            Value<MediaFrom> from = const Value.absent(),
+            Value<BoxFit?> fit = const Value.absent(),
+            Value<int> orderNum = const Value.absent(),
+          }) =>
+              MediaItemCompanion(
+            id: id,
+            type: type,
+            url: url,
+            fileName: fileName,
+            from: from,
+            fit: fit,
+            orderNum: orderNum,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required MediaType type,
+            required String url,
+            Value<String?> fileName = const Value.absent(),
+            Value<MediaFrom> from = const Value.absent(),
+            Value<BoxFit?> fit = const Value.absent(),
+            required int orderNum,
+          }) =>
+              MediaItemCompanion.insert(
+            id: id,
+            type: type,
+            url: url,
+            fileName: fileName,
+            from: from,
+            fit: fit,
+            orderNum: orderNum,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$MediaItemTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $MediaItemTable,
+    MediaItemData,
+    $$MediaItemTableFilterComposer,
+    $$MediaItemTableOrderingComposer,
+    $$MediaItemTableAnnotationComposer,
+    $$MediaItemTableCreateCompanionBuilder,
+    $$MediaItemTableUpdateCompanionBuilder,
+    (
+      MediaItemData,
+      BaseReferences<_$AppDatabase, $MediaItemTable, MediaItemData>
+    ),
+    MediaItemData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
   $$BasicInfoTableTableManager get basicInfo =>
       $$BasicInfoTableTableManager(_db, _db.basicInfo);
-  $$TimetableTableTableManager get timetable =>
-      $$TimetableTableTableManager(_db, _db.timetable);
   $$PageTableTableManager get page => $$PageTableTableManager(_db, _db.page);
   $$ButtonTableTableManager get button =>
       $$ButtonTableTableManager(_db, _db.button);
+  $$MediaItemTableTableManager get mediaItem =>
+      $$MediaItemTableTableManager(_db, _db.mediaItem);
 }

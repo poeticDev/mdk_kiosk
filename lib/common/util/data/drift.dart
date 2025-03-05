@@ -1,15 +1,17 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:flutter/cupertino.dart' show BoxFit;
 import 'package:get_it/get_it.dart';
+
 import 'package:mdk_kiosk/common/util/data/model/basicInfo.dart';
 import 'package:mdk_kiosk/common/util/data/model/button.dart';
 import 'package:mdk_kiosk/common/util/data/model/button_with_page.dart';
 import 'package:mdk_kiosk/common/util/data/model/page.dart';
-import 'package:mdk_kiosk/common/util/data/model/timetable.dart';
+import 'package:mdk_kiosk/common/util/data/model/MediaItem.dart';
 
 part 'drift.g.dart';
 
-@DriftDatabase(tables: [BasicInfo, Timetable, Page, Button])
+@DriftDatabase(tables: [BasicInfo, Page, Button, MediaItem])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -57,7 +59,7 @@ class AppDatabase extends _$AppDatabase {
   Future<int> createBasicInfo(BasicInfoCompanion data) =>
       into(basicInfo).insert(data);
 
-  /// Pages
+  /// 2. Pages
   Future<List<PageData>> getPages() => select(page).get();
 
   // page를 생성
@@ -67,7 +69,7 @@ class AppDatabase extends _$AppDatabase {
   Future<int> updatePage(int id, PageCompanion data) =>
       (update(page)..where((t) => t.id.equals(id))).write(data);
 
-  /// Button
+  /// 3. Button
   Future<List<ButtonData>> getButtons() => select(button).get();
 
   Future<ButtonData?> getButtonById(int buttonId) async {
@@ -92,7 +94,7 @@ class AppDatabase extends _$AppDatabase {
     return (update(button)..where((t) => t.id.equals(id))).write(data);
   }
 
-  /// Button with Page
+  /// 2+3.Button with Page
   Future<List<ButtonWithPage>> getButtonWithPage() {
     final query = (select(button)
           ..orderBy([
@@ -109,4 +111,22 @@ class AppDatabase extends _$AppDatabase {
       return ButtonWithPage(button: buttonInfo, page: pageInfo);
     }).get();
   }
+
+
+  /// 4. MediaItem
+  Future<List<MediaItemData>> getMediaItems() => select(mediaItem).get();
+
+  // button 생성
+  Future<int> createMediaItems(MediaItemCompanion data) => into(mediaItem).insert(data);
+
+  // button 수정
+  Future<int> updateMediaItem(int id, MediaItemCompanion data) {
+    return (update(mediaItem)..where((t) => t.id.equals(id))).write(data);
+  }
+
+  Future<int> deleteMediaItem(int id) {
+    return (delete(mediaItem)..where((t) => t.id.equals(id))).go();
+  }
+
+
 }
