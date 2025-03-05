@@ -1,3 +1,4 @@
+import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_mqtt_manager/mqtt_manager.dart';
 import 'package:uuid/uuid.dart';
@@ -18,6 +19,8 @@ Future<void> openMqttManager() async {
     password: globalData.serverMqttPassword,
     clientId: Uuid().v4(),
   );
+
+  GetIt.I.registerSingleton<MqttManager>(mqttManager);
 
   await mqttManager.connect();
 }

@@ -112,14 +112,14 @@ class AppDatabase extends _$AppDatabase {
     }).get();
   }
 
-
   /// 4. MediaItem
   Future<List<MediaItemData>> getMediaItems() => select(mediaItem).get();
 
-  // button 생성
-  Future<int> createMediaItems(MediaItemCompanion data) => into(mediaItem).insert(data);
+  // MediaItem 생성
+  Future<int> createMediaItems(MediaItemCompanion data) =>
+      into(mediaItem).insert(data);
 
-  // button 수정
+  // MediaItem 수정
   Future<int> updateMediaItem(int id, MediaItemCompanion data) {
     return (update(mediaItem)..where((t) => t.id.equals(id))).write(data);
   }
@@ -128,5 +128,17 @@ class AppDatabase extends _$AppDatabase {
     return (delete(mediaItem)..where((t) => t.id.equals(id))).go();
   }
 
+  Future<void> upsertMediaItemByUrl(MediaItemCompanion data) async {
+    final existingItem = await (select(mediaItem)
+          ..where((t) => t.url.equals(data.url.value)))
+        .getSingleOrNull();
 
+    if (existingItem == null) {
+      // 해당 url이 없으면 새로 삽입
+      await createMediaItems(data);
+    } else {
+      // 해당 url이 있으면 기존 데이터 업데이트
+      await updateMediaItem(existingItem.id, data);
+    }
+  }
 }
