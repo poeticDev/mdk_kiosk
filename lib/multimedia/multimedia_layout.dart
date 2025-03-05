@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/multimedia/component/item_image.dart';
 import 'package:mdk_kiosk/multimedia/component/item_video.dart';
+import 'package:mdk_kiosk/multimedia/component/item_web_view.dart';
 
 class MultimediaLayout extends StatefulWidget {
   final List<Widget>? items;
@@ -33,7 +34,6 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
   void _handleVideoPlayEnded() {
     setState(() {
       isAutoPlaying = true;
-      carouselSliderController.nextPage();
     });
   }
 
@@ -62,16 +62,16 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
                 }
               },
             ),
-            items: [1, 2, 3].map((i) {
+            items: [4, 1, 2, 3].map((i) {
               return Builder(
                 builder: (BuildContext context) {
-                  if (i == 1) {
-                    return ItemVideo.fromGDrive(
-                      url: videoUrlFromGDrive,
-                      onPlayStart: _handleVideoPlayStarted,
-                      onPlayEnd: _handleVideoPlayEnded,
-                    );
-                  }
+                  // if (i == 1) {
+                  //   return ItemVideo.fromGDrive(
+                  //     url: videoUrlFromGDrive,
+                  //     onPlayStart: _handleVideoPlayStarted,
+                  //     onPlayEnd: _handleVideoPlayEnded,
+                  //   );
+                  // }
 
                   if (i == 2) {
                     return ItemImage(downloadUrl: imageUrlFromWeb);
@@ -81,6 +81,11 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
                     return ItemImage.fromGDrive(
                         url: imageUrlFromGDrive, fit: BoxFit.contain);
                   }
+
+                  if(i == 4) {
+                    return ItemWebView(url: webViewUrl);
+                  }
+
                   return Container(
                       width: mWidth,
                       // margin: EdgeInsets.symmetric(horizontal: 4.0),
