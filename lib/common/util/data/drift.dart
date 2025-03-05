@@ -7,7 +7,7 @@ import 'package:mdk_kiosk/common/util/data/model/basicInfo.dart';
 import 'package:mdk_kiosk/common/util/data/model/button.dart';
 import 'package:mdk_kiosk/common/util/data/model/button_with_page.dart';
 import 'package:mdk_kiosk/common/util/data/model/page.dart';
-import 'package:mdk_kiosk/common/util/data/model/MediaItem.dart';
+import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
 
 part 'drift.g.dart';
 

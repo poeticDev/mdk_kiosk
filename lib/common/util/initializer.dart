@@ -7,6 +7,7 @@ import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_kiosk/common/util/data/initial/default_buttons.dart';
 import 'package:mdk_kiosk/common/util/data/initial/default_pages.dart';
 import 'package:mdk_kiosk/common/util/data/initial/initial_basic_info.dart';
+import 'package:mdk_kiosk/common/util/data/initial/initial_media_item.dart';
 import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
@@ -38,6 +39,7 @@ class AppInitializer {
     final basicInfoData = await _initializeBasicInfo();
     await _initializePages();
     await _initializeButtons();
+    await _initializeMediaItems();
 
     /// 2.4 Database 데이터 로딩
     if (basicInfoData != null)
@@ -177,6 +179,38 @@ class AppInitializer {
 
       print('✅ 버튼 데이터 초기화 결과');
       print(resultCreatingButtons);
+    }
+  }
+
+
+  /// 2.3.4 미디어 아이템 초기화 메서드(globalData 미등록)
+  static Future<void> _initializeMediaItems() async {
+    final db = GetIt.I<AppDatabase>();
+
+    // 최신 buttonData 불러오기
+    List<MediaItemData>? mediaItemDataList = await db.getMediaItems();
+
+    // 앱 첫 실행 시, 초기값을 가져와 기본 정보에 저장
+    if (mediaItemDataList.isEmpty) {
+      Map<String, int> resultCreatingMediaItems = {};
+
+      // 기본 정보 생성
+      for (MediaItemCompanion mediaItemCompanion in DEFAULT_MEDIA_ITEM) {
+        try {
+          final result = await db.createMediaItems(mediaItemCompanion);
+
+          resultCreatingMediaItems = {
+            ...resultCreatingMediaItems,
+            mediaItemCompanion.title.value: result,
+          };
+        } catch (e) {
+          print('❌ mediaItem 초기화 실패 : $e');
+          return;
+        }
+      }
+
+      print('✅ 미디어 아이템 데이터 초기화 결과');
+      print(resultCreatingMediaItems);
     }
   }
 

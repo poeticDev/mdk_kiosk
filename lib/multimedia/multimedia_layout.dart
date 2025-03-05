@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
+import 'package:mdk_kiosk/common/util/data/drift.dart';
+import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
+import 'package:mdk_kiosk/common/view/splash_screen.dart';
 import 'package:mdk_kiosk/multimedia/component/item_image.dart';
 import 'package:mdk_kiosk/multimedia/component/item_video.dart';
 import 'package:mdk_kiosk/multimedia/component/item_web_view.dart';
@@ -25,16 +29,76 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
   bool isAutoPlaying = true;
   Color iconColor = ICON_COLOR;
 
-  void _handleVideoPlayStarted() {
+  late List<Widget> mediaItems;
+  bool _isLoading = true;
+
+  void _stopAutoPlay() {
     setState(() {
       isAutoPlaying = false;
     });
   }
 
-  void _handleVideoPlayEnded() {
+  void _startAutoPlay() {
     setState(() {
       isAutoPlaying = true;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeMediaItems();
+  }
+
+  void _initializeMediaItems() async {
+    final db = GetIt.I<AppDatabase>();
+
+    final List<MediaItemData> mediaItemDatas = await db.getMediaItems();
+
+    mediaItems = _RenderMediaItems(mediaItemDatas);
+  }
+
+  List<Widget> _RenderMediaItems(List<MediaItemData> mediaItemDatas) {
+    List<Widget> items = [];
+
+    for (MediaItemData mediaItemData in mediaItemDatas) {
+      if (mediaItemData.type == MediaType.image) {
+        items.add(ItemImage.fromMediaData(mediaItemData,
+          onLoadingStart: _stopAutoPlay,
+          onLoadingEnd: _startAutoPlay,
+        ));
+      } else if (mediaItemData.type == MediaType.video) {
+        items.add(
+          ItemVideo.fromMediaData(
+            mediaItemData,
+            onPlayStart: _stopAutoPlay,
+            onPlayEnd: _startAutoPlay,
+          ),
+        );
+      } else if (mediaItemData.type == MediaType.webView) {
+        items.add(
+          ItemWebView(url: mediaItemData.url),
+        );
+      }
+    }
+
+    if (items.isEmpty) {
+      items.add(
+        Center(
+          child: Text(
+            '미디어 정보가 없습니다',
+            style: TextStyle(fontSize: 32),
+          ),
+        ),
+      );
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+
+
+    return items;
   }
 
   @override
@@ -43,6 +107,10 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
       final mWidth = constraints.maxWidth;
       final mHeight = constraints.maxHeight;
       final iconSize = mHeight * 0.08;
+
+      if (_isLoading) {
+        return const Center(child: SplashScreen()); // 로딩 화면
+      }
 
       return Stack(
         children: [
@@ -58,47 +126,11 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
               onPageChanged: (index, reason) {
                 if (reason == CarouselPageChangedReason.manual) {
                   // 수동 슬라이드 넘김 → autoPlay 재개
-                  _handleVideoPlayEnded();
+                  _startAutoPlay();
                 }
               },
             ),
-            items: [4, 1, 2, 3].map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  // if (i == 1) {
-                  //   return ItemVideo.fromGDrive(
-                  //     url: videoUrlFromGDrive,
-                  //     onPlayStart: _handleVideoPlayStarted,
-                  //     onPlayEnd: _handleVideoPlayEnded,
-                  //   );
-                  // }
-
-                  if (i == 2) {
-                    return ItemImage(downloadUrl: imageUrlFromWeb);
-                  }
-
-                  if (i == 3) {
-                    return ItemImage.fromGDrive(
-                        url: imageUrlFromGDrive, fit: BoxFit.contain);
-                  }
-
-                  if(i == 4) {
-                    return ItemWebView(url: webViewUrl);
-                  }
-
-                  return Container(
-                      width: mWidth,
-                      // margin: EdgeInsets.symmetric(horizontal: 4.0),
-                      decoration: BoxDecoration(color: LECTURE_BG_COLORS[i]),
-                      child: Center(
-                        child: Text(
-                          '테스트 슬라이드 $i',
-                          style: TextStyle(fontSize: mHeight * 0.05),
-                        ),
-                      ));
-                },
-              );
-            }).toList(),
+            items: mediaItems,
           ),
           // 컨트롤 버튼
           // _RenderCarouselController(iconSize: iconSize),

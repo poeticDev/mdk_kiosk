@@ -9,26 +9,29 @@ class MediaItem extends Table {
   /// 1) 식별 아이디
   IntColumn get id => integer().autoIncrement()();
 
-  /// 2) 미디어 타입
+  /// 2) 미디어 이름
+  TextColumn get title => text().withDefault(const Constant('미디어 이름'))();
+
+  /// 3) 미디어 타입
   TextColumn get type => textEnum<MediaType>()();
 
-  /// 3) 주소
+  /// 4) 주소
   TextColumn get url => text()();
 
-  /// 4) 파일명
+  /// 5) 파일명
   /// - 없으면 url 마지막 부분에서 파일명 추출
   TextColumn get fileName => text().nullable()();
 
-  /// 5) 저장위치
+  /// 6) 저장위치
   TextColumn get from =>
       textEnum<MediaFrom>().withDefault(const Constant('gDrive'))();
 
-  /// 6) 미디어 표출 방식
+  /// 7) 미디어 표출 방식
   /// - cover(기본): 꽉 채움
   /// - contain: 여백이 있더라도 다 나오게)
   TextColumn get fit => textEnum<BoxFit>().nullable()();
 
-  /// 7) 표출 순서 : 기본 생성순
+  /// 8) 표출 순서 : 기본 생성순
   IntColumn get orderNum => integer()();
 }
 

@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
+import 'package:mdk_kiosk/common/util/data/drift.dart';
+import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
 import 'package:mdk_kiosk/common/view/splash_screen.dart';
 import 'package:mdk_kiosk/multimedia/util/download_manager.dart';
 
@@ -14,26 +16,62 @@ String imageUrlFromWeb =
 class ItemImage extends StatefulWidget {
   final String downloadUrl;
   final String? fileName;
-  final BoxFit fit;
+  final BoxFit? fit;
+  final VoidCallback? onLoadingStart;
+  final VoidCallback? onLoadingEnd;
 
   const ItemImage({
     super.key,
     required this.downloadUrl,
     this.fit = BoxFit.cover,
     this.fileName,
+    this.onLoadingStart,
+    this.onLoadingEnd,
   });
 
   /// 이미지가 구글 드라이브에 있을 때
   factory ItemImage.fromGDrive({
     required String url,
-    BoxFit fit = BoxFit.cover,
+    String? fileName,
+    BoxFit? fit = BoxFit.cover,
+    VoidCallback? onLoadingStart,
+    VoidCallback? onLoadingEnd,
   }) {
     final convertedUrl = DownloadManager().convertToDownloadUrl(url);
 
     return ItemImage(
       downloadUrl: convertedUrl,
+      fileName: fileName,
       fit: fit,
+      onLoadingStart: onLoadingStart,
+      onLoadingEnd: onLoadingEnd,
     );
+  }
+
+  /// 앱 db로부터 미디어데이터 불러와 생성하기
+  factory ItemImage.fromMediaData(
+    MediaItemData mediaItemData, {
+    VoidCallback? onLoadingStart,
+    VoidCallback? onLoadingEnd,
+  }) {
+    if (mediaItemData.from == MediaFrom.gDrive) {
+      return ItemImage.fromGDrive(
+        url: mediaItemData.url,
+        fileName:
+            mediaItemData.fileName ?? 'imageFromGDrive${mediaItemData.id}',
+        fit: mediaItemData.fit,
+        onLoadingStart: onLoadingStart,
+        onLoadingEnd: onLoadingEnd,
+      );
+    } else {
+      return ItemImage(
+        downloadUrl: mediaItemData.url,
+        fileName: mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.id}',
+        fit: mediaItemData.fit,
+        onLoadingStart: onLoadingStart,
+        onLoadingEnd: onLoadingEnd,
+      );
+    }
   }
 
   @override
@@ -68,10 +106,18 @@ class _ItemImageState extends State<ItemImage> {
 
   Future<void> _initializeImage() async {
     try {
+      if (widget.onLoadingStart != null) {
+        widget.onLoadingStart!();
+      }
+
       final DownloadManager downloadManager = DownloadManager();
 
       file = await downloadManager.downloadImage(
           widget.downloadUrl, widget.fileName);
+
+      if (widget.onLoadingEnd != null) {
+        widget.onLoadingEnd!();
+      }
 
       if (mounted) {
         setState(() {

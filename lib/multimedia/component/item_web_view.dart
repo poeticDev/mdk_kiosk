@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:mdk_kiosk/common/util/data/drift.dart';
 // import 'package:webview_flutter/webview_flutter.dart';
 // import 'package:webview_flutter_android/webview_flutter_android.dart';
 
@@ -12,6 +13,11 @@ class ItemWebView extends StatefulWidget {
 
   @override
   State<ItemWebView> createState() => _ItemWebViewState();
+
+  // factory ItemWebView.fromMediaData(MediaItemData mediaItemData){
+  //   return ItemWebView(url: mediaItemData.url);
+  //
+  // }
 }
 
 class _ItemWebViewState extends State<ItemWebView> {

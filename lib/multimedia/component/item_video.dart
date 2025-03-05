@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mdk_kiosk/common/util/data/drift.dart';
+import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
 
 import 'package:video_player/video_player.dart';
 
@@ -16,7 +18,7 @@ String videoUrlFromWeb =
 class ItemVideo extends StatefulWidget {
   final String downloadUrl;
   final String? fileName;
-  final BoxFit fit;
+  final BoxFit? fit;
   final VoidCallback? onPlayStart;
   final VoidCallback? onPlayEnd;
 
@@ -32,17 +34,46 @@ class ItemVideo extends StatefulWidget {
   /// 구글 드라이브 URL 모드
   factory ItemVideo.fromGDrive({
     required String url,
-    BoxFit fit = BoxFit.cover,
+    String? fileName,
+    BoxFit? fit = BoxFit.cover,
     VoidCallback? onPlayStart,
     VoidCallback? onPlayEnd,
   }) {
     final convertedUrl = _convertedFromGoogleURL(url);
     return ItemVideo(
       downloadUrl: convertedUrl,
+      fileName: fileName,
       fit: fit,
       onPlayStart: onPlayStart,
       onPlayEnd: onPlayEnd,
     );
+  }
+
+  /// 앱 db로부터 미디어데이터 불러와 생성하기
+  factory ItemVideo.fromMediaData(
+    MediaItemData mediaItemData, {
+    VoidCallback? onPlayStart,
+    VoidCallback? onPlayEnd,
+  }) {
+    if (mediaItemData.from == MediaFrom.gDrive) {
+      return ItemVideo.fromGDrive(
+        url: mediaItemData.url,
+        fileName:
+        mediaItemData.fileName ?? 'videoFromGDrive${mediaItemData.id}',
+        fit: mediaItemData.fit,
+        onPlayStart: onPlayStart,
+        onPlayEnd: onPlayEnd,
+      );
+    } else {
+      return ItemVideo(
+        downloadUrl: mediaItemData.url,
+        fileName:
+        mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.id}',
+        fit: mediaItemData.fit,
+        onPlayStart: onPlayStart,
+        onPlayEnd: onPlayEnd,
+      );
+    }
   }
 
   // 구글 드라이브 URL을 다운로드 URL로 변환
@@ -87,6 +118,8 @@ class _ItemVideoState extends State<ItemVideo> {
     try {
       final DownloadManager downloadManager = DownloadManager();
 
+      widget.onPlayStart?.call();
+
       file = await downloadManager.downloadVideo(
           widget.downloadUrl, widget.fileName);
 
@@ -111,9 +144,9 @@ class _ItemVideoState extends State<ItemVideo> {
   }
 
   void _videoListener() {
-    if (_controller.value.isPlaying) {
-      widget.onPlayStart?.call(); // 재생 시작
-    }
+    // if (_controller.value.isPlaying) {
+    //   widget.onPlayStart?.call(); // 재생 시작
+    // }
 
     if (_controller.value.position >= _controller.value.duration) {
       widget.onPlayEnd?.call(); // 재생 끝
@@ -122,7 +155,6 @@ class _ItemVideoState extends State<ItemVideo> {
 
   @override
   void dispose() {
-
     _controller.removeListener(_videoListener);
     _controller.dispose();
     super.dispose();
