@@ -20,17 +20,13 @@ import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
 class MediaController {
   /// 싱글턴 패턴
   static final MediaController _instance = MediaController._internal();
+  DateTime lastModified = _nowKST();
 
   factory MediaController() => _instance;
 
   MediaController._internal();
 
   final AppDatabase db = GetIt.I<AppDatabase>();
-
-  void sendAllMediaList() {
-
-
-  }
 
   /// App -> [MQTT] -> Server
   // BoxFit을 문자열로 변환하는 헬퍼 메서드
@@ -105,4 +101,45 @@ class MediaController {
     );
   }
 
+  List<MediaItemCompanion> jsonToCompanionList(
+      List<Map<String, dynamic>> jsonList) {
+    return jsonList.map((json) {
+      return MediaItemCompanion(
+        title: Value(json['title'] ?? '미디어 이름'),
+        type: Value(MediaType.values.byName(json['type'])),
+        url: Value(json['url']),
+        fileName: Value(json['fileName']),
+        from: Value(MediaFrom.values.byName(json['from'] ?? 'gDrive')),
+        fit: json['fit'] != null
+            ? Value(BoxFit.values.byName(json['fit']))
+            : const Value.absent(),
+        orderNum: Value(json['orderNum'] ?? 0),
+      );
+    }).toList();
+  }
+
+  /// MediaItemData 핸들링
+  void mediaDataHandler(
+      {required List<Map<String, dynamic>> mediaDataList,
+      required DateTime timeRecord}) {
+    // 최신 데이터가 아니면 무시
+    if (lastModified.isAfter(timeRecord)) {
+      return;
+    } else {
+      lastModified = timeRecord;
+    }
+
+    // MediaItemCompanion 변환
+    final List<MediaItemCompanion> mediaItemCompanionList =
+        jsonToCompanionList(mediaDataList);
+
+    // MediaItem 동기화
+    db.syncMediaItems(mediaItemCompanionList);
+
+    // 화면 rebuild하는 방법 투입(데이터베이스에서 불러오기부터 필요)
+  }
+
+  static DateTime _nowKST() {
+    return DateTime.now().toUtc().add(Duration(hours: 9));
+  }
 }

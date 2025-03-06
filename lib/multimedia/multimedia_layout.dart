@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -103,6 +105,15 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
 
   @override
   Widget build(BuildContext context) {
+    // print('nodeRedToFlutterData: $nodeRedToFlutterData');
+    // print('nodeRedToFlutterData.runtimeType: ${nodeRedToFlutterData.runtimeType}');
+    // print('jsonEncode(nodeRedToFlutterData): ${jsonEncode(nodeRedToFlutterData)}');
+    // print('jsonEncode(nodeRedToFlutterData).runtimeType: ${jsonEncode(nodeRedToFlutterData).runtimeType}');
+    // print('jsonDecode(jsonEncode(nodeRedToFlutterData)): ${jsonDecode(jsonEncode(nodeRedToFlutterData))}');
+    // print('jsonDecode(jsonEncode(nodeRedToFlutterData)).runtimeType: ${jsonDecode(jsonEncode(nodeRedToFlutterData)).runtimeType}');
+
+
+
     return LayoutBuilder(builder: (context, constraints) {
       final mWidth = constraints.maxWidth;
       final mHeight = constraints.maxHeight;

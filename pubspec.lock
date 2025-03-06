@@ -869,15 +869,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
-  mdk_mqtt_manager:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: main
-      resolved-ref: "09f5a277949a3100f4b1dc2ef718679bc261b4f5"
-      url: "https://github.com/poeticDev/mdk_mqtt_manager"
-    source: git
-    version: "0.0.2"
   meta:
     dependency: transitive
     description:
@@ -895,7 +886,7 @@ packages:
     source: hosted
     version: "2.0.0"
   mqtt_client:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mqtt_client
       sha256: "37aae360fac0b3322cb37267696c1535e1ad2984a13064d877273ffe4b16ca7a"

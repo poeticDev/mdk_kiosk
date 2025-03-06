@@ -12,6 +12,7 @@ import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
 import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
+import 'package:uuid/uuid.dart';
 
 class AppInitializer {
   static Future<void> initialize() async {
@@ -50,13 +51,15 @@ class AppInitializer {
     openOscManager();
 
     /// 3.2 MQTT
-    openMqttManager();
+    await openMqttManager();
+    subscribeTopics();
+
+
 
     /// 4. 시간표 연결
     final gSheet = GoogleSheets(sheetName: globalData.roomId);
     await gSheet.initialize();
     GetIt.I.registerSingleton<GoogleSheets>(gSheet);
-
   }
 
   /// 1. 하드웨어 세팅
@@ -182,7 +185,6 @@ class AppInitializer {
     }
   }
 
-
   /// 2.3.4 미디어 아이템 초기화 메서드(globalData 미등록)
   static Future<void> _initializeMediaItems() async {
     final db = GetIt.I<AppDatabase>();
@@ -214,11 +216,34 @@ class AppInitializer {
     }
   }
 
-  /// . Network
+  /// 3.2. Network
+  /// 3.2.1 MqttManager 오픈
+  static Future<MqttManager> openMqttManager() async {
+    // oscManager가 열려있으면 일단 닫음
+    try {
+      mqttManager.hashCode;
+      mqttManager.disconnect();
+    } catch (_) {}
 
-  void _mqttConnect() async {
+    mqttManager = MqttManager(
+      broker: globalData.serverIp,
+      port: globalData.serverMqttPort,
+      userName: globalData.serverMqttId,
+      password: globalData.serverMqttPassword,
+      clientId: Uuid().v4(),
+    );
+
+    GetIt.I.registerSingleton<MqttManager>(mqttManager);
     await mqttManager.connect();
-    mqttManager.subscribe('msg/#');
-    mqttManager.listen((String topic, String payload) {});
+
+    return mqttManager;
+  }
+
+  /// 3.2.2 토픽 구독
+  static void subscribeTopics() {
+    for (var topic in subscribingTopics) {
+      mqttManager.subscribe(topic);
+    }
+    mqttManager.listen(onMqttReceived);
   }
 }

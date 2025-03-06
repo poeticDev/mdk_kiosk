@@ -141,4 +141,24 @@ class AppDatabase extends _$AppDatabase {
       await updateMediaItem(existingItem.id, data);
     }
   }
+
+  Future<void> syncMediaItems(List<MediaItemCompanion> newItems) async {
+    // 현재 DB에 저장된 모든 URL 가져오기
+    final currentItems = await getMediaItems();
+    final currentUrls = currentItems.map((e) => e.url).toSet();
+
+    // 새로 받은 데이터의 URL 추출
+    final newUrls = newItems.map((e) => e.url.value).toSet();
+
+    // 삭제할 URL 목록 (기존에는 있는데, 새 데이터엔 없는 것들)
+    final urlsToDelete = currentUrls.difference(newUrls);
+
+    // 삭제 작업
+    await (delete(mediaItem)..where((tbl) => tbl.url.isIn(urlsToDelete))).go();
+
+    // 새 데이터는 upsert로 삽입/수정
+    for (final item in newItems) {
+      await upsertMediaItemByUrl(item);
+    }
+  }
 }

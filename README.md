@@ -44,6 +44,7 @@ mdk_kiosk
         - Value
           {
           "roomId": "0-004-0101",
+          "timeRecord" : timeInUtc,
           "data": {
             "mediaData": {
               {
