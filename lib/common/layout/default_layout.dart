@@ -37,6 +37,18 @@ class DefaultLayout extends StatelessWidget {
             maxWidth: maxWidth,
             maxHeight: maxHeight,
           ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.indigo.withAlpha(100),
+                Colors.indigo.withAlpha(60),
+                Colors.transparent,
+                Colors.transparent,
+              ],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+          ),
           child: Padding(
             padding: EdgeInsets.all(padding),
             child: Column(
@@ -63,9 +75,8 @@ class DefaultLayout extends StatelessWidget {
                 ),
                 // 3. 멀티미디어
                 MorphContainer(
-                  child: _MultiMedia(
-                      width: maxWidth,
-                      height: (maxWidth) * 9 / 16),
+                  child:
+                      _MultiMedia(width: maxWidth, height: (maxWidth) * 9 / 16),
                 ),
                 SizedBox(
                   height: padding * 0.7,

@@ -117,8 +117,8 @@ class _ItemVideoState extends State<ItemVideo> {
   Future<void> _initializeVideo() async {
     try {
       final DownloadManager downloadManager = DownloadManager();
-
       widget.onPlayStart?.call();
+
 
       file = await downloadManager.downloadVideo(
           widget.downloadUrl, widget.fileName);
@@ -144,9 +144,9 @@ class _ItemVideoState extends State<ItemVideo> {
   }
 
   void _videoListener() {
-    // if (_controller.value.isPlaying) {
-    //   widget.onPlayStart?.call(); // 재생 시작
-    // }
+    if (_controller.value.isPlaying) {
+      widget.onPlayStart?.call(); // 재생 시작
+    }
 
     if (_controller.value.position >= _controller.value.duration) {
       widget.onPlayEnd?.call(); // 재생 끝
