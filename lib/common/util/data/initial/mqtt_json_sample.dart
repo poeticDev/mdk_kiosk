@@ -124,7 +124,8 @@ final jsonSample = {
   ],
   "message": {
     "target": "kiosk, controller",
-    "until": "TimeInUtc",
+    "until": "TimeInKSTf",
+    "type" : "type",
     "content": "전달사항"
   }
 };

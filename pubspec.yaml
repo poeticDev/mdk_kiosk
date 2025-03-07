@@ -69,6 +69,7 @@ dependencies:
   #### 아이콘
   cupertino_icons: ^1.0.8
   flutter_octicons: ^1.45.0
+  flutter_svg: ^2.0.17
   #### 테마 & 순수 디자인 요소
   flutter_neumorphic_plus: ^3.4.0
   dotted_line: ^3.2.3
@@ -115,6 +116,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - asset/img/
+    - asset/img/svg/
     - asset/env/
 
   # An image asset can refer to one or more resolution-specific "variants", see

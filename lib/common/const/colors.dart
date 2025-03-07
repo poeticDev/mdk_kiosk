@@ -17,6 +17,12 @@ const TEXT_COLOR = Color(0xFF2C3740);
 const BODY_TEXT_COLOR = Color(0xFF485157);
 const WHITE_TEXT_COLOR = Color(0xFFFDF8F8);
 
+/// 헤더
+const Color normalBlue = Color(0xff7fc3f1);
+const Color warningRed = Color(0xffe26d72);
+const Color checkGreen = Color(0xff70b38c);
+const Color announceYellow = Color(0xffffc785);
+
 /// 시간표
 // 구분선 컬러
 const DIVIDER_COLOR = Color(0xFF485157);

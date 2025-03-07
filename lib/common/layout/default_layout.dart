@@ -52,9 +52,7 @@ class DefaultLayout extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // 1. 헤더
-                MorphContainer(
-                  child: HeaderLayout(height: maxHeight * 0.035),
-                ),
+                HeaderLayout(height: maxHeight * 0.035),
                 // ElevatedButton(
                 //   onPressed: () {
                 //     context.go('/test');

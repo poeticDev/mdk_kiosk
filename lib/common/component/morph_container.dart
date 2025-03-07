@@ -3,9 +3,11 @@ import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 
 class MorphContainer extends StatelessWidget {
+  final Color color;
   final Widget child;
 
-  const MorphContainer({required this.child, super.key});
+  const MorphContainer(
+      {required this.child, super.key, this.color = COMPONENT_BG_COLOR});
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +48,11 @@ class MorphContainer extends StatelessWidget {
         boxShape: NeumorphicBoxShape.roundRect(
           BorderRadius.circular(32.0),
         ),
-        color: COMPONENT_BG_COLOR,
+        color: color,
         shadowLightColor: Color(0xFFF9F9FF),
         depth: 8,
         intensity: 0.68,
       ),
-
       child: child,
     );
   }
