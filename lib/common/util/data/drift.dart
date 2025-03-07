@@ -113,7 +113,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   /// 4. MediaItem
-  Future<List<MediaItemData>> getMediaItems() => select(mediaItem).get();
+  Future<List<MediaItemData>> getMediaItemDataList() => select(mediaItem).get();
 
   // MediaItem 생성
   Future<int> createMediaItems(MediaItemCompanion data) =>
@@ -144,7 +144,7 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> syncMediaItems(List<MediaItemCompanion> newItems) async {
     // 현재 DB에 저장된 모든 URL 가져오기
-    final currentItems = await getMediaItems();
+    final currentItems = await getMediaItemDataList();
     final currentUrls = currentItems.map((e) => e.url).toSet();
 
     // 새로 받은 데이터의 URL 추출

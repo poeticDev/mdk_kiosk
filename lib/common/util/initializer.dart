@@ -190,7 +190,7 @@ class AppInitializer {
     final db = GetIt.I<AppDatabase>();
 
     // 최신 buttonData 불러오기
-    List<MediaItemData>? mediaItemDataList = await db.getMediaItems();
+    List<MediaItemData>? mediaItemDataList = await db.getMediaItemDataList();
 
     // 앱 첫 실행 시, 초기값을 가져와 기본 정보에 저장
     if (mediaItemDataList.isEmpty) {

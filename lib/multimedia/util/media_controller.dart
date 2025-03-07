@@ -58,6 +58,17 @@ class MediaController {
     };
   }
 
+  ///  미디어 아이템 목록을 mdk mqtt 형식의 json 변환
+  String mediaItemDataListToJson(List<MediaItemData> mediaItemDataList) {
+    final String timeRecord = _nowKST().toString();
+    final Map<String, dynamic> formattedData = {
+      "timeRecord": timeRecord,
+      "mediaData": mediaItemDataList,
+    };
+
+    return jsonEncode(formattedData);
+  }
+
   void dataListToJson(List<MediaItemData> mediaItemDataList) {
     final List<Map<String, dynamic>> jsonList = mediaItemDataList
         .map((mediaItem) => mediaItemDataToJson(mediaItem))
@@ -113,9 +124,22 @@ class MediaController {
         fit: json['fit'] != null
             ? Value(BoxFit.values.byName(json['fit']))
             : const Value.absent(),
-        orderNum: Value(int.tryParse(json['orderNum'] ?? '999')!),
+        orderNum: Value(_intParser(json['orderNum'])),
       );
     }).toList();
+  }
+
+  int _intParser(dynamic data) {
+    if (data == null) return 999;
+
+    late final int result;
+    try {
+      result = int.tryParse(data)!;
+    } catch (e) {
+      result = data;
+    }
+
+    return result;
   }
 
   /// MediaItemData 핸들링

@@ -56,7 +56,7 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
   void _initializeMediaItems() async {
     final db = GetIt.I<AppDatabase>();
 
-    final List<MediaItemData> mediaItemDatas = await db.getMediaItems();
+    final List<MediaItemData> mediaItemDatas = await db.getMediaItemDataList();
 
     mediaItems = _RenderMediaItems(mediaItemDatas);
   }
