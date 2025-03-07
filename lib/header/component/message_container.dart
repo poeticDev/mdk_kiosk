@@ -91,14 +91,17 @@ class _MessageContainerState extends State<MessageContainer> {
                     children: [
                       SizedBox(width: 44),
                       Expanded(
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          controller: _scrollController,
-                          child: Text(
-                            widget.messageData.content,
-                            style: TITLE_TEXT_STYLE.copyWith(
-                                fontSize: widget.fontSize,
-                                color: WHITE_TEXT_COLOR),
+                        child: ScrollConfiguration(
+                          behavior: ScrollBehavior(), // 오버스크롤 글로우 제거
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: _scrollController,
+                            child: Text(
+                              widget.messageData.content,
+                              style: TITLE_TEXT_STYLE.copyWith(
+                                  fontSize: widget.fontSize,
+                                  color: WHITE_TEXT_COLOR),
+                            ),
                           ),
                         ),
                       ),
