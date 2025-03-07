@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
-import 'package:mdk_kiosk/common/const/style.dart';
-import 'package:mdk_kiosk/common/util/data/global_data.dart';
+import 'package:mdk_kiosk/header/header_layout.dart';
 import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
 
 class DefaultLayout extends StatelessWidget {
@@ -55,17 +53,17 @@ class DefaultLayout extends StatelessWidget {
               children: [
                 // 1. 헤더
                 MorphContainer(
-                  child: _Header(height: maxHeight * 0.035),
+                  child: HeaderLayout(height: maxHeight * 0.035),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    context.go('/test');
-                  },
-                  child: Text(
-                    'TEST_PAGE',
-                    style: BODY_TEXT_STYLE,
-                  ),
-                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     context.go('/test');
+                //   },
+                //   child: Text(
+                //     'TEST_PAGE',
+                //     style: BODY_TEXT_STYLE,
+                //   ),
+                // ),
                 SizedBox(
                   height: padding,
                 ),
@@ -98,28 +96,6 @@ class DefaultLayout extends StatelessWidget {
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _Header({double? height}) {
-    return SizedBox(
-      height: height ?? 80.0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              globalData.roomName,
-              style: TITLE_TEXT_STYLE.copyWith(fontSize: (height ?? 80) * 0.36),
-            ),
-            Text(
-              globalData.titleText,
-              style: TITLE_TEXT_STYLE.copyWith(fontSize: (height ?? 80) * 0.36),
-            ),
-          ],
         ),
       ),
     );

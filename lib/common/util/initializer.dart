@@ -15,12 +15,34 @@ import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
 import 'package:uuid/uuid.dart';
 
 class AppInitializer {
-  static Future<void> initialize() async {
+  static bool _isInitialized = false;
+
+  /// 싱글턴 패턴
+  static final AppInitializer _instance = AppInitializer._internal();
+
+  factory AppInitializer() => _instance;
+
+  AppInitializer._internal();
+
+  static bool getInitializedStatus() {
+    return _isInitialized;
+  }
+
+  static String state = '';
+
+  static Stream<String> initialize() async* {
+    if (_isInitialized) {
+      yield 'done';
+      return;
+    }
+
     /// 1. 하드웨어 세팅
     /// 1.1 필수권한 요청
+    yield '필수 권한 요청 중...';
     await _requestPermissions();
 
     /// 1.2 세로모드 고정
+    yield '세로 모드 고정 중...';
     await _setOnlyPortrait();
 
     /// 1.3 하단 네비게이션 바 숨김
@@ -34,32 +56,40 @@ class AppInitializer {
     GetIt.I.allowReassignment = true;
 
     /// 2.2 Database 열기
+    yield 'Database 여는 중...';
     AppDatabase.openDB();
 
     /// 2.3 첫 실행 시 초기 Data 등록
+    yield 'Database 초기화 중...';
     final basicInfoData = await _initializeBasicInfo();
     await _initializePages();
     await _initializeButtons();
     await _initializeMediaItems();
 
     /// 2.4 Database 데이터 로딩
+    yield 'Database 데이터 로딩 중...';
     if (basicInfoData != null)
       globalData.updateFromBasicInfoData(basicInfoData: basicInfoData);
 
     /// 3. Network
     /// 3.1 OSC
+    yield 'OSC 매니저 초기화 중...';
     openOscManager();
 
     /// 3.2 MQTT
+    yield 'MQTT 매니저 초기화 중...';
     await openMqttManager();
     subscribeTopics();
 
-
-
     /// 4. 시간표 연결
+    yield '시간표 불러오는 중...';
     final gSheet = GoogleSheets(sheetName: globalData.roomId);
     await gSheet.initialize();
     GetIt.I.registerSingleton<GoogleSheets>(gSheet);
+
+    _isInitialized = true;
+
+    yield ' ';
   }
 
   /// 1. 하드웨어 세팅
