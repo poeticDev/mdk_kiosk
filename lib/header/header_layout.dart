@@ -28,27 +28,30 @@ class HeaderLayout extends ConsumerStatefulWidget {
 
 class _HeaderLayoutState extends ConsumerState<HeaderLayout>
     with SingleTickerProviderStateMixin {
-  // message 자동 넘기기
+  // 오토슬라이드 타이머
   Timer? _timer;
+
+  // 현재 표출 중인 헤더
   int _currentIndex = 0;
   late AnimationController _fadeController;
+
+  // 현재 애니메이션 상태 -> 메세지 컨테이너가 계속 리빌드되면서 불필요한 스크롤 컨트롤러가 계속 생성되는 걸 막아줌
   bool isFading = true;
+
+  // 헤더 수에 따라 오토슬라이드 관리
   int? childrenCount;
 
   @override
   void initState() {
     super.initState();
+    // vsync 때문에 여기서 정의
     _fadeController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(milliseconds: 500),
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
+  // 오토슬라이드 시작
   void _startAutoSlide() {
     _fadeController.forward();
 
@@ -59,6 +62,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
     });
   }
 
+  // 오토슬라이드 중지
   void _stopAutoSlide() {
     _timer?.cancel();
     _timer = null;
@@ -71,9 +75,11 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
     super.dispose();
   }
 
+  // 헤더 생성
   List<Widget> _childList(List<Message> messageList) {
     List<Widget> childList = [
       DefaultHeader(),
+      // Test용
       MessageContainer(
         height: widget.height,
         padding: widget.padding,
@@ -83,11 +89,48 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
               Duration(minutes: 10),
             ),
             type: MessageType.check,
-            content: '학과 메세지가 있으면 여기에 표시됩니다. 길어지면 애니메이션이 적용됩니다 에헤라디아'),
+            content: '테스트 1. 체크 타입입니다. 학과 메세지가 있으면 여기에 표시됩니다.'),
+        isFading: isFading,
+      ),
+      MessageContainer(
+        height: widget.height,
+        padding: widget.padding,
+        fontSize: widget.fontSize,
+        messageData: Message(
+            until: DateTime.now().add(
+              Duration(minutes: 10),
+            ),
+            type: MessageType.announce,
+            content: '테스트2. 공지사항 타입입니다. 메세지가 한번에 표시되는 길이보다 더 길어지면 3초 뒤에 흐르기 시작합니다.'),
+        isFading: isFading,
+      ),
+      MessageContainer(
+        height: widget.height,
+        padding: widget.padding,
+        fontSize: widget.fontSize,
+        messageData: Message(
+            until: DateTime.now().add(
+              Duration(minutes: 10),
+            ),
+            type: MessageType.warning,
+            content: '테스트3. 경고 타입입니다. 메세지는 약 12초간 노출됩니다.'),
+        isFading: isFading,
+      ),
+      MessageContainer(
+        height: widget.height,
+        padding: widget.padding,
+        fontSize: widget.fontSize,
+        messageData: Message(
+            until: DateTime.now().add(
+              Duration(minutes: 10),
+            ),
+            type: MessageType.normal,
+            content: '테스트4. 일반 타입입니다.'),
         isFading: isFading,
       ),
     ];
 
+    // 학과 메세지가 있을 경우, 헤더 생성
     if (messageList.isNotEmpty) {
       for (Message messageData in messageList) {
         childList.add(
@@ -104,6 +147,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
     return childList;
   }
 
+  // 페이드 상태에 따라 헤더를 재생성(메모리 누수 방지)
   void _onStatusChanged(status) {
     if (status == AnimationStatus.completed) {
       setState(() {
@@ -126,10 +170,11 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
     final messageWatcher = ref.watch(messageControllerProvider);
     final children = _childList(messageWatcher);
 
+    // 헤더 수에 따라 오토슬라이드 설정
     if (childrenCount == null || childrenCount != children.length) {
       childrenCount = children.length;
       _stopAutoSlide();
-      if (children.length <= 1) {
+      if (childrenCount! <= 1) {
         setState(() {
           _fadeController.removeStatusListener(_onStatusChanged);
           // 1개 이하면 슬라이드 불필요

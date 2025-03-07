@@ -12,8 +12,6 @@ class MessageContainer extends StatelessWidget {
   final Message messageData;
   final bool isFading;
 
-  // final ScrollController scrollController; // <- 외부에서 받음
-
   const MessageContainer({
     super.key,
     required this.height,
@@ -21,9 +19,9 @@ class MessageContainer extends StatelessWidget {
     required this.fontSize,
     required this.messageData,
     required this.isFading,
-    // required this.scrollController,
   });
 
+  // 스크롤이 가능해지면(메세지가 길어지면) 자동 스크롤
   void _startScrollingIfNeeded(ScrollController scrollController) {
     if (isFading) return;
 
@@ -65,7 +63,7 @@ class MessageContainer extends StatelessWidget {
                 child: ClipRect(
                   child: Row(
                     children: [
-                      SizedBox(width: 44),
+                      SizedBox(width: 50),
                       Expanded(
                         child: ScrollConfiguration(
                           behavior: ScrollBehavior(),
