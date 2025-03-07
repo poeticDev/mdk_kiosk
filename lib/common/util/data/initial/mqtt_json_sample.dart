@@ -72,7 +72,7 @@ const observerToNodeRed = {
 /// 3. 개별 강의실 서버 -> flutter(키오스크, 컨트롤러 앱)
 /// 3.1. topic : node-mdk/{kiosk / tablet}/data
 final nodeRedToFlutterData = {
-  "timeRecord": DateTime(1),
+  "timeRecord": DateTime.now().toString(),
   "mediaData": [
     {
       'id': "data.id",
@@ -99,6 +99,33 @@ final nodeRedToFlutterData = {
     "target": "kiosk, controller",
     "until": "TimeInUtc",
     "content": "전달사항",
+  }
+};
+
+final jsonSample = {
+  "timeRecord": "2025-03-06 20:47:33.258722",
+  "mediaData": [
+    {
+      "id": "1",
+      "title": "2025새해복",
+      "type": "image",
+      "url": "https://www.gnu.ac.kr/upload/main/na/bbs_5171/ntt_2264748/img_44ab9c58-a741-4b93-bd7b-ddeee17c0ac11736728581323.png",
+      "from": "etc",
+      "orderNum": "1"
+    },
+    {
+      "id": "2",
+      "title": "수강정정 안내",
+      "type": "image",
+      "url": "https://drive.google.com/file/d/1YKPA7ezjTsN1jIc79Zs0NM7Me-akXWVA/view?usp=sharing",
+      "from": "gDrive",
+      "orderNum": "2"
+    }
+  ],
+  "message": {
+    "target": "kiosk, controller",
+    "until": "TimeInUtc",
+    "content": "전달사항"
   }
 };
 

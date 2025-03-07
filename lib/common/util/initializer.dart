@@ -219,11 +219,15 @@ class AppInitializer {
   /// 3.2. Network
   /// 3.2.1 MqttManager 오픈
   static Future<MqttManager> openMqttManager() async {
-    // oscManager가 열려있으면 일단 닫음
+    print('MqttManager를 오픈 중입니다...');
+    // // oscManager가 열려있으면 일단 닫음
     try {
       mqttManager.hashCode;
       mqttManager.disconnect();
     } catch (_) {}
+
+    print(globalData.serverIp.toString());
+    print(globalData.serverMqttPort.toString());
 
     mqttManager = MqttManager(
       broker: globalData.serverIp,
@@ -241,7 +245,7 @@ class AppInitializer {
 
   /// 3.2.2 토픽 구독
   static void subscribeTopics() {
-    for (var topic in subscribingTopics) {
+    for (var topic in SUBSCRIBING_TOPICS) {
       mqttManager.subscribe(topic);
     }
     mqttManager.listen(onMqttReceived);

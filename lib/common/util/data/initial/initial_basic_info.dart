@@ -15,8 +15,8 @@ const String initialTitleText = "자율전공학부";
 // const String initialMyPassword = '12344321!';
 
 /// 3. 서버 정보
-const String initialServerIp =  '192.168.219.122';
+const String initialServerIp =  '192.168.219.186';
 // const int initialServerOscPort = 12321;
-// const int initialServerMqttPort = 1883;
+const int initialServerMqttPort = 1883;
 // const int initialServerMqttId = 'mdk';
 // const int initialServerMqttPassword = '12344321';

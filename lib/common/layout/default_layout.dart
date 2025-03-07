@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
@@ -58,7 +57,15 @@ class DefaultLayout extends StatelessWidget {
                 MorphContainer(
                   child: _Header(height: maxHeight * 0.035),
                 ),
-                // CustomDivider(),
+                ElevatedButton(
+                  onPressed: () {
+                    context.go('/test');
+                  },
+                  child: Text(
+                    'TEST_PAGE',
+                    style: BODY_TEXT_STYLE,
+                  ),
+                ),
                 SizedBox(
                   height: padding,
                 ),

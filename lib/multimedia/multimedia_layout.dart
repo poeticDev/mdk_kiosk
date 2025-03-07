@@ -6,6 +6,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
+import 'package:mdk_kiosk/common/util/data/initial/mqtt_json_sample.dart';
 import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
 import 'package:mdk_kiosk/common/view/splash_screen.dart';
 import 'package:mdk_kiosk/multimedia/component/item_image.dart';

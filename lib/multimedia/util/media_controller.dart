@@ -113,7 +113,7 @@ class MediaController {
         fit: json['fit'] != null
             ? Value(BoxFit.values.byName(json['fit']))
             : const Value.absent(),
-        orderNum: Value(json['orderNum'] ?? 0),
+        orderNum: Value(int.tryParse(json['orderNum'] ?? '999')!),
       );
     }).toList();
   }
@@ -124,6 +124,7 @@ class MediaController {
       required DateTime timeRecord}) {
     // 최신 데이터가 아니면 무시
     if (lastModified.isAfter(timeRecord)) {
+      print('✅ 최신 미디어아이템 데이터가 아닙니다');
       return;
     } else {
       lastModified = timeRecord;

@@ -5,15 +5,23 @@ import 'package:mdk_kiosk/multimedia/util/media_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
-const List<String> subscribingTopics = ['node-mdk/data', 'node-mdk/sensor'];
+const KIOSK_NAME = 'wall_hub';
+
+const List<String> SUBSCRIBING_TOPICS = [
+  'node-mdk/+/$KIOSK_NAME',
+  'node-mdk/states',
+];
 
 late MqttManager mqttManager;
 
 /// Mqtt 수신시
 void onMqttReceived(String topic, String message) {
-  if (topic == 'data') {
+  // data : media data, message
+  if (topic.split('/').last == KIOSK_NAME) {
     mqttDataHandler(message);
-  } else if (topic == 'states') {}
+  }
+  // states
+  else if (topic == 'node-mdk/states') {}
 }
 
 /// Kiosk Data 핸들링
@@ -23,7 +31,7 @@ void mqttDataHandler(String dataJson) {
 
   // 발행시간이 없을 경우, 무시
   try {
-    timeRecord = parsedData['timeRecord'] as DateTime;
+    timeRecord = DateTime.parse(parsedData['timeRecord']);
   } catch (e) {
     print('❌ MQTT data에 발행시간이 없습니다');
     return;
@@ -32,14 +40,23 @@ void mqttDataHandler(String dataJson) {
   final List<String> keys = parsedData.keys.toList();
 
   if (keys.contains('mediaData')) {
-    final List<Map<String, dynamic>> mediaDataList = parsedData['mediaData'];
+    final List<dynamic> rawList = parsedData['mediaData'];
 
-    MediaController().mediaDataHandler(
-        mediaDataList: mediaDataList, timeRecord: timeRecord);
-  } else if (keys.contains('message')) {
-    final String message = parsedData['message'];
+    final List<Map<String, dynamic>> mediaDataList = rawList.map((item) {
+      return item as Map<String, dynamic>;
+    }).toList();
+
+    // final List<Map<String, dynamic>> mediaDataList = parsedData['mediaData'] as List<Map<String, dynamic>>;
+
+    MediaController()
+        .mediaDataHandler(mediaDataList: mediaDataList, timeRecord: timeRecord);
+  }
+
+  if (keys.contains('message')) {
+    final Map<String, dynamic> message = parsedData['message'];
     // ✅
     print('✅ MQTT 메세지 수신');
+    print(message);
   }
 }
 
@@ -139,8 +156,12 @@ class MqttManager {
   void listen(void Function(String topic, String message) onMessageReceived) {
     _client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
       final recMess = c![0].payload as MqttPublishMessage;
-      final payload =
-          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+      final payload = utf8.decode(recMess.payload.message);
+
+      // 한글이 깨지는 변환방식
+      // final payload =
+      //     MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
       print('📩 수신된 메시지: ${c[0].topic} → "$payload"');
       onMessageReceived(c[0].topic, payload);
     });
