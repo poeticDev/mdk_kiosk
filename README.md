@@ -3,8 +3,9 @@
 mdk_kiosk
 
 # 다음 할일
-
-##  
+- 메세지 MQTT 수신 메서드 만들기
+- 메시지 듀레이션 지나면 폭파되게 만들기
+- 관리자 모드 만들기
 
 ## Getting Started
 
@@ -46,28 +47,29 @@ mdk_kiosk
           "roomId": "0-004-0101",
           "timeRecord" : timeInUtc,
           "data": {
-            "mediaData": {
-              {
-                'id': data.id,
-                'title': data.title,
-                'type': mediaTypeToString(data.type),
-                'url': data.url,
-                'fileName': data.fileName,
-                'from': mediaFromToString(data.from),
-                'fit': boxFitToString(data.fit),
-                'orderNum': data.orderNum,
-              },
-            },
-            "massage": {
-              "target" : "kiosk, controller",
-              "until" : TimeInUtc,
-              "content" : "",
-            }
+          "mediaData": {
+          {
+          'id': data.id,
+          'title': data.title,
+          'type': mediaTypeToString(data.type),
+          'url': data.url,
+          'fileName': data.fileName,
+          'from': mediaFromToString(data.from),
+          'fit': boxFitToString(data.fit),
+          'orderNum': data.orderNum,
+          },
+          },
+          "massage": {
+          "target" : "kiosk, controller",
+          "until" : TimeInUtc,
+          "content" : "",
+          }
           }
 
 # 개발 환경 정보(수정 중)
 
 ## 서버
+
 - **Companion 버전**: ^3.3.1
 
 ## Flutter
@@ -80,6 +82,7 @@ mdk_kiosk
 - **DevTools 버전**: 2.37.3
 
 ## Android Toolchain
+
 - **SDK 버전**: Android SDK 30.0.0
 - **플랫폼**: android-30
 - **빌드 도구**: build-tools 30.0.0

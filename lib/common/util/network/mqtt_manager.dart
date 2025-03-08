@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/multimedia/util/media_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -27,36 +28,54 @@ void onMqttReceived(String topic, String message) {
 /// Kiosk Data 핸들링
 void mqttDataHandler(String dataJson) {
   final Map<String, dynamic> parsedData = jsonDecode(dataJson);
-  late final DateTime timeRecord;
+  final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
 
-  // 발행시간이 없을 경우, 무시
-  try {
-    timeRecord = DateTime.parse(parsedData['timeRecord']);
-  } catch (e) {
+  // 발행시간이 없으면 무시
+  if (timeRecord == null) {
     print('❌ MQTT data에 발행시간이 없습니다');
     return;
   }
 
-  final List<String> keys = parsedData.keys.toList();
+  // 데이터 핸들링
+  handleParsedData(parsedData, 'mediaData', (dataList) {
+    MediaController().mediaDataHandler(
+      mediaDataList: dataList,
+      timeRecord: timeRecord,
+    );
+  });
 
-  if (keys.contains('mediaData')) {
-    final List<dynamic> rawList = parsedData['mediaData'];
+  handleParsedData(parsedData, 'messageData', (dataList) {
+    print('✅ MQTT 메세지 수신');
+    MessageController().messageDataHandler(
+      messageDataList: dataList,
+    );
+  });
+}
 
-    final List<Map<String, dynamic>> mediaDataList = rawList.map((item) {
+/// JSON에서 발행시간(timeRecord) 파싱
+DateTime? _parseTimeRecord(dynamic timeRecord) {
+  try {
+    return DateTime.parse(timeRecord);
+  } catch (e) {
+    return null;
+  }
+}
+
+/// 특정 key가 있는 경우, 해당 데이터를 리스트로 변환 후 핸들링
+void handleParsedData(
+    Map<String, dynamic> parsedData,
+    String key,
+    Function(List<Map<String, dynamic>>) handler,
+    ) {
+  if (parsedData.containsKey(key)) {
+    final List<Map<String, dynamic>>? dataList =
+    (parsedData[key] as List?)?.map((item) {
       return item as Map<String, dynamic>;
     }).toList();
 
-    // final List<Map<String, dynamic>> mediaDataList = parsedData['mediaData'] as List<Map<String, dynamic>>;
-
-    MediaController()
-        .mediaDataHandler(mediaDataList: mediaDataList, timeRecord: timeRecord);
-  }
-
-  if (keys.contains('message')) {
-    final Map<String, dynamic> message = parsedData['message'];
-    // ✅
-    print('✅ MQTT 메세지 수신');
-    print(message);
+    if (dataList != null) {
+      handler(dataList);
+    }
   }
 }
 

@@ -26,19 +26,22 @@ class MessageController extends _$MessageController {
     }
   }
 
-  void addMessage(Message messageData) {
-    state = [...state, messageData];
-    _setAutoRemoveTimer(messageData);
+  void addMessage(Message message) {
+    state = [...state, message];
+    _setAutoRemoveTimer(message);
   }
 
-  void removeMessage(Message messageData) {
-    state = state.where((m) => m != messageData).toList();
-    _cancelTimer(messageData);
+  void removeMessage(Message message) {
+    state = state.where((m) => m != message).toList();
+    _cancelTimer(message);
   }
 
   void _setAutoRemoveTimer(Message message) {
     final now = DateTime.now();
-    final key = _generateMessageKey(message);
+    final key = message.key;
+
+    // 타이머 중복 생성 방지
+    if (_messageTimers[key] != null) return;
 
     if (message.until.isAfter(now)) {
       final duration = message.until.difference(now);
@@ -61,15 +64,27 @@ class MessageController extends _$MessageController {
   }
 
   void _cancelTimer(Message message) {
-    final key = _generateMessageKey(message);
+    final key = message.key;
     if (_messageTimers.containsKey(key)) {
       _messageTimers[key]?.cancel();
       _messageTimers.remove(key);
     }
   }
 
-  String _generateMessageKey(Message message) {
-    // 예시로 until과 content 조합해서 고유키 생성
-    return '${message.until.toIso8601String()}_${message.content.hashCode}';
+  // String _generateMessageKey(Message message) {
+  //   // 예시로 until과 content 조합해서 고유키 생성
+  //   return '${message.until.toIso8601String()}_${message.content.hashCode}';
+  // }
+
+  messageDataHandler({required List<Map<String, dynamic>> messageDataList}) {
+    List<Message> messageList = [];
+
+    for (Map<String, dynamic> messageDataMap in messageDataList) {
+      final message = Message.fromMap(messageDataMap);
+
+      messageList = [...messageList, message];
+    }
+
+    syncMessageList(messageList);
   }
 }

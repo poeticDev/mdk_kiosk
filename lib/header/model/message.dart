@@ -9,6 +9,7 @@ enum MessageType {
 }
 
 class Message {
+  final String key;
   final DateTime until;
   final MessageType type;
   final String content;
@@ -16,6 +17,7 @@ class Message {
   late final String svgPath;
 
   Message({
+    required this.key,
     required this.until,
     required this.type,
     required this.content,
@@ -39,5 +41,14 @@ class Message {
         svgPath = 'asset/img/svg/announce.svg';
         break;
     }
+  }
+
+  factory Message.fromMap(Map<String, dynamic> messageDataMap) {
+    return Message(
+      key: messageDataMap['key'],
+      until: DateTime.parse(messageDataMap['until']),
+      type: MessageType.values.byName(messageDataMap['type']),
+      content: messageDataMap['content'],
+    );
   }
 }
