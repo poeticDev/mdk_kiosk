@@ -32,14 +32,25 @@ dependencies:
     sdk: flutter
 
   ### Network
-  osc: ^1.0.0
+  mqtt_client: ^10.5.1
+  osc:
+    git:
+      url: https://github.com/poeticDev/osc.git
+      ref: master
+  uuid: ^4.5.1
   network_info_plus: ^6.1.1
   dart_ping: ^9.0.1
+  dio: ^5.8.0+1
+  #### 웹뷰
+#  webview_flutter: ^4.10.0
+#  webview_flutter_android: ^4.3.2
+  flutter_inappwebview: ^6.1.5
 
   ### State Managing
   get_it: ^8.0.2
   flutter_riverpod: ^2.6.1
   riverpod_annotation: ^2.6.1
+  go_router: ^14.7.1
 
   ### data tools
   drift: ^2.21.0
@@ -47,14 +58,21 @@ dependencies:
   image_picker: ^1.1.2
   path_provider: ^2.1.4
   excel: ^4.0.6
+  gsheets: ^0.5.0
+  #  syncfusion_flutter_datagrid: ^28.2.7
 
   ### device settings
   kiosk_mode: ^0.5.1
   permission_handler: ^11.3.1
 
   ### Design
+  #### 아이콘
   cupertino_icons: ^1.0.8
   flutter_octicons: ^1.45.0
+  flutter_svg: ^2.0.17
+  #### 테마 & 순수 디자인 요소
+  flutter_neumorphic_plus: ^3.4.0
+  dotted_line: ^3.2.3
   #### 토글
   animated_toggle_switch: ^0.8.3
   #### 액션 슬라이더
@@ -63,6 +81,10 @@ dependencies:
   loading_indicator: ^3.1.1
   #### alert
   fluttertoast: ^8.2.8
+  #### 캐러슬 슬라이더(멀티미디어)
+  carousel_slider: ^5.0.0
+  video_player: ^2.8.1
+
 
 dev_dependencies:
   flutter_test:
@@ -94,6 +116,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - asset/img/
+    - asset/img/svg/
+    - asset/env/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -109,23 +133,43 @@ flutter:
   fonts:
     - family: Pretendard
       fonts:
-        - asset: asset/fonts/Pretendard-Black.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Black.ttf
           weight: 900
-        - asset: asset/fonts/Pretendard-ExtraBold.ttf
+        - asset: asset/fonts/pretendard/Pretendard-ExtraBold.ttf
           weight: 800
-        - asset: asset/fonts/Pretendard-Bold.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Bold.ttf
           weight: 700
-        - asset: asset/fonts/Pretendard-SemiBold.ttf
+        - asset: asset/fonts/pretendard/Pretendard-SemiBold.ttf
           weight: 600
-        - asset: asset/fonts/Pretendard-Medium.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Medium.ttf
           weight: 500
-        - asset: asset/fonts/Pretendard-Regular.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Regular.ttf
           weight: 400
-        - asset: asset/fonts/Pretendard-Light.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Light.ttf
           weight: 300
-        - asset: asset/fonts/Pretendard-ExtraLight.ttf
+        - asset: asset/fonts/pretendard/Pretendard-ExtraLight.ttf
           weight: 200
-        - asset: asset/fonts/Pretendard-Thin.ttf
+        - asset: asset/fonts/pretendard/Pretendard-Thin.ttf
+          weight: 100
+    - family: Paperlogy
+      fonts:
+        - asset: asset/fonts/paperlogy/Paperlogy-9Black.ttf
+          weight: 900
+        - asset: asset/fonts/paperlogy/Paperlogy-8ExtraBold.ttf
+          weight: 800
+        - asset: asset/fonts/paperlogy/Paperlogy-7Bold.ttf
+          weight: 700
+        - asset: asset/fonts/paperlogy/Paperlogy-6SemiBold.ttf
+          weight: 600
+        - asset: asset/fonts/paperlogy/Paperlogy-5Medium.ttf
+          weight: 500
+        - asset: asset/fonts/paperlogy/Paperlogy-4Regular.ttf
+          weight: 400
+        - asset: asset/fonts/paperlogy/Paperlogy-3Light.ttf
+          weight: 300
+        - asset: asset/fonts/paperlogy/Paperlogy-2ExtraLight.ttf
+          weight: 200
+        - asset: asset/fonts/paperlogy/paperlogy-1Thin.ttf
           weight: 100
 
   # For details regarding fonts from package dependencies,
