@@ -30,6 +30,13 @@ class EditorWrapper extends StatelessWidget {
     this.disableChildInteraction = true, // 기본값: 터치 차단
   });
 
+  factory EditorWrapper.basicInfo({
+
+    required Widget child,
+  }) {
+    return EditorWrapper(child: child);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -459,9 +466,7 @@ class _EditorDialogState extends State<EditorDialog> {
     if (toastMsg == '') {
       toastMsg = '변경된 정보가 없습니다.';
       showCustomToast(toastMsg);
-    } else {
-
-    }
+    } else {}
 
     Navigator.of(context).pop();
   }

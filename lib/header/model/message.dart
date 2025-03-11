@@ -24,20 +24,20 @@ class Message {
   }) {
     switch (type) {
       case MessageType.normal:
-        color = normalBlue;
+        color = NORMAL_BLUE;
         svgPath = 'asset/img/svg/hello.svg';
         break;
 
       case MessageType.warning:
-        color = warningRed;
+        color = WARNING_RED;
         svgPath = 'asset/img/svg/warning.svg';
         break;
       case MessageType.check:
-        color = checkGreen;
+        color = CHECK_GREEN;
         svgPath = 'asset/img/svg/check.svg';
         break;
       case MessageType.announce:
-        color = announceYellow;
+        color = ANNOUNCE_YELLOW;
         svgPath = 'asset/img/svg/announce.svg';
         break;
     }

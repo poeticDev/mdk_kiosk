@@ -71,3 +71,8 @@ ButtonStyle DIALOG_BTN_STYLE = ElevatedButton.styleFrom(
   ),
   padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
 );
+
+const SNACKBAR_TEXT_STYLE = TextStyle(
+  fontSize: 14.0,
+  color: WHITE_TEXT_COLOR,
+);

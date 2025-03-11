@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:mdk_kiosk/common/component/custom_snack_bar.dart';
+import 'package:mdk_kiosk/common/component/editor_dialog.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
+import 'package:mdk_kiosk/common/util/app_editor_mode.dart';
 import 'package:mdk_kiosk/header/header_layout.dart';
 import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
 
@@ -52,7 +55,7 @@ class DefaultLayout extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // 1. 헤더
-                HeaderLayout(height: maxHeight * 0.035),
+                EditorWrapper(child: HeaderLayout(height: maxHeight * 0.035)),
                 // ElevatedButton(
                 //   onPressed: () {
                 //     context.go('/test');
@@ -85,11 +88,34 @@ class DefaultLayout extends StatelessWidget {
                   height: padding * 0.7,
                 ),
                 // 4. 로고
-                Container(
-                  color: Colors.transparent,
-                  height: 72,
-                  width: 138,
-                  child: Image.asset('asset/img/gnu_logo.png'),
+                GestureDetector(
+                  onTap: () {
+                    appEditorManager.countUp();
+
+                    if (appEditorManager.isEditorModeOn) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        CustomSnackBar(
+                          text: '관리자 모드가 실행 중입니다!',
+                          actionButton: TextButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                              appEditorManager.turnEditorModeOff();
+                            },
+                            child:
+                            Text('종료', style: TextStyle(color: Colors.white)),
+                          ),
+                        ),
+                      );
+                    }
+
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    height: 72,
+                    width: 138,
+                    child: Image.asset('asset/img/gnu_logo.png'),
+                  ),
                 )
               ],
             ),
