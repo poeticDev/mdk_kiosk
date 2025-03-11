@@ -26,7 +26,8 @@ class DefaultLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final maxWidth = MediaQuery.of(context).size.width;
     final maxHeight = MediaQuery.of(context).size.height;
-    const double padding = 60.0;
+    const double layoutPadding = 60.0;
+    const double betweenPadding = 40.0;
 
     return Scaffold(
       backgroundColor: backgroundColor ?? BG_COLOR,
@@ -50,12 +51,12 @@ class DefaultLayout extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: EdgeInsets.all(padding),
+            padding: EdgeInsets.all(layoutPadding),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // 1. 헤더
-                EditorWrapper(child: HeaderLayout(height: maxHeight * 0.035)),
+                EditorWrapper(child: HeaderLayout(height: maxHeight * 0.045)),
                 // ElevatedButton(
                 //   onPressed: () {
                 //     context.go('/test');
@@ -66,7 +67,7 @@ class DefaultLayout extends StatelessWidget {
                 //   ),
                 // ),
                 SizedBox(
-                  height: padding,
+                  height: betweenPadding,
                 ),
                 // 2. 시간표
                 if (midChild != null)
@@ -77,7 +78,7 @@ class DefaultLayout extends StatelessWidget {
                   ),
                 // CustomDivider(),
                 SizedBox(
-                  height: padding,
+                  height: betweenPadding,
                 ),
                 // 3. 멀티미디어
                 MorphContainer(
@@ -85,7 +86,7 @@ class DefaultLayout extends StatelessWidget {
                       _MultiMedia(width: maxWidth, height: (maxWidth) * 9 / 16),
                 ),
                 SizedBox(
-                  height: padding * 0.7,
+                  height: betweenPadding * 0.7,
                 ),
                 // 4. 로고
                 GestureDetector(

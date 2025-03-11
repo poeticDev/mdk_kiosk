@@ -26,6 +26,7 @@ class MessageContainer extends StatelessWidget {
     if (isFading) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      scrollController.jumpTo(0);
       if (scrollController.hasClients) {
         final maxScroll = scrollController.position.maxScrollExtent;
         if (maxScroll > 0) {
@@ -63,7 +64,7 @@ class MessageContainer extends StatelessWidget {
                 child: ClipRect(
                   child: Row(
                     children: [
-                      SizedBox(width: 50),
+                      SizedBox(width: height * 0.9),
                       Expanded(
                         child: ScrollConfiguration(
                           behavior: ScrollBehavior(),
