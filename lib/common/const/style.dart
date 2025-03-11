@@ -35,17 +35,12 @@ const BODY_TEXT_STYLE = TextStyle(
 );
 
 /// DIALOG Style
-final CUSTOM_DIALOG_TITLE_TEXT_STYLE = TextStyle(
-  fontSize: 18.0,
-  fontWeight: FontWeight.w600,
-  color: WHITE_TEXT_COLOR.withOpacity(0.95),
-);
 
-final CUSTOM_DIALOG_TITLE_ACTION_TEXT_STYLE = TextStyle(
-  fontSize: 16.0,
-  fontWeight: FontWeight.w600,
-  color: BODY_TEXT_COLOR.withOpacity(0.9),
-);
+// final CUSTOM_DIALOG_TITLE_ACTION_TEXT_STYLE = TextStyle(
+//   fontSize: 16.0,
+//   fontWeight: FontWeight.w600,
+//   color: BODY_TEXT_COLOR.withOpacity(0.9),
+// );
 
 const DIALOG_TITLE_TEXT_STYLE = TextStyle(
   color: TEXT_COLOR,

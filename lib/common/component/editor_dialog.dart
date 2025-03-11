@@ -18,6 +18,7 @@ enum EquipType { video, audio, etc }
 
 class EditorWrapper extends StatelessWidget {
   final Widget child;
+  final Widget dialog;
   final String? buttonName;
   final String? fixedName;
   final bool disableChildInteraction; // 자식 위젯 터치 차단 옵션
@@ -25,16 +26,24 @@ class EditorWrapper extends StatelessWidget {
   EditorWrapper({
     super.key,
     required this.child,
+    required this.dialog,
     this.buttonName,
     this.fixedName,
     this.disableChildInteraction = true, // 기본값: 터치 차단
   });
 
   factory EditorWrapper.basicInfo({
-
     required Widget child,
   }) {
-    return EditorWrapper(child: child);
+    return EditorWrapper(dialog: BasicInfoDialog(),
+    child: child);
+  }
+
+  factory EditorWrapper.button({
+    required Widget child,
+  }) {
+    return EditorWrapper(dialog: ButtonEditorDialog(),
+        child: child);
   }
 
   @override
@@ -45,7 +54,7 @@ class EditorWrapper extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) {
-              return EditorDialog();
+              return dialog;
             },
           );
         }
@@ -57,19 +66,130 @@ class EditorWrapper extends StatelessWidget {
   }
 }
 
-class EditorDialog extends StatefulWidget {
+class BasicInfoDialog extends StatefulWidget {
+  const BasicInfoDialog({super.key});
+
+  @override
+  State<BasicInfoDialog> createState() => _BasicInfoDialogState();
+}
+
+class _BasicInfoDialogState extends State<BasicInfoDialog> {
+
+  Widget _BasicInfoEditor({Key? key}) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text('테스트'),
+        Text('테스트'),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomDialog(
+        title: '기본 정보 수정',
+        widthRatio: 0.5,
+        heightRatio: 0.88,
+        content: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: _BasicInfoEditor(key: ValueKey('OscEditor')),
+                ),
+              ),
+              Container(
+                constraints: BoxConstraints(maxWidth: 300),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: onSaveButtonPressed,
+                      style: DIALOG_BTN_STYLE,
+                      child: Text(
+                        '저장',
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: onCancelButtonPressed,
+                      style: DIALOG_BTN_STYLE,
+                      child: Text(
+                        '취소',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
+
+
+  }
+
+  void onSaveButtonPressed() async {
+    String toastMsg = '';
+    // if (widget.buttonName != null) {
+    //   if (isUsingButton != buttonData.isUsingButton ||
+    //       page != buttonData.page ||
+    //       row != buttonData.row ||
+    //       column != buttonData.column ||
+    //       command != buttonData.command ||
+    //       queryString != buttonData.queryString ||
+    //       message != buttonData.message) {
+    //     ButtonCompanion updatedButtonInfo = ButtonCompanion(
+    //       id: Value(buttonId),
+    //       buttonName: Value(buttonName),
+    //       isUsingButton: Value(isUsingButton),
+    //       page: Value(page),
+    //       row: Value(row),
+    //       column: Value(column),
+    //       command: Value(command),
+    //       queryString: Value(queryString),
+    //       message: Value(message),
+    //     );
+    //
+    //     if (isButtonExist) {
+    //       // ✅ 기존 버튼이 있으면 업데이트
+    //       await db.updateButton(buttonId, updatedButtonInfo);
+    //       showCustomToast('OSC 정보가 수정되었습니다.');
+    //     } else {
+    //       // ✅ 기존 버튼이 없으면 새로 생성
+    //       await db.createButton(updatedButtonInfo);
+    //       showCustomToast('OSC 정보가 생성되었습니다.');
+    //     }
+    //   }
+    // }
+
+    if (toastMsg == '') {
+      toastMsg = '변경된 정보가 없습니다.';
+      showCustomToast(toastMsg);
+    } else {}
+
+    Navigator.of(context).pop();
+  }
+
+  void onCancelButtonPressed() {
+    Navigator.of(context).pop();
+  }
+}
+
+
+class ButtonEditorDialog extends StatefulWidget {
   final String? buttonName;
 
-  const EditorDialog({
+  const ButtonEditorDialog({
     this.buttonName,
     super.key,
   });
 
   @override
-  State<EditorDialog> createState() => _EditorDialogState();
+  State<ButtonEditorDialog> createState() => _ButtonEditorDialogState();
 }
 
-class _EditorDialogState extends State<EditorDialog> {
+class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
   late final List<ButtonWithPage> bWpList;
   late final List<PageData> pageList;
 

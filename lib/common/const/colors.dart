@@ -48,7 +48,9 @@ const TOAST_BG_COLOR = Color(0xDD485157);
 const INPUT_BG_COLOR = Color(0xFFFBFBFB);
 // 텍스트필드 테두리 색상
 const INPUT_BORDER_COLOR = Color(0xFFF3F2F2);
-// 다이얼로그 타이틀 BG
+
+// 다이얼로그
+const DIALOG_BORDER_COLOR = Color(0xFF485157);
 const DIALOG_TITLE_BG_COLOR = Color(0xFFE3EFF7);
 const Color TOGGLE_BUTTON_COLOR = Color(0xFFBDAE80);
 const Color TOGGLE_QUERY_COLOR = Color(0xFF485157);

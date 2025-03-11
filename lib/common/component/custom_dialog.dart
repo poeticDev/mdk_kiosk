@@ -28,8 +28,8 @@ class CustomDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: TOAST_BG_COLOR,
-          width: 4.0,
+          color: BORDER_COLOR,
+          width: 2.0,
         ),
         borderRadius: BorderRadius.circular(borderRadius),
       ),
@@ -52,11 +52,11 @@ class CustomDialog extends StatelessWidget {
   Widget renderTitle() {
     return Container(
       width: double.infinity,
-      height: 50,
+      height: 72,
       decoration: BoxDecoration(
         border: Border.all(
-          color: TOAST_BG_COLOR,
-          width: 4.0,
+          color: BORDER_COLOR,
+          width: 2.0,
         ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(borderRadius),
@@ -73,12 +73,12 @@ class CustomDialog extends StatelessWidget {
               Icon(
                 Icons.settings,
                 size: 26,
-                color: WHITE_TEXT_COLOR.withOpacity(0.95),
+                color: TEXT_COLOR,
               ),
               SizedBox(width: 12.0),
               Text(
                 title!,
-                style: CUSTOM_DIALOG_TITLE_TEXT_STYLE,
+                style: DIALOG_TITLE_TEXT_STYLE,
               ),
             ],
           ),

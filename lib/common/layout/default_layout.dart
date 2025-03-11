@@ -8,7 +8,7 @@ import 'package:mdk_kiosk/common/util/app_editor_mode.dart';
 import 'package:mdk_kiosk/header/header_layout.dart';
 import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
 
-class DefaultLayout extends StatelessWidget {
+class DefaultLayout extends StatefulWidget {
   final Color? backgroundColor;
   final Widget? cover;
   final Widget? midChild;
@@ -23,6 +23,11 @@ class DefaultLayout extends StatelessWidget {
   });
 
   @override
+  State<DefaultLayout> createState() => _DefaultLayoutState();
+}
+
+class _DefaultLayoutState extends State<DefaultLayout> {
+  @override
   Widget build(BuildContext context) {
     final maxWidth = MediaQuery.of(context).size.width;
     final maxHeight = MediaQuery.of(context).size.height;
@@ -30,7 +35,7 @@ class DefaultLayout extends StatelessWidget {
     const double betweenPadding = 40.0;
 
     return Scaffold(
-      backgroundColor: backgroundColor ?? BG_COLOR,
+      backgroundColor: widget.backgroundColor ?? BG_COLOR,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
@@ -56,7 +61,9 @@ class DefaultLayout extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // 1. 헤더
-                EditorWrapper(child: HeaderLayout(height: maxHeight * 0.045)),
+                EditorWrapper.basicInfo(
+                  child: HeaderLayout(height: maxHeight * 0.045),
+                ),
                 // ElevatedButton(
                 //   onPressed: () {
                 //     context.go('/test');
@@ -70,10 +77,10 @@ class DefaultLayout extends StatelessWidget {
                   height: betweenPadding,
                 ),
                 // 2. 시간표
-                if (midChild != null)
+                if (widget.midChild != null)
                   Expanded(
                     child: MorphContainer(
-                      child: midChild!,
+                      child: widget.midChild!,
                     ),
                   ),
                 // CustomDivider(),
@@ -94,22 +101,25 @@ class DefaultLayout extends StatelessWidget {
                     appEditorManager.countUp();
 
                     if (appEditorManager.isEditorModeOn) {
+                      setState(() {});
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       ScaffoldMessenger.of(context).showSnackBar(
                         CustomSnackBar(
                           text: '관리자 모드가 실행 중입니다!',
                           actionButton: TextButton(
                             onPressed: () {
-                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                              appEditorManager.turnEditorModeOff();
+                              setState(() {
+                                ScaffoldMessenger.of(context)
+                                    .hideCurrentSnackBar();
+                                appEditorManager.turnEditorModeOff();
+                              });
                             },
-                            child:
-                            Text('종료', style: TextStyle(color: Colors.white)),
+                            child: Text('종료',
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ),
                       );
                     }
-
                   },
                   child: Container(
                     color: Colors.transparent,
