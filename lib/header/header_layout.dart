@@ -204,10 +204,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
         if (!_fadeController.isAnimating) {
           _stopAutoSlide();
           _fadeController.reverse().then((_) {
-            _fadeController.forward();
-            Future.delayed(Duration(seconds: 12), () {
-              _startAutoSlide();
-            });
+            _startAutoSlide();
           });
         }
       },
