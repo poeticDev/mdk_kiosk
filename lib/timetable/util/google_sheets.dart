@@ -45,6 +45,13 @@ class GoogleSheets {
     );
   }
 
+  Future<void> reInitialize() async {
+    _worksheet = await _getWorksheet(
+      await _sheet.spreadsheet(_spreadSheetId),
+      title: sheetName.toString(),
+    );
+  }
+
   /// 먼저 시트를 생성하고, 이미 있을 경우는 해당 시트를 가져온다.
   static Future<Worksheet> _getWorksheet(
     Spreadsheet spreadsheet, {

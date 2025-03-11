@@ -10,6 +10,7 @@ class SplashScreen extends ConsumerStatefulWidget {
   final String? nextPageName;
   final Color? backgroundColor;
 
+  final Stream<String>? stream;
   final Future<void> Function()? onSplashing;
   final Widget? child;
   final bool isLogoOn;
@@ -18,6 +19,7 @@ class SplashScreen extends ConsumerStatefulWidget {
     this.nextPagePath,
     this.nextPageName,
     this.backgroundColor,
+    this.stream,
     this.onSplashing,
     this.child,
     this.isLogoOn = true,
@@ -61,6 +63,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   @override
+  void dispose() {
+    isLoading = true;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (isLoading) {
       setState(() async {
@@ -71,7 +79,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return Scaffold(
       backgroundColor: widget.backgroundColor ?? BG_COLOR,
       body: StreamBuilder<String>(
-          stream: AppInitializer.initialize(),
+          stream: widget.stream,
           builder: (context, snapshot) {
             if (snapshot.data == ' ' && !isLoading) {
               _navigateToNextPageAfterBuild();

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mdk_kiosk/common/component/custom_snack_bar.dart';
 import 'package:mdk_kiosk/common/component/editor_dialog.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/util/app_editor_mode.dart';
+import 'package:mdk_kiosk/common/util/initializer.dart';
+import 'package:mdk_kiosk/common/util/route/router.dart';
 import 'package:mdk_kiosk/header/header_layout.dart';
 import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
 
@@ -108,11 +111,12 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                           text: '관리자 모드가 실행 중입니다!',
                           actionButton: TextButton(
                             onPressed: () {
-                              setState(() {
+
                                 ScaffoldMessenger.of(context)
                                     .hideCurrentSnackBar();
                                 appEditorManager.turnEditorModeOff();
-                              });
+
+                              context.go('/reinit');
                             },
                             child: Text('종료',
                                 style: TextStyle(color: Colors.white)),

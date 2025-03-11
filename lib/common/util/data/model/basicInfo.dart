@@ -6,10 +6,10 @@ class BasicInfo extends Table {
 
   /// 1. 강의실 정보
   TextColumn get roomId => text()();
-  TextColumn get roomName => text().withDefault(const Constant('건물번호-강의실번호'))();
+  TextColumn get roomName => text().withDefault(const Constant('000동 0000호'))();
   BlobColumn get logoImage => blob()();
-  TextColumn get wifiName => text().nullable()();
   TextColumn get titleText => text().withDefault(const Constant('Wall Hub'))();
+  TextColumn get wifiName => text().withDefault(const Constant('와이파이 이름'))();
 
   /// 2. 태블릿
   // TextColumn get myIp => text().withDefault(const Constant('192.168.11.111'))();

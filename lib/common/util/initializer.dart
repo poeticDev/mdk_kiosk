@@ -92,6 +92,36 @@ class AppInitializer {
     yield ' ';
   }
 
+  static Stream<String> reinitAfterEditorMode() async* {
+    _isInitialized = false;
+
+    /// 2.4 Database 데이터 로딩
+    yield 'Database 데이터 로딩 중...';
+    final basicInfoData = await _initializeBasicInfo();
+    if (basicInfoData != null)
+      globalData.updateFromBasicInfoData(basicInfoData: basicInfoData);
+
+    /// 3. Network
+    /// 3.1 OSC
+    yield 'OSC 매니저 초기화 중...';
+    openOscManager();
+
+    /// 3.2 MQTT
+    yield 'MQTT 매니저 초기화 중...';
+    await openMqttManager();
+    subscribeTopics();
+
+    /// 4. 시간표 연결
+    yield '시간표 불러오는 중...';
+    final gSheet = GoogleSheets(sheetName: globalData.roomId);
+    await gSheet.reInitialize();
+    GetIt.I.registerSingleton<GoogleSheets>(gSheet);
+
+    _isInitialized = true;
+
+    yield ' ';
+  }
+
   /// 1. 하드웨어 세팅
   /// 1.1 필수 권한 요청
   static Future<void> _requestPermissions() async {

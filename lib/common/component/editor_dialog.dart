@@ -9,6 +9,7 @@ import 'package:mdk_kiosk/common/component/custom_text_form_field.dart';
 import 'package:mdk_kiosk/common/component/custom_toast.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
+import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_kiosk/common/util/data/model/button.dart';
 import 'package:mdk_kiosk/common/util/data/model/button_with_page.dart';
 import 'package:mdk_kiosk/common/util/app_editor_mode.dart';
@@ -35,15 +36,13 @@ class EditorWrapper extends StatelessWidget {
   factory EditorWrapper.basicInfo({
     required Widget child,
   }) {
-    return EditorWrapper(dialog: BasicInfoDialog(),
-    child: child);
+    return EditorWrapper(dialog: BasicInfoDialog(), child: child);
   }
 
   factory EditorWrapper.button({
     required Widget child,
   }) {
-    return EditorWrapper(dialog: ButtonEditorDialog(),
-        child: child);
+    return EditorWrapper(dialog: ButtonEditorDialog(), child: child);
   }
 
   @override
@@ -74,13 +73,155 @@ class BasicInfoDialog extends StatefulWidget {
 }
 
 class _BasicInfoDialogState extends State<BasicInfoDialog> {
+  final db = GetIt.I<AppDatabase>();
+
+  /// 1. 강의실 정보
+  String roomId = globalData.roomId;
+  String roomName = globalData.roomName;
+  String titleText = globalData.titleText;
+  String wifiName = globalData.wifiName;
+
+  /// 2. 태블릿
+  int myOscPort = globalData.myOscPort;
+
+  /// 3. 서버
+  String serverIp = globalData.serverIp;
+  int serverOscPort = globalData.serverOscPort;
+  int serverMqttPort = globalData.serverMqttPort;
+  String serverMqttId = globalData.serverMqttId;
+  String serverMqttPassword = globalData.serverMqttPassword;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Widget _BasicInfoEditor({Key? key}) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text('테스트'),
-        Text('테스트'),
+        CustomTextFormField(
+          title: '강의실 Id',
+          hintText: '0+건물번호 3자리+강의실번호 4자리, ex: 0-004-0101 = 4동 0101호',
+          initialValue: roomId,
+          onChanged: (inputText) {
+            roomId = inputText;
+          },
+        ),
+        SizedBox(height: 20.0),
+        Row(
+          children: [
+            Expanded(
+              child: CustomTextFormField(
+                title: '강의실 이름',
+                hintText: '000동 0000호',
+                initialValue: roomName,
+                onChanged: (inputText) {
+                  roomName = inputText;
+                },
+              ),
+            ),
+            SizedBox(width: 24),
+            Expanded(
+              child: CustomTextFormField(
+                title: '헤더 텍스트',
+                hintText: '헤더 우측 표시되는 텍스트',
+                initialValue: titleText,
+                onChanged: (inputText) {
+                  titleText = inputText;
+                },
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20.0),
+        Row(
+          children: [
+            Expanded(
+              child: CustomTextFormField(
+                title: '와이파이명',
+                hintText: '와이파이 SSID',
+                initialValue: wifiName,
+                onChanged: (inputText) {
+                  wifiName = inputText;
+                },
+              ),
+            ),
+            SizedBox(width: 24),
+            Expanded(
+              child: CustomTextFormField(
+                title: '태블릿 OSC 포트',
+                hintText: '보통 3000',
+                initialValue: myOscPort.toString(),
+                textInputType: TextInputType.number,
+                onChanged: (inputText) {
+                  myOscPort = int.parse(inputText);
+                },
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20.0),
+        CustomTextFormField(
+          title: '서버 IP',
+          hintText: '서버 IP',
+          initialValue: serverIp,
+          onChanged: (inputText) {
+            serverIp = inputText;
+          },
+        ),
+        SizedBox(height: 20.0),
+        Row(
+          children: [
+            Expanded(
+              child: CustomTextFormField(
+                title: '서버 OSC 포트',
+                hintText: '보통 12321',
+                initialValue: serverOscPort.toString(),
+                textInputType: TextInputType.number,
+                onChanged: (inputText) {
+                  serverOscPort = int.parse(inputText);
+                },
+              ),
+            ),
+            SizedBox(width: 24),
+            Expanded(
+              child: CustomTextFormField(
+                title: '서버 MQTT 포트',
+                hintText: '보통 12321',
+                initialValue: serverMqttPort.toString(),
+                textInputType: TextInputType.number,
+                onChanged: (inputText) {
+                  serverMqttPort = int.parse(inputText);
+                },
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20.0),
+        Row(
+          children: [
+            Expanded(
+              child: CustomTextFormField(
+                title: '서버 MQTT Id',
+                initialValue: serverMqttId,
+                onChanged: (inputText) {
+                  serverMqttId = inputText;
+                },
+              ),
+            ),
+            SizedBox(width: 24),
+            Expanded(
+              child: CustomTextFormField(
+                title: '서버 MQTT Password',
+                initialValue: serverMqttPassword,
+                onChanged: (inputText) {
+                  serverMqttPassword = inputText;
+                },
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -89,8 +230,8 @@ class _BasicInfoDialogState extends State<BasicInfoDialog> {
   Widget build(BuildContext context) {
     return CustomDialog(
         title: '기본 정보 수정',
-        widthRatio: 0.5,
-        heightRatio: 0.88,
+        widthRatio: 0.85,
+        heightRatio: 0.55,
         content: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
           child: Column(
@@ -125,43 +266,41 @@ class _BasicInfoDialogState extends State<BasicInfoDialog> {
             ],
           ),
         ));
-
-
   }
 
   void onSaveButtonPressed() async {
     String toastMsg = '';
-    // if (widget.buttonName != null) {
-    //   if (isUsingButton != buttonData.isUsingButton ||
-    //       page != buttonData.page ||
-    //       row != buttonData.row ||
-    //       column != buttonData.column ||
-    //       command != buttonData.command ||
-    //       queryString != buttonData.queryString ||
-    //       message != buttonData.message) {
-    //     ButtonCompanion updatedButtonInfo = ButtonCompanion(
-    //       id: Value(buttonId),
-    //       buttonName: Value(buttonName),
-    //       isUsingButton: Value(isUsingButton),
-    //       page: Value(page),
-    //       row: Value(row),
-    //       column: Value(column),
-    //       command: Value(command),
-    //       queryString: Value(queryString),
-    //       message: Value(message),
-    //     );
-    //
-    //     if (isButtonExist) {
-    //       // ✅ 기존 버튼이 있으면 업데이트
-    //       await db.updateButton(buttonId, updatedButtonInfo);
-    //       showCustomToast('OSC 정보가 수정되었습니다.');
-    //     } else {
-    //       // ✅ 기존 버튼이 없으면 새로 생성
-    //       await db.createButton(updatedButtonInfo);
-    //       showCustomToast('OSC 정보가 생성되었습니다.');
-    //     }
-    //   }
-    // }
+    if (roomId != globalData.roomId ||
+        roomName != globalData.roomName ||
+        titleText != globalData.titleText ||
+        wifiName != globalData.wifiName ||
+        myOscPort != globalData.myOscPort ||
+        serverIp != globalData.serverIp ||
+        serverOscPort != globalData.serverOscPort ||
+        serverMqttPort != globalData.serverMqttPort ||
+        serverMqttId != globalData.serverMqttId ||
+        serverMqttPassword != globalData.serverMqttPassword) {
+      BasicInfoCompanion newBasicInfo = BasicInfoCompanion(
+        roomId: Value(roomId),
+        roomName: Value(roomName),
+        titleText: Value(titleText),
+        wifiName: Value(wifiName),
+        myOscPort: Value(myOscPort),
+        logoImage: Value(globalData.logoImage),
+        serverIp: Value(serverIp),
+        serverOscPort: Value(serverOscPort),
+        serverMqttPort: Value(serverMqttPort),
+        serverMqttId: Value(serverMqttId),
+        serverMqttPassword: Value(serverMqttPassword),
+      );
+
+      await db.createBasicInfo(newBasicInfo);
+      final newBasicInfoData = await db.getLatestBasicInfo();
+      globalData.updateFromBasicInfoData(basicInfoData: newBasicInfoData!);
+      toastMsg = '기본 정보 업데이트!';
+      showCustomToast(toastMsg);
+
+    }
 
     if (toastMsg == '') {
       toastMsg = '변경된 정보가 없습니다.';
@@ -175,7 +314,6 @@ class _BasicInfoDialogState extends State<BasicInfoDialog> {
     Navigator.of(context).pop();
   }
 }
-
 
 class ButtonEditorDialog extends StatefulWidget {
   final String? buttonName;

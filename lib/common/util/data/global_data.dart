@@ -13,7 +13,7 @@ class GlobalData {
   late String roomId;
   late String roomName;
   late Uint8List logoImage;
-  late String? wifiName;
+  late String wifiName;
   late String titleText;
 
   /// 2. 태블릿
