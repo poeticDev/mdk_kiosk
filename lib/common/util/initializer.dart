@@ -108,8 +108,15 @@ class AppInitializer {
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
-    await openMqttManager(ref);
-    subscribeTopics(ref);
+    try {
+      await openMqttManager(ref).then((_) {
+        subscribeTopics(ref);
+      }).timeout(
+        Duration(seconds: 10),
+      );
+    } catch (e) {
+      print(' ❌ Mqtt 매니저 초기화 실패! : $e');
+    }
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
@@ -282,7 +289,6 @@ class AppInitializer {
   /// 3.2.1 MqttManager 오픈
   static Future<void> openMqttManager(WidgetRef ref) async {
     print('MqttManager를 오픈 중입니다...');
-    // // oscManager가 열려있으면 일단 닫음
     try {
       final mqttManager = ref.read(mqttManagerProvider);
       await mqttManager.connect();

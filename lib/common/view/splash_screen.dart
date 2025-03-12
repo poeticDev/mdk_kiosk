@@ -14,7 +14,7 @@ class SplashScreen extends ConsumerStatefulWidget {
   final bool needInitializing;
 
   final Future<void> Function()? onSplashing;
-  final Widget? child;
+
   final bool isLogoOn;
 
   SplashScreen({
@@ -24,7 +24,6 @@ class SplashScreen extends ConsumerStatefulWidget {
     this.stream,
     this.needInitializing = false,
     this.onSplashing,
-    this.child,
     this.isLogoOn = true,
     super.key,
   });
@@ -36,15 +35,20 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   // bool isLoading = false; // ✅ 중복 실행 방지
   bool isLoading = true;
+  late final Stream<String> _stream;
 
   @override
   void initState() {
     if (widget.needInitializing) {
       if (!AppInitializer.getInitializedStatus()) {
-        widget.stream = AppInitializer.initialize(ref);
+        _stream = AppInitializer.initialize(ref);
       } else {
-        widget.stream = AppInitializer.reinitAfterEditorMode(ref);
+        _stream = AppInitializer.reinitAfterEditorMode(ref);
       }
+    } else if(widget.stream != null) {
+      _stream = widget.stream!;
+    } else {
+      _stream = Stream.value(' ');
     }
 
     super.initState();
@@ -90,7 +94,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return Scaffold(
       backgroundColor: widget.backgroundColor ?? BG_COLOR,
       body: StreamBuilder<String>(
-          stream: widget.stream,
+          stream: _stream,
           initialData: '',
           builder: (context, snapshot) {
             print('snapshot.data : ${snapshot.data}');

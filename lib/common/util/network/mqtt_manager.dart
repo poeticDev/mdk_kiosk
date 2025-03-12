@@ -51,6 +51,7 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
 
   // 데이터 핸들링
   handleParsedData(parsedData, 'mediaData', (dataList) {
+    print('✅ MQTT 미디어데이터 수신');
     MediaController().mediaDataHandler(
       mediaDataList: dataList,
       timeRecord: timeRecord,
