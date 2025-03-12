@@ -143,7 +143,7 @@ class _ItemImageState extends State<ItemImage> {
       final double mHeight = constraints.maxHeight;
 
       if (_isLoading) {
-        return const Center(child: SplashScreen()); // 로딩 화면
+        return Center(child: SplashScreen()); // 로딩 화면
       }
 
       if (_hasError) {

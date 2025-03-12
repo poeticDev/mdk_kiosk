@@ -121,7 +121,7 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
       final iconSize = mHeight * 0.08;
 
       if (_isLoading) {
-        return const Center(child: SplashScreen()); // 로딩 화면
+        return Center(child: SplashScreen()); // 로딩 화면
       }
 
       return Stack(

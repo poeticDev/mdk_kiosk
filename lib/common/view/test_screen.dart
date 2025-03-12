@@ -40,8 +40,8 @@ class TestScreen extends StatelessWidget {
                       MediaController().mediaItemDataListToJson(mediaItemList);
                   ;
 
-                  mqttManager.publish(
-                      'node-mdk/$KIOSK_NAME/$KIOSK_NAME', message);
+                  // mqttManager.publish(
+                  //     'node-mdk/$KIOSK_NAME/$KIOSK_NAME', message);
                 },
                 child: Text(
                   'mqtt publish',

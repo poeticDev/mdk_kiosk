@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/util/custom_permission_handler.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
@@ -12,7 +13,6 @@ import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
 import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
-import 'package:uuid/uuid.dart';
 
 class AppInitializer {
   static bool _isInitialized = false;
@@ -30,7 +30,7 @@ class AppInitializer {
 
   static String state = '';
 
-  static Stream<String> initialize() async* {
+  static Stream<String> initialize(WidgetRef ref) async* {
     if (_isInitialized) {
       yield 'done';
       return;
@@ -78,8 +78,8 @@ class AppInitializer {
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
-    await openMqttManager();
-    subscribeTopics();
+    await openMqttManager(ref);
+    subscribeTopics(ref);
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
@@ -92,7 +92,7 @@ class AppInitializer {
     yield ' ';
   }
 
-  static Stream<String> reinitAfterEditorMode() async* {
+  static Stream<String> reinitAfterEditorMode(WidgetRef ref) async* {
     _isInitialized = false;
 
     /// 2.4 Database 데이터 로딩
@@ -108,8 +108,8 @@ class AppInitializer {
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
-    await openMqttManager();
-    subscribeTopics();
+    await openMqttManager(ref);
+    subscribeTopics(ref);
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
@@ -154,10 +154,12 @@ class AppInitializer {
     final db = GetIt.I<AppDatabase>();
 
     // 최신 BasicInfo 불러오기
+    print('BasicInfo 불러오는 중');
     BasicInfoData? basicInfoData = await db.getLatestBasicInfo();
 
     // 앱 첫 실행 시, 초기값을 가져와 기본 정보에 저장
     if (basicInfoData == null) {
+      print('BasicInfo 초기화 중');
       // 로고 이미지 파일을 로드하여 DB에 저장
       final ByteData bytes = await rootBundle.load(initialImagePath);
       final Uint8List imageList = bytes.buffer.asUint8List();
@@ -278,36 +280,25 @@ class AppInitializer {
 
   /// 3.2. Network
   /// 3.2.1 MqttManager 오픈
-  static Future<MqttManager> openMqttManager() async {
+  static Future<void> openMqttManager(WidgetRef ref) async {
     print('MqttManager를 오픈 중입니다...');
     // // oscManager가 열려있으면 일단 닫음
     try {
-      mqttManager.hashCode;
-      mqttManager.disconnect();
-    } catch (_) {}
-
-    print(globalData.serverIp.toString());
-    print(globalData.serverMqttPort.toString());
-
-    mqttManager = MqttManager(
-      broker: globalData.serverIp,
-      port: globalData.serverMqttPort,
-      userName: globalData.serverMqttId,
-      password: globalData.serverMqttPassword,
-      clientId: Uuid().v4(),
-    );
-
-    GetIt.I.registerSingleton<MqttManager>(mqttManager);
-    await mqttManager.connect();
-
-    return mqttManager;
+      final mqttManager = ref.read(mqttManagerProvider);
+      await mqttManager.connect();
+    } catch (e) {
+      print('❌ MQTT 연결 실패: $e');
+    }
   }
 
   /// 3.2.2 토픽 구독
-  static void subscribeTopics() {
+  static void subscribeTopics(WidgetRef ref) {
+    final mqttManager = ref.read(mqttManagerProvider);
     for (var topic in SUBSCRIBING_TOPICS) {
       mqttManager.subscribe(topic);
     }
-    mqttManager.listen(onMqttReceived);
+    mqttManager.listen((topic, message) {
+      onMqttReceived(ref, topic, message);
+    });
   }
 }

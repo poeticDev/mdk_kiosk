@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/multimedia/util/media_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:uuid/uuid.dart';
 
 const KIOSK_NAME = 'wall_hub';
 
@@ -13,20 +16,30 @@ const List<String> SUBSCRIBING_TOPICS = [
   'node-mdk/states',
 ];
 
-late MqttManager mqttManager;
+final mqttManagerProvider = Provider<MqttManager>((ref) {
+  return MqttManager(
+    broker: globalData.serverIp,
+    port: globalData.serverMqttPort,
+    userName: globalData.serverMqttId,
+    password: globalData.serverMqttPassword,
+    clientId: Uuid().v4(),
+  );
+});
+
 
 /// Mqtt 수신시
-void onMqttReceived(String topic, String message) {
+void onMqttReceived(WidgetRef ref, String topic, String message) {
   // data : media data, message
   if (topic.split('/').last == KIOSK_NAME) {
-    mqttDataHandler(message);
+    mqttDataHandler(ref, message);
   }
   // states
   else if (topic == 'node-mdk/states') {}
 }
 
+
 /// Kiosk Data 핸들링
-void mqttDataHandler(String dataJson) {
+void mqttDataHandler(WidgetRef ref, String dataJson) {
   final Map<String, dynamic> parsedData = jsonDecode(dataJson);
   final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
 
@@ -46,7 +59,7 @@ void mqttDataHandler(String dataJson) {
 
   handleParsedData(parsedData, 'messageData', (dataList) {
     print('✅ MQTT 메세지 수신');
-    MessageController().messageDataHandler(
+    ref.read(messageControllerProvider.notifier).messageDataHandler(
       messageDataList: dataList,
     );
   });
@@ -78,6 +91,7 @@ void handleParsedData(
     }
   }
 }
+
 
 class MqttManager {
   final String broker;

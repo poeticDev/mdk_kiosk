@@ -10,16 +10,19 @@ class SplashScreen extends ConsumerStatefulWidget {
   final String? nextPageName;
   final Color? backgroundColor;
 
-  final Stream<String>? stream;
+  Stream<String>? stream;
+  final bool needInitializing;
+
   final Future<void> Function()? onSplashing;
   final Widget? child;
   final bool isLogoOn;
 
-  const SplashScreen({
+  SplashScreen({
     this.nextPagePath,
     this.nextPageName,
     this.backgroundColor,
     this.stream,
+    this.needInitializing = false,
     this.onSplashing,
     this.child,
     this.isLogoOn = true,
@@ -36,6 +39,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   void initState() {
+    if (widget.needInitializing) {
+      if (!AppInitializer.getInitializedStatus()) {
+        widget.stream = AppInitializer.initialize(ref);
+      } else {
+        widget.stream = AppInitializer.reinitAfterEditorMode(ref);
+      }
+    }
+
     super.initState();
     _onSplashing();
   }
@@ -80,7 +91,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       backgroundColor: widget.backgroundColor ?? BG_COLOR,
       body: StreamBuilder<String>(
           stream: widget.stream,
+          initialData: '',
           builder: (context, snapshot) {
+            print('snapshot.data : ${snapshot.data}');
             if (snapshot.data == ' ' && !isLoading) {
               _navigateToNextPageAfterBuild();
             }
