@@ -17,7 +17,7 @@ const List<MediaItemCompanion> DEFAULT_MEDIA_ITEM = [
     type: Value(MediaType.image),
     title: Value('수강정정 안내'),
     url: Value(
-        'https://drive.google.com/file/d/1YKPA7ezjTsN1jIc79Zs0NM7Me-akXWVA/view?usp=sharing'),
+        'https://drive.google.com/file/d/1NohQvH-3Bqg1ev-Wju50Yfsp3TRFKZf2/view?usp=sharing'),
     from: Value(MediaFrom.gDrive),
     orderNum: Value(2),
   ),
@@ -26,7 +26,7 @@ const List<MediaItemCompanion> DEFAULT_MEDIA_ITEM = [
     type: Value(MediaType.video),
     title: Value('대학홍보영상'),
     url: Value(
-        'https://drive.google.com/file/d/1zxmvhegyd9coVoUeNSonexwxnhbQ5A_I/view?usp=sharing'),
+        'https://drive.google.com/file/d/1NkN1gbTceG_4rnAjhcu5SHZHsx4cMoSo/view?usp=sharing'),
     from: Value(MediaFrom.gDrive),
     orderNum: Value(3),
   ),
