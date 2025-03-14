@@ -6,7 +6,7 @@
 const String initialRoomId = '0-004-0111';
 const String initialRoomName = '4동 111호';
 const String initialImagePath = 'asset/img/gnu_logo.png';
-const String initialWifiName ='U+Net2054_5G';
+const String initialWifiName ='MDK4-111';
 const String initialTitleText = "자율전공학부";
 // const String initialWifiName ='mdk';
 
@@ -15,7 +15,7 @@ const String initialTitleText = "자율전공학부";
 // const String initialMyPassword = '12344321!';
 
 /// 3. 서버 정보
-const String initialServerIp =  '192.168.219.186';
+const String initialServerIp =  '192.168.11.120';
 // const int initialServerOscPort = 12321;
 const int initialServerMqttPort = 1883;
 // const int initialServerMqttId = 'mdk';
