@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mdk_kiosk/common/util/custom_logger.dart';
 import 'package:mdk_kiosk/common/util/custom_permission_handler.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
@@ -35,6 +36,11 @@ class AppInitializer {
       yield 'done';
       return;
     }
+
+    logger = await CustomLogger.initLogging();
+
+
+    logger.d('로그 기록 시작');
 
     /// 1. 하드웨어 세팅
     /// 1.1 필수권한 요청
@@ -135,10 +141,14 @@ class AppInitializer {
     final permissionHandler = CustomPermissionHandler();
 
     print('위치 권한 요청 중');
+    logger.i('위치 권한 요청 중');
+
     await permissionHandler.requestLocationPermission();
     print('시스템 알람창 권한 요청 중');
+    logger.i('시스템 알람창 권한 요청 중');
     await permissionHandler.requestSystemAlertWindowPermission();
     print('미디어 접근 권한 요청 중');
+    logger.i('미디어 접근 권한 요청 중');
     await permissionHandler.requestMediaPermissions();
     // print('설정 변경 권한 요청 중');
     // await permissionHandler.requestWriteSettingsPermission();

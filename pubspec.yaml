@@ -64,6 +64,7 @@ dependencies:
   ### device settings
   kiosk_mode: ^0.5.1
   permission_handler: ^11.3.1
+  logger: ^2.5.0
 
   ### Design
   #### 아이콘

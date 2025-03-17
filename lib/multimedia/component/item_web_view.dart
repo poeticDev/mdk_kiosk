@@ -27,7 +27,7 @@ class _ItemWebViewState extends State<ItemWebView> {
     javaScriptEnabled: true, // 자바스크립트 실행 여부
     javaScriptCanOpenWindowsAutomatically: false, // 팝업 여부
     useHybridComposition: true, // 하이브리드 사용을 위한 안드로이드 웹뷰 최적화
-    supportMultipleWindows: true, // 멀티 윈도우 허용
+    supportMultipleWindows: false, // 멀티 윈도우 허용
     allowsInlineMediaPlayback: true, // 웹뷰 내 미디어 재생 허용
   );
 
