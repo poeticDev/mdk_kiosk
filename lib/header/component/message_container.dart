@@ -5,7 +5,7 @@ import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/header/model/message.dart';
 
-class MessageContainer extends StatelessWidget {
+class MessageContainer extends StatefulWidget {
   final double height;
   final double padding;
   final double fontSize;
@@ -21,17 +21,37 @@ class MessageContainer extends StatelessWidget {
     required this.isFading,
   });
 
+  @override
+  State<MessageContainer> createState() => _MessageContainerState();
+
+  static ColorFilter? _getColorFilter(
+    Color? color,
+    BlendMode colorBlendMode,
+  ) =>
+      color == null ? null : ColorFilter.mode(color, colorBlendMode);
+}
+
+class _MessageContainerState extends State<MessageContainer> {
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _startScrollingIfNeeded();
+  }
+
   // 스크롤이 가능해지면(메세지가 길어지면) 자동 스크롤
-  void _startScrollingIfNeeded(ScrollController scrollController) {
-    if (isFading) return;
+  void _startScrollingIfNeeded() {
+    if (widget.isFading) return;
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      scrollController.jumpTo(0);
-      if (scrollController.hasClients) {
-        final maxScroll = scrollController.position.maxScrollExtent;
+      _scrollController.jumpTo(0);
+      if (_scrollController.hasClients) {
+        final maxScroll = _scrollController.position.maxScrollExtent;
         if (maxScroll > 0) {
           await Future.delayed(Duration(seconds: 3));
-          await scrollController.animateTo(
+          await _scrollController.animateTo(
             maxScroll,
             duration: Duration(seconds: 5),
             curve: Curves.linear,
@@ -42,12 +62,14 @@ class MessageContainer extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose(); // ✅ 메모리 해제
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
-
-    _startScrollingIfNeeded(scrollController);
-
-    final color = messageData.color;
+    final color = widget.messageData.color;
     final hsl = HSLColor.fromColor(color);
     final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
 
@@ -55,26 +77,26 @@ class MessageContainer extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         SizedBox(
-          height: height,
+          height: widget.height,
           child: MorphContainer(
             color: color,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: padding),
+              padding: EdgeInsets.symmetric(horizontal: widget.padding),
               child: Center(
                 child: ClipRect(
                   child: Row(
                     children: [
-                      SizedBox(width: height * 0.9),
+                      SizedBox(width: widget.height * 0.9),
                       Expanded(
                         child: ScrollConfiguration(
                           behavior: ScrollBehavior(),
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
-                            controller: scrollController,
+                            controller: _scrollController,
                             child: Text(
-                              messageData.content,
+                              widget.messageData.content,
                               style: TITLE_TEXT_STYLE.copyWith(
-                                  fontSize: fontSize, color: WHITE_TEXT_COLOR),
+                                  fontSize: widget.fontSize, color: WHITE_TEXT_COLOR),
                             ),
                           ),
                         ),
@@ -87,23 +109,23 @@ class MessageContainer extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: -height * 0.25,
+          top: -widget.height * 0.25,
           left: 20,
           child: Stack(
             alignment: Alignment.center,
             children: [
               SvgPicture.asset(
                 'asset/img/svg/back.svg',
-                height: height,
-                width: height,
+                height: widget.height,
+                width: widget.height,
                 colorFilter:
-                    _getColorFilter(hslDark.toColor(), BlendMode.srcIn),
+                    MessageContainer._getColorFilter(hslDark.toColor(), BlendMode.srcIn),
               ),
               Positioned(
                 top: 12,
                 child: SvgPicture.asset(
-                  messageData.svgPath,
-                  height: height * 0.45,
+                  widget.messageData.svgPath,
+                  height: widget.height * 0.45,
                 ),
               ),
             ],
@@ -112,10 +134,4 @@ class MessageContainer extends StatelessWidget {
       ],
     );
   }
-
-  static ColorFilter? _getColorFilter(
-    Color? color,
-    BlendMode colorBlendMode,
-  ) =>
-      color == null ? null : ColorFilter.mode(color, colorBlendMode);
 }
