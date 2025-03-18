@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
@@ -44,6 +45,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
   @override
   void initState() {
     super.initState();
+
     // vsync 때문에 여기서 정의
     _fadeController = AnimationController(
       vsync: this,
