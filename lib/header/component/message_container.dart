@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
@@ -38,28 +39,9 @@ class _MessageContainerState extends State<MessageContainer> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    _startScrollingIfNeeded();
   }
 
   // 스크롤이 가능해지면(메세지가 길어지면) 자동 스크롤
-  void _startScrollingIfNeeded() {
-    if (widget.isFading) return;
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      _scrollController.jumpTo(0);
-      if (_scrollController.hasClients) {
-        final maxScroll = _scrollController.position.maxScrollExtent;
-        if (maxScroll > 0) {
-          await Future.delayed(Duration(seconds: 3));
-          await _scrollController.animateTo(
-            maxScroll,
-            duration: Duration(seconds: 5),
-            curve: Curves.linear,
-          );
-        }
-      }
-    });
-  }
 
   @override
   void dispose() {
@@ -69,6 +51,29 @@ class _MessageContainerState extends State<MessageContainer> {
 
   @override
   Widget build(BuildContext context) {
+    void _startScrollingIfNeeded() {
+      print('isFading: ${widget.isFading}');
+      if (widget.isFading) return;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        _scrollController.jumpTo(0);
+        if (_scrollController.hasClients) {
+          final maxScroll = _scrollController.position.maxScrollExtent;
+          print('maxScroll : $maxScroll');
+          if (maxScroll > 0) {
+            await Future.delayed(Duration(seconds: 3));
+            await _scrollController.animateTo(
+              maxScroll,
+              duration: Duration(seconds: 5),
+              curve: Curves.linear,
+            );
+          }
+        }
+      });
+    }
+
+    _startScrollingIfNeeded();
+
     final color = widget.messageData.color;
     final hsl = HSLColor.fromColor(color);
     final hslDark = hsl.withLightness((hsl.lightness - 0.1).clamp(0.0, 1.0));
@@ -96,7 +101,8 @@ class _MessageContainerState extends State<MessageContainer> {
                             child: Text(
                               widget.messageData.content,
                               style: TITLE_TEXT_STYLE.copyWith(
-                                  fontSize: widget.fontSize, color: WHITE_TEXT_COLOR),
+                                  fontSize: widget.fontSize,
+                                  color: WHITE_TEXT_COLOR),
                             ),
                           ),
                         ),
@@ -118,11 +124,11 @@ class _MessageContainerState extends State<MessageContainer> {
                 'asset/img/svg/back.svg',
                 height: widget.height,
                 width: widget.height,
-                colorFilter:
-                    MessageContainer._getColorFilter(hslDark.toColor(), BlendMode.srcIn),
+                colorFilter: MessageContainer._getColorFilter(
+                    hslDark.toColor(), BlendMode.srcIn),
               ),
               Positioned(
-                top: 12,
+                top: 16,
                 child: SvgPicture.asset(
                   widget.messageData.svgPath,
                   height: widget.height * 0.45,
