@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mdk_kiosk/common/component/custom_snack_bar.dart';
 import 'package:mdk_kiosk/common/component/editor_dialog.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
+import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/common/util/app_editor_mode.dart';
+import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'package:mdk_kiosk/common/util/initializer.dart';
 import 'package:mdk_kiosk/common/util/route/router.dart';
 import 'package:mdk_kiosk/header/header_layout.dart';
@@ -30,6 +33,25 @@ class DefaultLayout extends StatefulWidget {
 }
 
 class _DefaultLayoutState extends State<DefaultLayout> {
+  String contactName = '교육혁신처';
+  String contactNumber = '055-772-4864';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  Future<void> assignContact() async {
+    final db = GetIt.I<AppDatabase>();
+    ButtonData? contactData = await db.getButtonByName('contact');
+    contactName = contactData?.queryString ?? '교육혁신처';
+    contactNumber = contactData?.message ?? '055-772-4864';
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final maxWidth = MediaQuery.of(context).size.width;
@@ -98,38 +120,62 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 SizedBox(
                   height: betweenPadding * 0.7,
                 ),
-                // 4. 로고
-                GestureDetector(
-                  onTap: () {
-                    appEditorManager.countUp();
-
-                    if (appEditorManager.isEditorModeOn) {
-                      setState(() {});
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        CustomSnackBar(
-                          text: '관리자 모드가 실행 중입니다!',
-                          actionButton: TextButton(
-                            onPressed: () {
-
-                                ScaffoldMessenger.of(context)
-                                    .hideCurrentSnackBar();
-                                appEditorManager.turnEditorModeOff();
-
-                              context.go('/reinit');
-                            },
-                            child: Text('종료',
-                                style: TextStyle(color: Colors.white)),
+                // 4. 푸터 : 연락처 & 로고
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onLongPress: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ButtonEditorDialog(
+                                    buttonName: 'contact');
+                              });
+                        },
+                        child: Text(
+                          '$contactName $contactNumber',
+                          style: BODY_TEXT_STYLE.copyWith(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 26,
                           ),
                         ),
-                      );
-                    }
-                  },
-                  child: Container(
-                    color: Colors.transparent,
-                    height: 72,
-                    width: 138,
-                    child: Image.asset('asset/img/gnu_logo.png'),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          appEditorManager.countUp();
+
+                          if (appEditorManager.isEditorModeOn) {
+                            setState(() {});
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              CustomSnackBar(
+                                text: '관리자 모드가 실행 중입니다!',
+                                actionButton: TextButton(
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context)
+                                        .hideCurrentSnackBar();
+                                    appEditorManager.turnEditorModeOff();
+
+                                    context.go('/reinit');
+                                  },
+                                  child: Text('종료',
+                                      style: TextStyle(color: Colors.white)),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: Container(
+                          color: Colors.transparent,
+                          height: 72,
+                          width: 138,
+                          child: Image.asset('asset/img/gnu_logo.png'),
+                        ),
+                      ),
+                    ],
                   ),
                 )
               ],

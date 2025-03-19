@@ -414,8 +414,8 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
           child: renderTitleToggle(),
         ),
       ],
-      widthRatio: 0.5,
-      heightRatio: 0.88,
+      widthRatio: 0.8,
+      heightRatio: 0.5,
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
         child: Column(
@@ -665,7 +665,7 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
   Widget renderTitleToggle() {
     List<bool> values = [false, true];
     List<String> texts = [
-      'OSC',
+      'OSC','Query'
     ];
 
     // if (widget.buttonName == null) {

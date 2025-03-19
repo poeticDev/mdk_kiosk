@@ -79,6 +79,13 @@ class AppDatabase extends _$AppDatabase {
     return result;
   }
 
+  Future<ButtonData?> getButtonByName(String buttonName) async {
+    final result = await (select(button)
+      ..where((tbl) => tbl.buttonName.equals(buttonName)))
+        .getSingleOrNull();
+    return result;
+  }
+
   Future<bool> doesButtonExist(int buttonId) async {
     final result = await (select(button)
           ..where((tbl) => tbl.id.equals(buttonId)))
