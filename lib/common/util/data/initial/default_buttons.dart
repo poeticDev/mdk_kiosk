@@ -694,4 +694,14 @@ const List<ButtonCompanion> DEFAULT_BUTTONS = [
   //   column: Value(8),
   //   command: Value(Command.press),
   // ),
+  ButtonCompanion(
+    buttonName: Value('contact'),
+      page: Value(pageAUDIO),
+      // isUsingButton: Value(false),
+      queryString: Value('교육혁신처'),
+      message: Value('055-772-4864'),
+      row: Value(0),
+      column: Value(0),
+      command: Value(Command.press),
+  ),
 ];
