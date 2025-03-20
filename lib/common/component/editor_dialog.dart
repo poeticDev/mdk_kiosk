@@ -590,7 +590,7 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
               isButtonExist ? '일반적으로 입력하지 않습니다.' : '버튼 정보가 없습니다. 새로 생성합니다.',
           initialValue: message,
           onChanged: (inputText) {
-            queryString = inputText;
+            message = inputText;
           },
         ),
       ],
