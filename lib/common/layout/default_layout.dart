@@ -40,6 +40,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    assignContact();
   }
 
   Future<void> assignContact() async {
@@ -127,13 +128,15 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
-                        onLongPress: () {
-                          showDialog(
+                        onLongPress: () async {
+                          await showDialog(
                               context: context,
                               builder: (context) {
                                 return ButtonEditorDialog(
                                     buttonName: 'contact');
                               });
+
+                          context.go('/reinit');
                         },
                         child: Text(
                           '$contactName $contactNumber',
