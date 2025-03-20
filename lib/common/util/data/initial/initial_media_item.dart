@@ -31,12 +31,12 @@ const List<MediaItemCompanion> DEFAULT_MEDIA_ITEM = [
     orderNum: Value(3),
   ),
   // 경상대 웹뷰
-  MediaItemCompanion(
-    type: Value(MediaType.webView),
-    title: Value('대학 홈페이지'),
-    url: Value(
-        'https://www.gnu.ac.kr/main/main.do'),
-    from: Value(MediaFrom.webView),
-    orderNum: Value(4),
-  ),
+  // MediaItemCompanion(
+  //   type: Value(MediaType.webView),
+  //   title: Value('대학 홈페이지'),
+  //   url: Value(
+  //       'https://www.gnu.ac.kr/main/main.do'),
+  //   from: Value(MediaFrom.webView),
+  //   orderNum: Value(4),
+  // ),
 ];
