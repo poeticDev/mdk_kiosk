@@ -40,7 +40,6 @@ class _DefaultLayoutState extends State<DefaultLayout> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    assignContact();
   }
 
   Future<void> assignContact() async {
