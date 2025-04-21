@@ -144,23 +144,23 @@ class MediaController {
   }
 
   /// MediaItemData 핸들링
-  void mediaDataHandler(
-      {required List<Map<String, dynamic>> mediaDataList,
-      required DateTime timeRecord}) {
+  void mediaDataHandler({required List<Map<String, dynamic>> mediaDataList}) {
     // 최신 데이터가 아니면 무시
-    if (lastModified.isAfter(timeRecord)) {
-      print('✅ 최신 미디어아이템 데이터가 아닙니다');
-      return;
-    } else {
-      lastModified = timeRecord;
-    }
+    // if (lastModified.isAfter(timeRecord)) {
+    //   print('✅ 최신 미디어아이템 데이터가 아닙니다');
+    //   return;
+    // } else {
+    //   lastModified = timeRecord;
+    // }
 
     // MediaItemCompanion 변환
     final List<MediaItemCompanion> mediaItemCompanionList =
         jsonToCompanionList(mediaDataList);
 
     // MediaItem 동기화
-    db.syncMediaItems(mediaItemCompanionList);
+    for (MediaItemCompanion mediaItemCompanion in mediaItemCompanionList) {
+      db.upsertMediaItemByUrl(mediaItemCompanion);
+    }
 
     // 화면 rebuild하는 방법 투입(데이터베이스에서 불러오기부터 필요)
   }

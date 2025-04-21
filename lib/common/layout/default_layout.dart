@@ -33,13 +33,14 @@ class DefaultLayout extends StatefulWidget {
 }
 
 class _DefaultLayoutState extends State<DefaultLayout> {
-  String contactName = '교육혁신처';
-  String contactNumber = '055-772-4864';
+  String contactName = '';
+  String contactNumber = '';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    assignContact();
   }
 
   Future<void> assignContact() async {

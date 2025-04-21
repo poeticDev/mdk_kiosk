@@ -43,32 +43,51 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
   print('✅parsedData: $parsedData');
   print('✅parsedData type: ${parsedData.runtimeType}');
 
-  if (parsedData is Map<String, dynamic>) {
-    final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
+  // if (parsedData is Map<String, dynamic>) {
+  //   final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
+  //
+  //   // 발행시간이 없으면 무시
+  //   if (timeRecord == null) {
+  //     print('❌ MQTT data에 발행시간이 없습니다');
+  //     return;
+  //   }
+  //   // 데이터 핸들링
+  //   handleParsedData(parsedData, 'mediaData', (dataList) {
+  //     print('✅ MQTT 미디어데이터 수신');
+  //     MediaController().mediaDataHandler(
+  //       mediaDataList: dataList,
+  //       timeRecord: timeRecord,
+  //     );
+  //   });
+  // } else
 
-    // 발행시간이 없으면 무시
-    if (timeRecord == null) {
-      print('❌ MQTT data에 발행시간이 없습니다');
-      return;
-    }
-    // 데이터 핸들링
-    handleParsedData(parsedData, 'mediaData', (dataList) {
-      print('✅ MQTT 미디어데이터 수신');
-      MediaController().mediaDataHandler(
-        mediaDataList: dataList,
-        timeRecord: timeRecord,
-      );
-    });
-  } else if (parsedData is List) {
-    print('✅ MQTT 메세지 수신');
+    if (parsedData is List) {
+
     final List<Map<String, dynamic>> messageMapList = [];
+    final List<Map<String, dynamic>> mediaMapList = [];
+
     for (dynamic e in parsedData) {
-      final messageMap = Map<String, dynamic>.from(e);
-      messageMapList.add(messageMap);
+      final dataMap = Map<String, dynamic>.from(e);
+      if (dataMap['key'].contains('messageItem'))
+        messageMapList.add(dataMap);
+      else if (dataMap['key'].contains('mediaItem')) mediaMapList.add(dataMap);
     }
-    ref.read(messageControllerProvider.notifier).messageDataHandler(
-          messageDataList: messageMapList,
-        );
+
+    if(messageMapList.isNotEmpty) {
+      print('✅ 메세지 아이템 수신');
+      ref.read(messageControllerProvider.notifier).messageDataHandler(
+        messageDataList: messageMapList,
+      );
+    }
+
+    if(mediaMapList.isNotEmpty) {
+      print('✅ 미디어 아이템 수신');
+      MediaController().mediaDataHandler(
+        mediaDataList: mediaMapList,
+        // timeRecord: timeRecord,
+      );
+    }
+
   }
 }
 
