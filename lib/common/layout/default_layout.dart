@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:get_it/get_it.dart';
@@ -33,6 +35,7 @@ class DefaultLayout extends StatefulWidget {
 }
 
 class _DefaultLayoutState extends State<DefaultLayout> {
+  Timer? _timer;
   String contactName = '';
   String contactNumber = '';
 
@@ -41,6 +44,17 @@ class _DefaultLayoutState extends State<DefaultLayout> {
     // TODO: implement initState
     super.initState();
     assignContact();
+    _initRestartTimer();
+  }
+
+  void _initRestartTimer() {
+    _timer?.cancel();
+
+    _timer = Timer(Duration(hours: 4), () {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.go('/reinit');
+      });
+    });
   }
 
   Future<void> assignContact() async {

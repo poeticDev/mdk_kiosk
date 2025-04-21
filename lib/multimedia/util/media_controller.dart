@@ -163,6 +163,7 @@ class MediaController {
     }
 
     // 화면 rebuild하는 방법 투입(데이터베이스에서 불러오기부터 필요)
+
   }
 
   static DateTime _nowKST() {

@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
+import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/header/component/message_container.dart';
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/header/model/message.dart';
@@ -51,6 +52,15 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
       vsync: this,
       duration: Duration(milliseconds: 500),
     );
+
+    _initMessageList();
+  }
+
+  void _initMessageList() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(mqttManagerProvider).publish('/node-mdk/wall_hub/node-mdk/feedback', '메세지 리스트 발송 요청');
+      ref.read(mqttManagerProvider).publish('/node-mdk/wall_hub/node-mdk/feedback', '미디어 리스트 발송 요청');
+    });
   }
 
   // 오토슬라이드 시작
