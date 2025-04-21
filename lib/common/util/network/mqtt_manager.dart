@@ -26,7 +26,6 @@ final mqttManagerProvider = Provider<MqttManager>((ref) {
   );
 });
 
-
 /// Mqtt 수신시
 void onMqttReceived(WidgetRef ref, String topic, String message) {
   // data : media data, message
@@ -37,33 +36,40 @@ void onMqttReceived(WidgetRef ref, String topic, String message) {
   else if (topic == 'node-mdk/states') {}
 }
 
-
 /// Kiosk Data 핸들링
 void mqttDataHandler(WidgetRef ref, String dataJson) {
-  final Map<String, dynamic> parsedData = jsonDecode(dataJson);
-  final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
+  final dynamic parsedData = jsonDecode(dataJson);
 
-  // 발행시간이 없으면 무시
-  if (timeRecord == null) {
-    print('❌ MQTT data에 발행시간이 없습니다');
-    return;
-  }
+  print('✅parsedData: $parsedData');
+  print('✅parsedData type: ${parsedData.runtimeType}');
 
-  // 데이터 핸들링
-  handleParsedData(parsedData, 'mediaData', (dataList) {
-    print('✅ MQTT 미디어데이터 수신');
-    MediaController().mediaDataHandler(
-      mediaDataList: dataList,
-      timeRecord: timeRecord,
-    );
-  });
+  if (parsedData is Map<String, dynamic>) {
+    final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
 
-  handleParsedData(parsedData, 'messageData', (dataList) {
+    // 발행시간이 없으면 무시
+    if (timeRecord == null) {
+      print('❌ MQTT data에 발행시간이 없습니다');
+      return;
+    }
+    // 데이터 핸들링
+    handleParsedData(parsedData, 'mediaData', (dataList) {
+      print('✅ MQTT 미디어데이터 수신');
+      MediaController().mediaDataHandler(
+        mediaDataList: dataList,
+        timeRecord: timeRecord,
+      );
+    });
+  } else if (parsedData is List) {
     print('✅ MQTT 메세지 수신');
+    final List<Map<String, dynamic>> messageMapList = [];
+    for (dynamic e in parsedData) {
+      final messageMap = Map<String, dynamic>.from(e);
+      messageMapList.add(messageMap);
+    }
     ref.read(messageControllerProvider.notifier).messageDataHandler(
-      messageDataList: dataList,
-    );
-  });
+          messageDataList: messageMapList,
+        );
+  }
 }
 
 /// JSON에서 발행시간(timeRecord) 파싱
@@ -77,13 +83,13 @@ DateTime? _parseTimeRecord(dynamic timeRecord) {
 
 /// 특정 key가 있는 경우, 해당 데이터를 리스트로 변환 후 핸들링
 void handleParsedData(
-    Map<String, dynamic> parsedData,
-    String key,
-    Function(List<Map<String, dynamic>>) handler,
-    ) {
+  Map<String, dynamic> parsedData,
+  String key,
+  Function(List<Map<String, dynamic>>) handler,
+) {
   if (parsedData.containsKey(key)) {
     final List<Map<String, dynamic>>? dataList =
-    (parsedData[key] as List?)?.map((item) {
+        (parsedData[key] as List?)?.map((item) {
       return item as Map<String, dynamic>;
     }).toList();
 
@@ -92,7 +98,6 @@ void handleParsedData(
     }
   }
 }
-
 
 class MqttManager {
   final String broker;

@@ -82,60 +82,60 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
     List<Widget> childList = [
       DefaultHeader(),
       // Test용
-      MessageContainer(
-        height: widget.height,
-        padding: widget.padding,
-        fontSize: widget.fontSize,
-        messageData: Message(
-            key: 'dataKey',
-            until: DateTime.now().add(
-              Duration(minutes: 10),
-            ),
-            type: MessageType.check,
-            content: '테스트 1. 체크 타입 메시지창입니다. 학과 메세지가 있으면 여기에 표시됩니다.'),
-        isFading: isFading,
-      ),
-      MessageContainer(
-        height: widget.height,
-        padding: widget.padding,
-        fontSize: widget.fontSize,
-        messageData: Message(
-            key: 'dataKey',
-            until: DateTime.now().add(
-              Duration(minutes: 10),
-            ),
-            type: MessageType.announce,
-            content:
-                '테스트2. 공지사항 타입 메시지창입니다. 메세지가 한번에 표시되는 길이보다 더 길어지면 3초 뒤에 흐르기 시작합니다.'),
-        isFading: isFading,
-      ),
-      MessageContainer(
-        height: widget.height,
-        padding: widget.padding,
-        fontSize: widget.fontSize,
-        messageData: Message(
-            key: 'dataKey',
-            until: DateTime.now().add(
-              Duration(minutes: 10),
-            ),
-            type: MessageType.warning,
-            content: '테스트3. 경고 타입 메시지창입니다. 메세지는 약 12초간 노출됩니다.'),
-        isFading: isFading,
-      ),
-      MessageContainer(
-        height: widget.height,
-        padding: widget.padding,
-        fontSize: widget.fontSize,
-        messageData: Message(
-            key: 'dataKey',
-            until: DateTime.now().add(
-              Duration(minutes: 10),
-            ),
-            type: MessageType.normal,
-            content:
-                '테스트4. 일반 타입 메시지창입니다. 학과 메시지가 없을 경우, 이 다음에 나오는 기본 헤더가 고정됩니다.'),
-        isFading: isFading,
-      ),
+      // MessageContainer(
+      //   height: widget.height,
+      //   padding: widget.padding,
+      //   fontSize: widget.fontSize,
+      //   messageData: Message(
+      //       key: 'dataKey',
+      //       until: DateTime.now().add(
+      //         Duration(minutes: 10),
+      //       ),
+      //       type: MessageType.check,
+      //       content: '테스트 1. 체크 타입 메시지창입니다. 학과 메세지가 있으면 여기에 표시됩니다.'),
+      //   isFading: isFading,
+      // ),
+      // MessageContainer(
+      //   height: widget.height,
+      //   padding: widget.padding,
+      //   fontSize: widget.fontSize,
+      //   messageData: Message(
+      //       key: 'dataKey',
+      //       until: DateTime.now().add(
+      //         Duration(minutes: 10),
+      //       ),
+      //       type: MessageType.announce,
+      //       content:
+      //           '테스트2. 공지사항 타입 메시지창입니다. 메세지가 한번에 표시되는 길이보다 더 길어지면 3초 뒤에 흐르기 시작합니다.'),
+      //   isFading: isFading,
+      // ),
+      // MessageContainer(
+      //   height: widget.height,
+      //   padding: widget.padding,
+      //   fontSize: widget.fontSize,
+      //   messageData: Message(
+      //       key: 'dataKey',
+      //       until: DateTime.now().add(
+      //         Duration(minutes: 10),
+      //       ),
+      //       type: MessageType.warning,
+      //       content: '테스트3. 경고 타입 메시지창입니다. 메세지는 약 12초간 노출됩니다.'),
+      //   isFading: isFading,
+      // ),
+      // MessageContainer(
+      //   height: widget.height,
+      //   padding: widget.padding,
+      //   fontSize: widget.fontSize,
+      //   messageData: Message(
+      //       key: 'dataKey',
+      //       until: DateTime.now().add(
+      //         Duration(minutes: 10),
+      //       ),
+      //       type: MessageType.normal,
+      //       content:
+      //           '테스트4. 일반 타입 메시지창입니다. 학과 메시지가 없을 경우, 이 다음에 나오는 기본 헤더가 고정됩니다.'),
+      //   isFading: isFading,
+      // ),
     ];
 
     // 학과 메세지가 있을 경우, 헤더 생성
@@ -175,12 +175,16 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
 
   @override
   Widget build(BuildContext context) {
+
     final messageWatcher = ref.watch(messageControllerProvider);
+
     final children = _childList(messageWatcher);
+
 
     // 헤더 수에 따라 오토슬라이드 설정
     if (childrenCount == null || childrenCount != children.length) {
       childrenCount = children.length;
+
       _stopAutoSlide();
       if (childrenCount! <= 1) {
         setState(() {

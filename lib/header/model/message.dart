@@ -13,6 +13,7 @@ class Message {
   final DateTime until;
   final MessageType type;
   final String content;
+  final DateTime lastUpdated;
   late final Color color;
   late final String svgPath;
 
@@ -21,6 +22,7 @@ class Message {
     required this.until,
     required this.type,
     required this.content,
+    required this.lastUpdated,
   }) {
     switch (type) {
       case MessageType.normal:
@@ -49,6 +51,7 @@ class Message {
       until: DateTime.parse(messageDataMap['until']),
       type: MessageType.values.byName(messageDataMap['type']),
       content: messageDataMap['content'],
+      lastUpdated: DateTime.parse(messageDataMap['lastUpdated']),
     );
   }
 }

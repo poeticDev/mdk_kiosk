@@ -1,0 +1,2 @@
+/Users/hugolim/code/workspaceFlutter/mdk_kiosk/android/app/.cxx/Debug/5f6b5s4b/x86_64/CMakeFiles/edit_cache.dir
+/Users/hugolim/code/workspaceFlutter/mdk_kiosk/android/app/.cxx/Debug/5f6b5s4b/x86_64/CMakeFiles/rebuild_cache.dir

@@ -15,16 +15,47 @@ class MessageController extends _$MessageController {
     return _initialState;
   }
 
-  void syncMessageList(List<Message> messageList) {
-    // 기존 타이머 정리
+  void upsertMessageList(List<Message> newMessageList) {
     _cancelAllTimers();
+    final Map<String, Message> currentMap = {
+      for (Message m in state) m.key: m,
+    };
 
-    state = messageList;
-
-    for (final message in messageList) {
-      _setAutoRemoveTimer(message);
+    for (final newMsg in newMessageList) {
+      currentMap[newMsg.key] = newMsg; // 있으면 덮어쓰기, 없으면 추가
     }
+
+    state = currentMap.values.toList();
+
+    print('currentMessageState: $state');
+      // ..sort((a, b) => a.until.compareTo(b.until)); // 정렬은 필요에 따라
+
+    for (Message m in state) _setAutoRemoveTimer(m);
+
   }
+
+  // void syncMessageList(List<Message> messageList) {
+  //   // 기존 타이머 정리
+  //   _cancelAllTimers();
+  //
+  //   final List<String> oldKeys = [];
+  //
+  //   for (Message message in state) {
+  //     oldKeys.add(message.key);
+  //   }
+  //
+  //   for (Message newMessage in messageList) {
+  //     for (Message oldMessage in state) {}
+  //   }
+  //
+  //   state = messageList;
+  //
+  //   print('msg state: $state');
+  //
+  //   for (final message in messageList) {
+  //     _setAutoRemoveTimer(message);
+  //   }
+  // }
 
   void addMessage(Message message) {
     state = [...state, message];
@@ -85,6 +116,6 @@ class MessageController extends _$MessageController {
       messageList = [...messageList, message];
     }
 
-    syncMessageList(messageList);
+    upsertMessageList(messageList);
   }
 }

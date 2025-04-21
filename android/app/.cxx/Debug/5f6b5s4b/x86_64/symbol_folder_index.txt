@@ -1,0 +1,1 @@
+/Users/hugolim/code/workspaceFlutter/mdk_kiosk/build/app/intermediates/cxx/Debug/5f6b5s4b/obj/x86_64
