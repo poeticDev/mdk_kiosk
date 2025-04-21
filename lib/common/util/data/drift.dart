@@ -127,12 +127,12 @@ class AppDatabase extends _$AppDatabase {
       into(mediaItem).insert(data);
 
   // MediaItem 수정
-  Future<int> updateMediaItem(int id, MediaItemCompanion data) {
-    return (update(mediaItem)..where((t) => t.id.equals(id))).write(data);
+  Future<int> updateMediaItem(String key, MediaItemCompanion data) {
+    return (update(mediaItem)..where((t) => t.key.equals(key))).write(data);
   }
 
-  Future<int> deleteMediaItem(int id) {
-    return (delete(mediaItem)..where((t) => t.id.equals(id))).go();
+  Future<int> deleteMediaItem(String key) {
+    return (delete(mediaItem)..where((t) => t.key.equals(key))).go();
   }
 
   Future<void> upsertMediaItemByUrl(MediaItemCompanion data) async {
@@ -145,7 +145,7 @@ class AppDatabase extends _$AppDatabase {
       await createMediaItems(data);
     } else {
       // 해당 url이 있으면 기존 데이터 업데이트
-      await updateMediaItem(existingItem.id, data);
+      await updateMediaItem(existingItem.key, data);
     }
   }
 

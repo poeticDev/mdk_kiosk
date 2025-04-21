@@ -59,7 +59,7 @@ class ItemVideo extends StatefulWidget {
       return ItemVideo.fromGDrive(
         url: mediaItemData.url,
         fileName:
-        mediaItemData.fileName ?? 'videoFromGDrive${mediaItemData.id}',
+        mediaItemData.fileName ?? 'videoFromGDrive${mediaItemData.key}',
         fit: mediaItemData.fit,
         onPlayStart: onPlayStart,
         onPlayEnd: onPlayEnd,
@@ -68,7 +68,7 @@ class ItemVideo extends StatefulWidget {
       return ItemVideo(
         downloadUrl: mediaItemData.url,
         fileName:
-        mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.id}',
+        mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.key}',
         fit: mediaItemData.fit,
         onPlayStart: onPlayStart,
         onPlayEnd: onPlayEnd,

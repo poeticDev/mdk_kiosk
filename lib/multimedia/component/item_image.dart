@@ -58,7 +58,7 @@ class ItemImage extends StatefulWidget {
       return ItemImage.fromGDrive(
         url: mediaItemData.url,
         fileName:
-            mediaItemData.fileName ?? 'imageFromGDrive${mediaItemData.id}',
+            mediaItemData.fileName ?? 'imageFromGDrive${mediaItemData.key}',
         fit: mediaItemData.fit,
         onLoadingStart: onLoadingStart,
         onLoadingEnd: onLoadingEnd,
@@ -66,7 +66,7 @@ class ItemImage extends StatefulWidget {
     } else {
       return ItemImage(
         downloadUrl: mediaItemData.url,
-        fileName: mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.id}',
+        fileName: mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.key}',
         fit: mediaItemData.fit,
         onLoadingStart: onLoadingStart,
         onLoadingEnd: onLoadingEnd,

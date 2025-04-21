@@ -47,7 +47,7 @@ class MediaController {
 
   Map<String, dynamic> mediaItemDataToJson(MediaItemData data) {
     return {
-      'id': data.id,
+      'key': data.key,
       'title': data.title,
       'type': mediaTypeToString(data.type),
       'url': data.url,
@@ -100,8 +100,7 @@ class MediaController {
 // 실제 Companion 변환 메서드
   MediaItemCompanion jsonToCompanion(Map<String, dynamic> json) {
     return MediaItemCompanion(
-      id: Value(json['id'] as int),
-      // id도 명시적으로 넣고 싶으면
+      key: Value(json['key'] as String),
       title: Value(json['title'] as String),
       type: Value(stringToMediaType(json['type'] as String)),
       url: Value(json['url'] as String),
