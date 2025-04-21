@@ -27,7 +27,7 @@ class MultimediaLayout extends StatefulWidget {
 
 class _MultimediaLayoutState extends State<MultimediaLayout> {
   final CarouselSliderController carouselSliderController =
-      CarouselSliderController();
+  CarouselSliderController();
 
   bool isAutoPlaying = true;
   Color iconColor = ICON_COLOR;
@@ -56,9 +56,10 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
   void _initializeMediaItems() async {
     final db = GetIt.I<AppDatabase>();
 
-    final List<MediaItemData> mediaItemDatas = await db.getMediaItemDataList();
+    final List<MediaItemData> mediaItemDataList = await db.getMediaItemDataList();
 
-    mediaItems = _RenderMediaItems(mediaItemDatas);
+    mediaItems = _RenderMediaItems(mediaItemDataList);
+
   }
 
   List<Widget> _RenderMediaItems(List<MediaItemData> mediaItemDatas) {

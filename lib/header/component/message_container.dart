@@ -26,9 +26,9 @@ class MessageContainer extends StatefulWidget {
   State<MessageContainer> createState() => _MessageContainerState();
 
   static ColorFilter? _getColorFilter(
-    Color? color,
-    BlendMode colorBlendMode,
-  ) =>
+      Color? color,
+      BlendMode colorBlendMode,
+      ) =>
       color == null ? null : ColorFilter.mode(color, colorBlendMode);
 }
 
@@ -52,14 +52,12 @@ class _MessageContainerState extends State<MessageContainer> {
   @override
   Widget build(BuildContext context) {
     void _startScrollingIfNeeded() {
-      print('isFading: ${widget.isFading}');
       if (widget.isFading) return;
 
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         _scrollController.jumpTo(0);
         if (_scrollController.hasClients) {
           final maxScroll = _scrollController.position.maxScrollExtent;
-          print('maxScroll : $maxScroll');
           if (maxScroll > 0) {
             await Future.delayed(Duration(seconds: 3));
             await _scrollController.animateTo(

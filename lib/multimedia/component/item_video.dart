@@ -51,15 +51,15 @@ class ItemVideo extends StatefulWidget {
 
   /// 앱 db로부터 미디어데이터 불러와 생성하기
   factory ItemVideo.fromMediaData(
-    MediaItemData mediaItemData, {
-    VoidCallback? onPlayStart,
-    VoidCallback? onPlayEnd,
-  }) {
+      MediaItemData mediaItemData, {
+        VoidCallback? onPlayStart,
+        VoidCallback? onPlayEnd,
+      }) {
     if (mediaItemData.from == MediaFrom.gDrive) {
       return ItemVideo.fromGDrive(
         url: mediaItemData.url,
         fileName:
-        mediaItemData.fileName ?? 'videoFromGDrive${mediaItemData.id}',
+        mediaItemData.fileName ?? 'videoFromGDrive${mediaItemData.key}',
         fit: mediaItemData.fit,
         onPlayStart: onPlayStart,
         onPlayEnd: onPlayEnd,
@@ -68,7 +68,7 @@ class ItemVideo extends StatefulWidget {
       return ItemVideo(
         downloadUrl: mediaItemData.url,
         fileName:
-        mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.id}',
+        mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.key}',
         fit: mediaItemData.fit,
         onPlayStart: onPlayStart,
         onPlayEnd: onPlayEnd,

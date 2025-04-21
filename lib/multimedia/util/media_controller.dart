@@ -47,7 +47,7 @@ class MediaController {
 
   Map<String, dynamic> mediaItemDataToJson(MediaItemData data) {
     return {
-      'id': data.id,
+      'key': data.key,
       'title': data.title,
       'type': mediaTypeToString(data.type),
       'url': data.url,
@@ -83,7 +83,7 @@ class MediaController {
   BoxFit? stringToBoxFit(String? value) {
     if (value == null) return null;
     return BoxFit.values.firstWhere(
-        (e) => e.toString().split('.').last == value,
+            (e) => e.toString().split('.').last == value,
         orElse: () => BoxFit.cover); // 기본값 cover
   }
 
@@ -100,8 +100,7 @@ class MediaController {
 // 실제 Companion 변환 메서드
   MediaItemCompanion jsonToCompanion(Map<String, dynamic> json) {
     return MediaItemCompanion(
-      id: Value(json['id'] as int),
-      // id도 명시적으로 넣고 싶으면
+      key: Value(json['key'] as String),
       title: Value(json['title'] as String),
       type: Value(stringToMediaType(json['type'] as String)),
       url: Value(json['url'] as String),
@@ -116,6 +115,7 @@ class MediaController {
       List<Map<String, dynamic>> jsonList) {
     return jsonList.map((json) {
       return MediaItemCompanion(
+        key: Value(json['key'] ?? 'media key'),
         title: Value(json['title'] ?? '미디어 이름'),
         type: Value(MediaType.values.byName(json['type'])),
         url: Value(json['url']),
@@ -125,6 +125,7 @@ class MediaController {
             ? Value(BoxFit.values.byName(json['fit']))
             : const Value.absent(),
         orderNum: Value(_intParser(json['orderNum'])),
+        lastUpdated: Value(json['lastUpdated']),
       );
     }).toList();
   }
@@ -143,25 +144,26 @@ class MediaController {
   }
 
   /// MediaItemData 핸들링
-  void mediaDataHandler(
-      {required List<Map<String, dynamic>> mediaDataList,
-      required DateTime timeRecord}) {
+  void mediaDataHandler({required List<Map<String, dynamic>> mediaDataList}) {
     // 최신 데이터가 아니면 무시
-    if (lastModified.isAfter(timeRecord)) {
-      print('✅ 최신 미디어아이템 데이터가 아닙니다');
-      return;
-    } else {
-      lastModified = timeRecord;
-    }
+    // if (lastModified.isAfter(timeRecord)) {
+    //   print('✅ 최신 미디어아이템 데이터가 아닙니다');
+    //   return;
+    // } else {
+    //   lastModified = timeRecord;
+    // }
 
     // MediaItemCompanion 변환
     final List<MediaItemCompanion> mediaItemCompanionList =
-        jsonToCompanionList(mediaDataList);
+    jsonToCompanionList(mediaDataList);
 
     // MediaItem 동기화
-    db.syncMediaItems(mediaItemCompanionList);
+    for (MediaItemCompanion mediaItemCompanion in mediaItemCompanionList) {
+      db.upsertMediaItemByUrl(mediaItemCompanion);
+    }
 
     // 화면 rebuild하는 방법 투입(데이터베이스에서 불러오기부터 필요)
+
   }
 
   static DateTime _nowKST() {

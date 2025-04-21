@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   Future<BasicInfoData?> getLatestBasicInfo() async {
     final query = select(basicInfo)
       ..orderBy([
-        (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)
+            (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)
       ])
       ..limit(1); // limit을 직접 사용
 
@@ -74,7 +74,7 @@ class AppDatabase extends _$AppDatabase {
 
   Future<ButtonData?> getButtonById(int buttonId) async {
     final result = await (select(button)
-          ..where((tbl) => tbl.id.equals(buttonId)))
+      ..where((tbl) => tbl.id.equals(buttonId)))
         .getSingleOrNull();
     return result;
   }
@@ -88,7 +88,7 @@ class AppDatabase extends _$AppDatabase {
 
   Future<bool> doesButtonExist(int buttonId) async {
     final result = await (select(button)
-          ..where((tbl) => tbl.id.equals(buttonId)))
+      ..where((tbl) => tbl.id.equals(buttonId)))
         .getSingleOrNull();
     return result != null; // ✅ 존재하면 true, 없으면 false 반환
   }
@@ -104,9 +104,9 @@ class AppDatabase extends _$AppDatabase {
   /// 2+3.Button with Page
   Future<List<ButtonWithPage>> getButtonWithPage() {
     final query = (select(button)
-          ..orderBy([
+      ..orderBy([
             (t) => OrderingTerm(expression: t.page, mode: OrderingMode.asc)
-          ]))
+      ]))
         .join([
       innerJoin(page, page.id.equalsExp(button.page)),
     ]);
@@ -127,17 +127,17 @@ class AppDatabase extends _$AppDatabase {
       into(mediaItem).insert(data);
 
   // MediaItem 수정
-  Future<int> updateMediaItem(int id, MediaItemCompanion data) {
-    return (update(mediaItem)..where((t) => t.id.equals(id))).write(data);
+  Future<int> updateMediaItem(String key, MediaItemCompanion data) {
+    return (update(mediaItem)..where((t) => t.key.equals(key))).write(data);
   }
 
-  Future<int> deleteMediaItem(int id) {
-    return (delete(mediaItem)..where((t) => t.id.equals(id))).go();
+  Future<int> deleteMediaItem(String key) {
+    return (delete(mediaItem)..where((t) => t.key.equals(key))).go();
   }
 
   Future<void> upsertMediaItemByUrl(MediaItemCompanion data) async {
     final existingItem = await (select(mediaItem)
-          ..where((t) => t.url.equals(data.url.value)))
+      ..where((t) => t.url.equals(data.url.value)))
         .getSingleOrNull();
 
     if (existingItem == null) {
@@ -145,7 +145,7 @@ class AppDatabase extends _$AppDatabase {
       await createMediaItems(data);
     } else {
       // 해당 url이 있으면 기존 데이터 업데이트
-      await updateMediaItem(existingItem.id, data);
+      await updateMediaItem(existingItem.key, data);
     }
   }
 

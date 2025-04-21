@@ -30,7 +30,7 @@ class $BasicInfoTable extends BasicInfo
       'room_name', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      defaultValue: const Constant('건물번호-강의실번호'));
+      defaultValue: const Constant('000동 0000호'));
   static const VerificationMeta _logoImageMeta =
       const VerificationMeta('logoImage');
   @override
@@ -1406,15 +1406,11 @@ class $MediaItemTable extends MediaItem
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $MediaItemTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+      'key', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -1459,9 +1455,17 @@ class $MediaItemTable extends MediaItem
   late final GeneratedColumn<int> orderNum = GeneratedColumn<int>(
       'order_num', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _lastUpdatedMeta =
+      const VerificationMeta('lastUpdated');
+  @override
+  late final GeneratedColumn<DateTime> lastUpdated = GeneratedColumn<DateTime>(
+      'last_updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, title, type, url, fileName, from, fit, orderNum];
+      [key, title, type, url, fileName, from, fit, orderNum, lastUpdated];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1472,8 +1476,11 @@ class $MediaItemTable extends MediaItem
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('key')) {
+      context.handle(
+          _keyMeta, key.isAcceptableOrUnknown(data['key']!, _keyMeta));
+    } else if (isInserting) {
+      context.missing(_keyMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -1498,17 +1505,23 @@ class $MediaItemTable extends MediaItem
     } else if (isInserting) {
       context.missing(_orderNumMeta);
     }
+    if (data.containsKey('last_updated')) {
+      context.handle(
+          _lastUpdatedMeta,
+          lastUpdated.isAcceptableOrUnknown(
+              data['last_updated']!, _lastUpdatedMeta));
+    }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   MediaItemData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MediaItemData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      key: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}key'])!,
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       type: $MediaItemTable.$convertertype.fromSql(attachedDatabase.typeMapping
@@ -1523,6 +1536,8 @@ class $MediaItemTable extends MediaItem
           .read(DriftSqlType.string, data['${effectivePrefix}fit'])),
       orderNum: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}order_num'])!,
+      lastUpdated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
     );
   }
 
@@ -1543,7 +1558,7 @@ class $MediaItemTable extends MediaItem
 
 class MediaItemData extends DataClass implements Insertable<MediaItemData> {
   /// 1) 식별 아이디
-  final int id;
+  final String key;
 
   /// 2) 미디어 이름
   final String title;
@@ -1568,19 +1583,23 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
 
   /// 8) 표출 순서 : 기본 생성순
   final int orderNum;
+
+  /// 9) 마지막 수정 일시
+  final DateTime lastUpdated;
   const MediaItemData(
-      {required this.id,
+      {required this.key,
       required this.title,
       required this.type,
       required this.url,
       this.fileName,
       required this.from,
       this.fit,
-      required this.orderNum});
+      required this.orderNum,
+      required this.lastUpdated});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['key'] = Variable<String>(key);
     map['title'] = Variable<String>(title);
     {
       map['type'] =
@@ -1598,12 +1617,13 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       map['fit'] = Variable<String>($MediaItemTable.$converterfitn.toSql(fit));
     }
     map['order_num'] = Variable<int>(orderNum);
+    map['last_updated'] = Variable<DateTime>(lastUpdated);
     return map;
   }
 
   MediaItemCompanion toCompanion(bool nullToAbsent) {
     return MediaItemCompanion(
-      id: Value(id),
+      key: Value(key),
       title: Value(title),
       type: Value(type),
       url: Value(url),
@@ -1613,6 +1633,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       from: Value(from),
       fit: fit == null && nullToAbsent ? const Value.absent() : Value(fit),
       orderNum: Value(orderNum),
+      lastUpdated: Value(lastUpdated),
     );
   }
 
@@ -1620,7 +1641,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MediaItemData(
-      id: serializer.fromJson<int>(json['id']),
+      key: serializer.fromJson<String>(json['key']),
       title: serializer.fromJson<String>(json['title']),
       type: $MediaItemTable.$convertertype
           .fromJson(serializer.fromJson<String>(json['type'])),
@@ -1631,13 +1652,14 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       fit: $MediaItemTable.$converterfitn
           .fromJson(serializer.fromJson<String?>(json['fit'])),
       orderNum: serializer.fromJson<int>(json['orderNum']),
+      lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'key': serializer.toJson<String>(key),
       'title': serializer.toJson<String>(title),
       'type': serializer
           .toJson<String>($MediaItemTable.$convertertype.toJson(type)),
@@ -1648,20 +1670,22 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       'fit': serializer
           .toJson<String?>($MediaItemTable.$converterfitn.toJson(fit)),
       'orderNum': serializer.toJson<int>(orderNum),
+      'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
     };
   }
 
   MediaItemData copyWith(
-          {int? id,
+          {String? key,
           String? title,
           MediaType? type,
           String? url,
           Value<String?> fileName = const Value.absent(),
           MediaFrom? from,
           Value<BoxFit?> fit = const Value.absent(),
-          int? orderNum}) =>
+          int? orderNum,
+          DateTime? lastUpdated}) =>
       MediaItemData(
-        id: id ?? this.id,
+        key: key ?? this.key,
         title: title ?? this.title,
         type: type ?? this.type,
         url: url ?? this.url,
@@ -1669,10 +1693,11 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
         from: from ?? this.from,
         fit: fit.present ? fit.value : this.fit,
         orderNum: orderNum ?? this.orderNum,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
       );
   MediaItemData copyWithCompanion(MediaItemCompanion data) {
     return MediaItemData(
-      id: data.id.present ? data.id.value : this.id,
+      key: data.key.present ? data.key.value : this.key,
       title: data.title.present ? data.title.value : this.title,
       type: data.type.present ? data.type.value : this.type,
       url: data.url.present ? data.url.value : this.url,
@@ -1680,43 +1705,47 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       from: data.from.present ? data.from.value : this.from,
       fit: data.fit.present ? data.fit.value : this.fit,
       orderNum: data.orderNum.present ? data.orderNum.value : this.orderNum,
+      lastUpdated:
+          data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
     );
   }
 
   @override
   String toString() {
     return (StringBuffer('MediaItemData(')
-          ..write('id: $id, ')
+          ..write('key: $key, ')
           ..write('title: $title, ')
           ..write('type: $type, ')
           ..write('url: $url, ')
           ..write('fileName: $fileName, ')
           ..write('from: $from, ')
           ..write('fit: $fit, ')
-          ..write('orderNum: $orderNum')
+          ..write('orderNum: $orderNum, ')
+          ..write('lastUpdated: $lastUpdated')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, title, type, url, fileName, from, fit, orderNum);
+  int get hashCode => Object.hash(
+      key, title, type, url, fileName, from, fit, orderNum, lastUpdated);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MediaItemData &&
-          other.id == this.id &&
+          other.key == this.key &&
           other.title == this.title &&
           other.type == this.type &&
           other.url == this.url &&
           other.fileName == this.fileName &&
           other.from == this.from &&
           other.fit == this.fit &&
-          other.orderNum == this.orderNum);
+          other.orderNum == this.orderNum &&
+          other.lastUpdated == this.lastUpdated);
 }
 
 class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
-  final Value<int> id;
+  final Value<String> key;
   final Value<String> title;
   final Value<MediaType> type;
   final Value<String> url;
@@ -1724,8 +1753,10 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
   final Value<MediaFrom> from;
   final Value<BoxFit?> fit;
   final Value<int> orderNum;
+  final Value<DateTime> lastUpdated;
+  final Value<int> rowid;
   const MediaItemCompanion({
-    this.id = const Value.absent(),
+    this.key = const Value.absent(),
     this.title = const Value.absent(),
     this.type = const Value.absent(),
     this.url = const Value.absent(),
@@ -1733,9 +1764,11 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     this.from = const Value.absent(),
     this.fit = const Value.absent(),
     this.orderNum = const Value.absent(),
+    this.lastUpdated = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   MediaItemCompanion.insert({
-    this.id = const Value.absent(),
+    required String key,
     this.title = const Value.absent(),
     required MediaType type,
     required String url,
@@ -1743,11 +1776,14 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     this.from = const Value.absent(),
     this.fit = const Value.absent(),
     required int orderNum,
-  })  : type = Value(type),
+    this.lastUpdated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : key = Value(key),
+        type = Value(type),
         url = Value(url),
         orderNum = Value(orderNum);
   static Insertable<MediaItemData> custom({
-    Expression<int>? id,
+    Expression<String>? key,
     Expression<String>? title,
     Expression<String>? type,
     Expression<String>? url,
@@ -1755,9 +1791,11 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     Expression<String>? from,
     Expression<String>? fit,
     Expression<int>? orderNum,
+    Expression<DateTime>? lastUpdated,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
+      if (key != null) 'key': key,
       if (title != null) 'title': title,
       if (type != null) 'type': type,
       if (url != null) 'url': url,
@@ -1765,20 +1803,24 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
       if (from != null) 'from': from,
       if (fit != null) 'fit': fit,
       if (orderNum != null) 'order_num': orderNum,
+      if (lastUpdated != null) 'last_updated': lastUpdated,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   MediaItemCompanion copyWith(
-      {Value<int>? id,
+      {Value<String>? key,
       Value<String>? title,
       Value<MediaType>? type,
       Value<String>? url,
       Value<String?>? fileName,
       Value<MediaFrom>? from,
       Value<BoxFit?>? fit,
-      Value<int>? orderNum}) {
+      Value<int>? orderNum,
+      Value<DateTime>? lastUpdated,
+      Value<int>? rowid}) {
     return MediaItemCompanion(
-      id: id ?? this.id,
+      key: key ?? this.key,
       title: title ?? this.title,
       type: type ?? this.type,
       url: url ?? this.url,
@@ -1786,14 +1828,16 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
       from: from ?? this.from,
       fit: fit ?? this.fit,
       orderNum: orderNum ?? this.orderNum,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -1819,20 +1863,28 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     if (orderNum.present) {
       map['order_num'] = Variable<int>(orderNum.value);
     }
+    if (lastUpdated.present) {
+      map['last_updated'] = Variable<DateTime>(lastUpdated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('MediaItemCompanion(')
-          ..write('id: $id, ')
+          ..write('key: $key, ')
           ..write('title: $title, ')
           ..write('type: $type, ')
           ..write('url: $url, ')
           ..write('fileName: $fileName, ')
           ..write('from: $from, ')
           ..write('fit: $fit, ')
-          ..write('orderNum: $orderNum')
+          ..write('orderNum: $orderNum, ')
+          ..write('lastUpdated: $lastUpdated, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -2705,7 +2757,7 @@ typedef $$ButtonTableProcessedTableManager = ProcessedTableManager<
     ButtonData,
     PrefetchHooks Function({bool page})>;
 typedef $$MediaItemTableCreateCompanionBuilder = MediaItemCompanion Function({
-  Value<int> id,
+  required String key,
   Value<String> title,
   required MediaType type,
   required String url,
@@ -2713,9 +2765,11 @@ typedef $$MediaItemTableCreateCompanionBuilder = MediaItemCompanion Function({
   Value<MediaFrom> from,
   Value<BoxFit?> fit,
   required int orderNum,
+  Value<DateTime> lastUpdated,
+  Value<int> rowid,
 });
 typedef $$MediaItemTableUpdateCompanionBuilder = MediaItemCompanion Function({
-  Value<int> id,
+  Value<String> key,
   Value<String> title,
   Value<MediaType> type,
   Value<String> url,
@@ -2723,6 +2777,8 @@ typedef $$MediaItemTableUpdateCompanionBuilder = MediaItemCompanion Function({
   Value<MediaFrom> from,
   Value<BoxFit?> fit,
   Value<int> orderNum,
+  Value<DateTime> lastUpdated,
+  Value<int> rowid,
 });
 
 class $$MediaItemTableFilterComposer
@@ -2734,8 +2790,8 @@ class $$MediaItemTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get key => $composableBuilder(
+      column: $table.key, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get title => $composableBuilder(
       column: $table.title, builder: (column) => ColumnFilters(column));
@@ -2763,6 +2819,9 @@ class $$MediaItemTableFilterComposer
 
   ColumnFilters<int> get orderNum => $composableBuilder(
       column: $table.orderNum, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
 }
 
 class $$MediaItemTableOrderingComposer
@@ -2774,8 +2833,8 @@ class $$MediaItemTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get key => $composableBuilder(
+      column: $table.key, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get title => $composableBuilder(
       column: $table.title, builder: (column) => ColumnOrderings(column));
@@ -2797,6 +2856,9 @@ class $$MediaItemTableOrderingComposer
 
   ColumnOrderings<int> get orderNum => $composableBuilder(
       column: $table.orderNum, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
 }
 
 class $$MediaItemTableAnnotationComposer
@@ -2808,8 +2870,8 @@ class $$MediaItemTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
@@ -2831,6 +2893,9 @@ class $$MediaItemTableAnnotationComposer
 
   GeneratedColumn<int> get orderNum =>
       $composableBuilder(column: $table.orderNum, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => column);
 }
 
 class $$MediaItemTableTableManager extends RootTableManager<
@@ -2859,7 +2924,7 @@ class $$MediaItemTableTableManager extends RootTableManager<
           createComputedFieldComposer: () =>
               $$MediaItemTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
+            Value<String> key = const Value.absent(),
             Value<String> title = const Value.absent(),
             Value<MediaType> type = const Value.absent(),
             Value<String> url = const Value.absent(),
@@ -2867,9 +2932,11 @@ class $$MediaItemTableTableManager extends RootTableManager<
             Value<MediaFrom> from = const Value.absent(),
             Value<BoxFit?> fit = const Value.absent(),
             Value<int> orderNum = const Value.absent(),
+            Value<DateTime> lastUpdated = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
               MediaItemCompanion(
-            id: id,
+            key: key,
             title: title,
             type: type,
             url: url,
@@ -2877,9 +2944,11 @@ class $$MediaItemTableTableManager extends RootTableManager<
             from: from,
             fit: fit,
             orderNum: orderNum,
+            lastUpdated: lastUpdated,
+            rowid: rowid,
           ),
           createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
+            required String key,
             Value<String> title = const Value.absent(),
             required MediaType type,
             required String url,
@@ -2887,9 +2956,11 @@ class $$MediaItemTableTableManager extends RootTableManager<
             Value<MediaFrom> from = const Value.absent(),
             Value<BoxFit?> fit = const Value.absent(),
             required int orderNum,
+            Value<DateTime> lastUpdated = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
               MediaItemCompanion.insert(
-            id: id,
+            key: key,
             title: title,
             type: type,
             url: url,
@@ -2897,6 +2968,8 @@ class $$MediaItemTableTableManager extends RootTableManager<
             from: from,
             fit: fit,
             orderNum: orderNum,
+            lastUpdated: lastUpdated,
+            rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

@@ -26,7 +26,6 @@ final mqttManagerProvider = Provider<MqttManager>((ref) {
   );
 });
 
-
 /// Mqtt 수신시
 void onMqttReceived(WidgetRef ref, String topic, String message) {
   // data : media data, message
@@ -37,33 +36,59 @@ void onMqttReceived(WidgetRef ref, String topic, String message) {
   else if (topic == 'node-mdk/states') {}
 }
 
-
 /// Kiosk Data 핸들링
 void mqttDataHandler(WidgetRef ref, String dataJson) {
-  final Map<String, dynamic> parsedData = jsonDecode(dataJson);
-  final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
+  final dynamic parsedData = jsonDecode(dataJson);
 
-  // 발행시간이 없으면 무시
-  if (timeRecord == null) {
-    print('❌ MQTT data에 발행시간이 없습니다');
-    return;
+  print('✅parsedData: $parsedData');
+  print('✅parsedData type: ${parsedData.runtimeType}');
+
+  // if (parsedData is Map<String, dynamic>) {
+  //   final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
+  //
+  //   // 발행시간이 없으면 무시
+  //   if (timeRecord == null) {
+  //     print('❌ MQTT data에 발행시간이 없습니다');
+  //     return;
+  //   }
+  //   // 데이터 핸들링
+  //   handleParsedData(parsedData, 'mediaData', (dataList) {
+  //     print('✅ MQTT 미디어데이터 수신');
+  //     MediaController().mediaDataHandler(
+  //       mediaDataList: dataList,
+  //       timeRecord: timeRecord,
+  //     );
+  //   });
+  // } else
+
+  if (parsedData is List) {
+
+    final List<Map<String, dynamic>> messageMapList = [];
+    final List<Map<String, dynamic>> mediaMapList = [];
+
+    for (dynamic e in parsedData) {
+      final dataMap = Map<String, dynamic>.from(e);
+      if (dataMap['key'].contains('messageItem'))
+        messageMapList.add(dataMap);
+      else if (dataMap['key'].contains('mediaItem')) mediaMapList.add(dataMap);
+    }
+
+    if(messageMapList.isNotEmpty) {
+      print('✅ 메세지 아이템 수신');
+      ref.read(messageControllerProvider.notifier).messageDataHandler(
+        messageDataList: messageMapList,
+      );
+    }
+
+    if(mediaMapList.isNotEmpty) {
+      print('✅ 미디어 아이템 수신');
+      MediaController().mediaDataHandler(
+        mediaDataList: mediaMapList,
+        // timeRecord: timeRecord,
+      );
+    }
+
   }
-
-  // 데이터 핸들링
-  handleParsedData(parsedData, 'mediaData', (dataList) {
-    print('✅ MQTT 미디어데이터 수신');
-    MediaController().mediaDataHandler(
-      mediaDataList: dataList,
-      timeRecord: timeRecord,
-    );
-  });
-
-  handleParsedData(parsedData, 'messageData', (dataList) {
-    print('✅ MQTT 메세지 수신');
-    ref.read(messageControllerProvider.notifier).messageDataHandler(
-      messageDataList: dataList,
-    );
-  });
 }
 
 /// JSON에서 발행시간(timeRecord) 파싱
@@ -92,7 +117,6 @@ void handleParsedData(
     }
   }
 }
-
 
 class MqttManager {
   final String broker;
