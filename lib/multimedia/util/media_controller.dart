@@ -115,6 +115,7 @@ class MediaController {
       List<Map<String, dynamic>> jsonList) {
     return jsonList.map((json) {
       return MediaItemCompanion(
+        key: Value(json['key'] ?? 'media key'),
         title: Value(json['title'] ?? '미디어 이름'),
         type: Value(MediaType.values.byName(json['type'])),
         url: Value(json['url']),
@@ -124,6 +125,7 @@ class MediaController {
             ? Value(BoxFit.values.byName(json['fit']))
             : const Value.absent(),
         orderNum: Value(_intParser(json['orderNum'])),
+        lastUpdated: Value(json['lastUpdated']),
       );
     }).toList();
   }
