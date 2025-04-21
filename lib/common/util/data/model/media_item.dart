@@ -7,7 +7,7 @@ enum MediaFrom { gDrive, etc, webView }
 
 class MediaItem extends Table {
   /// 1) 식별 아이디
-  IntColumn get id => integer().autoIncrement()();
+  TextColumn get key => text()();
 
   /// 2) 미디어 이름
   TextColumn get title => text().withDefault(const Constant('미디어 이름'))();
@@ -33,6 +33,10 @@ class MediaItem extends Table {
 
   /// 8) 표출 순서 : 기본 생성순
   IntColumn get orderNum => integer()();
+
+  /// 9) 마지막 수정 일시
+  DateTimeColumn get lastUpdated =>
+      dateTime().withDefault(currentDateAndTime)();
 }
 
 // class ItemModel {

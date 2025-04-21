@@ -50,15 +50,15 @@ class ItemImage extends StatefulWidget {
 
   /// 앱 db로부터 미디어데이터 불러와 생성하기
   factory ItemImage.fromMediaData(
-    MediaItemData mediaItemData, {
-    VoidCallback? onLoadingStart,
-    VoidCallback? onLoadingEnd,
-  }) {
+      MediaItemData mediaItemData, {
+        VoidCallback? onLoadingStart,
+        VoidCallback? onLoadingEnd,
+      }) {
     if (mediaItemData.from == MediaFrom.gDrive) {
       return ItemImage.fromGDrive(
         url: mediaItemData.url,
         fileName:
-            mediaItemData.fileName ?? 'imageFromGDrive${mediaItemData.id}',
+        mediaItemData.fileName ?? 'imageFromGDrive${mediaItemData.key}',
         fit: mediaItemData.fit,
         onLoadingStart: onLoadingStart,
         onLoadingEnd: onLoadingEnd,
@@ -66,7 +66,7 @@ class ItemImage extends StatefulWidget {
     } else {
       return ItemImage(
         downloadUrl: mediaItemData.url,
-        fileName: mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.id}',
+        fileName: mediaItemData.fileName ?? 'imageFromWeb${mediaItemData.key}',
         fit: mediaItemData.fit,
         onLoadingStart: onLoadingStart,
         onLoadingEnd: onLoadingEnd,

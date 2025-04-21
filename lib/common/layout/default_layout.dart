@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:get_it/get_it.dart';
@@ -33,14 +35,26 @@ class DefaultLayout extends StatefulWidget {
 }
 
 class _DefaultLayoutState extends State<DefaultLayout> {
-  String contactName = '교육혁신처';
-  String contactNumber = '055-772-4864';
+  Timer? _timer;
+  String contactName = '';
+  String contactNumber = '';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     assignContact();
+    _initRestartTimer();
+  }
+
+  void _initRestartTimer() {
+    _timer?.cancel();
+
+    _timer = Timer(Duration(hours: 4), () {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.go('/reinit');
+      });
+    });
   }
 
   Future<void> assignContact() async {
@@ -116,7 +130,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 // 3. 멀티미디어
                 MorphContainer(
                   child:
-                      _MultiMedia(width: maxWidth, height: (maxWidth) * 9 / 16),
+                  _MultiMedia(width: maxWidth, height: (maxWidth) * 9 / 16),
                 ),
                 SizedBox(
                   height: betweenPadding * 0.7,
