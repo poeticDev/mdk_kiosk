@@ -1463,9 +1463,28 @@ class $MediaItemTable extends MediaItem
       type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       defaultValue: currentDateAndTime);
+  static const VerificationMeta _isDeadMeta = const VerificationMeta('isDead');
   @override
-  List<GeneratedColumn> get $columns =>
-      [key, title, type, url, fileName, from, fit, orderNum, lastUpdated];
+  late final GeneratedColumn<bool> isDead = GeneratedColumn<bool>(
+      'is_dead', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_dead" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        key,
+        title,
+        type,
+        url,
+        fileName,
+        from,
+        fit,
+        orderNum,
+        lastUpdated,
+        isDead
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1511,6 +1530,10 @@ class $MediaItemTable extends MediaItem
           lastUpdated.isAcceptableOrUnknown(
               data['last_updated']!, _lastUpdatedMeta));
     }
+    if (data.containsKey('is_dead')) {
+      context.handle(_isDeadMeta,
+          isDead.isAcceptableOrUnknown(data['is_dead']!, _isDeadMeta));
+    }
     return context;
   }
 
@@ -1538,6 +1561,8 @@ class $MediaItemTable extends MediaItem
           .read(DriftSqlType.int, data['${effectivePrefix}order_num'])!,
       lastUpdated: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
+      isDead: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_dead'])!,
     );
   }
 
@@ -1586,6 +1611,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
 
   /// 9) 마지막 수정 일시
   final DateTime lastUpdated;
+  final bool isDead;
   const MediaItemData(
       {required this.key,
       required this.title,
@@ -1595,7 +1621,8 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       required this.from,
       this.fit,
       required this.orderNum,
-      required this.lastUpdated});
+      required this.lastUpdated,
+      required this.isDead});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1618,6 +1645,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
     }
     map['order_num'] = Variable<int>(orderNum);
     map['last_updated'] = Variable<DateTime>(lastUpdated);
+    map['is_dead'] = Variable<bool>(isDead);
     return map;
   }
 
@@ -1634,6 +1662,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       fit: fit == null && nullToAbsent ? const Value.absent() : Value(fit),
       orderNum: Value(orderNum),
       lastUpdated: Value(lastUpdated),
+      isDead: Value(isDead),
     );
   }
 
@@ -1653,6 +1682,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
           .fromJson(serializer.fromJson<String?>(json['fit'])),
       orderNum: serializer.fromJson<int>(json['orderNum']),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
+      isDead: serializer.fromJson<bool>(json['isDead']),
     );
   }
   @override
@@ -1671,6 +1701,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
           .toJson<String?>($MediaItemTable.$converterfitn.toJson(fit)),
       'orderNum': serializer.toJson<int>(orderNum),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
+      'isDead': serializer.toJson<bool>(isDead),
     };
   }
 
@@ -1683,7 +1714,8 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
           MediaFrom? from,
           Value<BoxFit?> fit = const Value.absent(),
           int? orderNum,
-          DateTime? lastUpdated}) =>
+          DateTime? lastUpdated,
+          bool? isDead}) =>
       MediaItemData(
         key: key ?? this.key,
         title: title ?? this.title,
@@ -1694,6 +1726,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
         fit: fit.present ? fit.value : this.fit,
         orderNum: orderNum ?? this.orderNum,
         lastUpdated: lastUpdated ?? this.lastUpdated,
+        isDead: isDead ?? this.isDead,
       );
   MediaItemData copyWithCompanion(MediaItemCompanion data) {
     return MediaItemData(
@@ -1707,6 +1740,7 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       orderNum: data.orderNum.present ? data.orderNum.value : this.orderNum,
       lastUpdated:
           data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
+      isDead: data.isDead.present ? data.isDead.value : this.isDead,
     );
   }
 
@@ -1721,14 +1755,15 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
           ..write('from: $from, ')
           ..write('fit: $fit, ')
           ..write('orderNum: $orderNum, ')
-          ..write('lastUpdated: $lastUpdated')
+          ..write('lastUpdated: $lastUpdated, ')
+          ..write('isDead: $isDead')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      key, title, type, url, fileName, from, fit, orderNum, lastUpdated);
+  int get hashCode => Object.hash(key, title, type, url, fileName, from, fit,
+      orderNum, lastUpdated, isDead);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1741,7 +1776,8 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
           other.from == this.from &&
           other.fit == this.fit &&
           other.orderNum == this.orderNum &&
-          other.lastUpdated == this.lastUpdated);
+          other.lastUpdated == this.lastUpdated &&
+          other.isDead == this.isDead);
 }
 
 class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
@@ -1754,6 +1790,7 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
   final Value<BoxFit?> fit;
   final Value<int> orderNum;
   final Value<DateTime> lastUpdated;
+  final Value<bool> isDead;
   final Value<int> rowid;
   const MediaItemCompanion({
     this.key = const Value.absent(),
@@ -1765,6 +1802,7 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     this.fit = const Value.absent(),
     this.orderNum = const Value.absent(),
     this.lastUpdated = const Value.absent(),
+    this.isDead = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MediaItemCompanion.insert({
@@ -1777,6 +1815,7 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     this.fit = const Value.absent(),
     required int orderNum,
     this.lastUpdated = const Value.absent(),
+    this.isDead = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : key = Value(key),
         type = Value(type),
@@ -1792,6 +1831,7 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     Expression<String>? fit,
     Expression<int>? orderNum,
     Expression<DateTime>? lastUpdated,
+    Expression<bool>? isDead,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1804,6 +1844,7 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
       if (fit != null) 'fit': fit,
       if (orderNum != null) 'order_num': orderNum,
       if (lastUpdated != null) 'last_updated': lastUpdated,
+      if (isDead != null) 'is_dead': isDead,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1818,6 +1859,7 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
       Value<BoxFit?>? fit,
       Value<int>? orderNum,
       Value<DateTime>? lastUpdated,
+      Value<bool>? isDead,
       Value<int>? rowid}) {
     return MediaItemCompanion(
       key: key ?? this.key,
@@ -1829,6 +1871,7 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
       fit: fit ?? this.fit,
       orderNum: orderNum ?? this.orderNum,
       lastUpdated: lastUpdated ?? this.lastUpdated,
+      isDead: isDead ?? this.isDead,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1866,6 +1909,9 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     if (lastUpdated.present) {
       map['last_updated'] = Variable<DateTime>(lastUpdated.value);
     }
+    if (isDead.present) {
+      map['is_dead'] = Variable<bool>(isDead.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1884,6 +1930,7 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
           ..write('fit: $fit, ')
           ..write('orderNum: $orderNum, ')
           ..write('lastUpdated: $lastUpdated, ')
+          ..write('isDead: $isDead, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2766,6 +2813,7 @@ typedef $$MediaItemTableCreateCompanionBuilder = MediaItemCompanion Function({
   Value<BoxFit?> fit,
   required int orderNum,
   Value<DateTime> lastUpdated,
+  Value<bool> isDead,
   Value<int> rowid,
 });
 typedef $$MediaItemTableUpdateCompanionBuilder = MediaItemCompanion Function({
@@ -2778,6 +2826,7 @@ typedef $$MediaItemTableUpdateCompanionBuilder = MediaItemCompanion Function({
   Value<BoxFit?> fit,
   Value<int> orderNum,
   Value<DateTime> lastUpdated,
+  Value<bool> isDead,
   Value<int> rowid,
 });
 
@@ -2822,6 +2871,9 @@ class $$MediaItemTableFilterComposer
 
   ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isDead => $composableBuilder(
+      column: $table.isDead, builder: (column) => ColumnFilters(column));
 }
 
 class $$MediaItemTableOrderingComposer
@@ -2859,6 +2911,9 @@ class $$MediaItemTableOrderingComposer
 
   ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isDead => $composableBuilder(
+      column: $table.isDead, builder: (column) => ColumnOrderings(column));
 }
 
 class $$MediaItemTableAnnotationComposer
@@ -2896,6 +2951,9 @@ class $$MediaItemTableAnnotationComposer
 
   GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDead =>
+      $composableBuilder(column: $table.isDead, builder: (column) => column);
 }
 
 class $$MediaItemTableTableManager extends RootTableManager<
@@ -2933,6 +2991,7 @@ class $$MediaItemTableTableManager extends RootTableManager<
             Value<BoxFit?> fit = const Value.absent(),
             Value<int> orderNum = const Value.absent(),
             Value<DateTime> lastUpdated = const Value.absent(),
+            Value<bool> isDead = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MediaItemCompanion(
@@ -2945,6 +3004,7 @@ class $$MediaItemTableTableManager extends RootTableManager<
             fit: fit,
             orderNum: orderNum,
             lastUpdated: lastUpdated,
+            isDead: isDead,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -2957,6 +3017,7 @@ class $$MediaItemTableTableManager extends RootTableManager<
             Value<BoxFit?> fit = const Value.absent(),
             required int orderNum,
             Value<DateTime> lastUpdated = const Value.absent(),
+            Value<bool> isDead = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MediaItemCompanion.insert(
@@ -2969,6 +3030,7 @@ class $$MediaItemTableTableManager extends RootTableManager<
             fit: fit,
             orderNum: orderNum,
             lastUpdated: lastUpdated,
+            isDead: isDead,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

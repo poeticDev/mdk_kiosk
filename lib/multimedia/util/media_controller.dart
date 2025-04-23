@@ -11,11 +11,13 @@
 //
 
 import 'package:drift/drift.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
+import 'package:mdk_kiosk/common/util/data/updaters.dart';
 
 class MediaController {
   /// 싱글턴 패턴
@@ -98,22 +100,23 @@ class MediaController {
   }
 
 // 실제 Companion 변환 메서드
-  MediaItemCompanion jsonToCompanion(Map<String, dynamic> json) {
-    return MediaItemCompanion(
-      key: Value(json['key'] as String),
-      title: Value(json['title'] as String),
-      type: Value(stringToMediaType(json['type'] as String)),
-      url: Value(json['url'] as String),
-      fileName: Value(json['fileName'] as String?),
-      from: Value(stringToMediaFrom(json['from'] as String)),
-      fit: Value(stringToBoxFit(json['fit'] as String?)),
-      orderNum: Value(json['orderNum'] as int),
-    );
-  }
+//   MediaItemCompanion jsonToCompanion(Map<String, dynamic> json) {
+//     return MediaItemCompanion(
+//       key: Value(json['key'] as String),
+//       title: Value(json['title'] as String),
+//       type: Value(stringToMediaType(json['type'] as String)),
+//       url: Value(json['url'] as String),
+//       fileName: Value(json['fileName'] as String?),
+//       from: Value(stringToMediaFrom(json['from'] as String)),
+//       fit: Value(stringToBoxFit(json['fit'] as String?)),
+//       orderNum: Value(json['orderNum'] as int),
+//     );
+//   }
 
   List<MediaItemCompanion> jsonToCompanionList(
       List<Map<String, dynamic>> jsonList) {
     return jsonList.map((json) {
+      DateTime lastUpdated = DateTime.parse(json['lastUpdated']);
       return MediaItemCompanion(
         key: Value(json['key'] ?? 'media key'),
         title: Value(json['title'] ?? '미디어 이름'),
@@ -125,7 +128,8 @@ class MediaController {
             ? Value(BoxFit.values.byName(json['fit']))
             : const Value.absent(),
         orderNum: Value(_intParser(json['orderNum'])),
-        lastUpdated: Value(json['lastUpdated']),
+        lastUpdated: Value(lastUpdated),
+        isDead: Value(json['isDead']),
       );
     }).toList();
   }
@@ -144,7 +148,9 @@ class MediaController {
   }
 
   /// MediaItemData 핸들링
-  void mediaDataHandler({required List<Map<String, dynamic>> mediaDataList}) {
+  void mediaDataHandler(
+      {required List<Map<String, dynamic>> mediaDataList,
+      required WidgetRef ref}) {
     // 최신 데이터가 아니면 무시
     // if (lastModified.isAfter(timeRecord)) {
     //   print('✅ 최신 미디어아이템 데이터가 아닙니다');
@@ -162,8 +168,7 @@ class MediaController {
       db.upsertMediaItemByUrl(mediaItemCompanion);
     }
 
-    // 화면 rebuild하는 방법 투입(데이터베이스에서 불러오기부터 필요)
-
+    updateMediaItems(ref);
   }
 
   static DateTime _nowKST() {

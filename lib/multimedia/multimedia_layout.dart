@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
@@ -12,8 +13,9 @@ import 'package:mdk_kiosk/common/view/splash_screen.dart';
 import 'package:mdk_kiosk/multimedia/component/item_image.dart';
 import 'package:mdk_kiosk/multimedia/component/item_video.dart';
 import 'package:mdk_kiosk/multimedia/component/item_web_view.dart';
+import 'package:mdk_kiosk/common/util/data/updaters.dart';
 
-class MultimediaLayout extends StatefulWidget {
+class MultimediaLayout extends ConsumerStatefulWidget {
   final List<Widget>? items;
 
   MultimediaLayout({
@@ -22,17 +24,19 @@ class MultimediaLayout extends StatefulWidget {
   });
 
   @override
-  State<MultimediaLayout> createState() => _MultimediaLayoutState();
+  ConsumerState<MultimediaLayout> createState() => _MultimediaLayoutState();
 }
 
-class _MultimediaLayoutState extends State<MultimediaLayout> {
+class _MultimediaLayoutState extends ConsumerState<MultimediaLayout> {
   final CarouselSliderController carouselSliderController =
   CarouselSliderController();
 
   bool isAutoPlaying = true;
   Color iconColor = ICON_COLOR;
 
-  late List<Widget> mediaItems;
+  DateTime? lastUpdated;
+
+  List<Widget>? mediaItems;
   bool _isLoading = true;
 
   void _stopAutoPlay() {
@@ -50,24 +54,27 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
   @override
   void initState() {
     super.initState();
-    _initializeMediaItems();
+    // _initializeMediaItems();
   }
 
-  void _initializeMediaItems() async {
+  Future<void> _initializeMediaItems() async {
     final db = GetIt.I<AppDatabase>();
 
-    final List<MediaItemData> mediaItemDataList = await db.getMediaItemDataList();
+    final List<MediaItemData> mediaItemDataList =
+        await db.getMediaItemDataList();
 
     mediaItems = _RenderMediaItems(mediaItemDataList);
-
   }
 
-  List<Widget> _RenderMediaItems(List<MediaItemData> mediaItemDatas) {
+  List<Widget> _RenderMediaItems(List<MediaItemData>? mediaItemDatas) {
     List<Widget> items = [];
+
+    if (mediaItemDatas == null) return items;
 
     for (MediaItemData mediaItemData in mediaItemDatas) {
       if (mediaItemData.type == MediaType.image) {
-        items.add(ItemImage.fromMediaData(mediaItemData,
+        items.add(ItemImage.fromMediaData(
+          mediaItemData,
           onLoadingStart: _stopAutoPlay,
           onLoadingEnd: _startAutoPlay,
         ));
@@ -101,7 +108,6 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
       _isLoading = false;
     });
 
-
     return items;
   }
 
@@ -114,7 +120,12 @@ class _MultimediaLayoutState extends State<MultimediaLayout> {
     // print('jsonDecode(jsonEncode(nodeRedToFlutterData)): ${jsonDecode(jsonEncode(nodeRedToFlutterData))}');
     // print('jsonDecode(jsonEncode(nodeRedToFlutterData)).runtimeType: ${jsonDecode(jsonEncode(nodeRedToFlutterData)).runtimeType}');
 
-
+    final mediaItemWatcher = ref.watch(mediaItemUpdater);
+    if (lastUpdated != mediaItemWatcher) {
+      setState(() {
+        _initializeMediaItems();
+      });
+    }
 
     return LayoutBuilder(builder: (context, constraints) {
       final mWidth = constraints.maxWidth;

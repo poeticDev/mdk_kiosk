@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
+import 'package:mdk_kiosk/common/util/data/updaters.dart';
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/multimedia/util/media_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -28,8 +29,10 @@ final mqttManagerProvider = Provider<MqttManager>((ref) {
 
 /// Mqtt 수신시
 void onMqttReceived(WidgetRef ref, String topic, String message) {
+  final List<String> splitedTopicList = topic.split('/');
+
   // data : media data, message
-  if (topic.split('/').last == KIOSK_NAME) {
+  if (splitedTopicList.last == KIOSK_NAME) {
     mqttDataHandler(ref, message);
   }
   // states
@@ -62,32 +65,33 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
   // } else
 
   if (parsedData is List) {
-
     final List<Map<String, dynamic>> messageMapList = [];
     final List<Map<String, dynamic>> mediaMapList = [];
 
     for (dynamic e in parsedData) {
       final dataMap = Map<String, dynamic>.from(e);
-      if (dataMap['key'].contains('messageItem'))
+      print('dataMap: $dataMap');
+      if (dataMap['key'].contains('message'))
         messageMapList.add(dataMap);
-      else if (dataMap['key'].contains('mediaItem')) mediaMapList.add(dataMap);
+      else if (dataMap['key'].contains('mediaItem'))
+        mediaMapList.add(dataMap);
+      else if (dataMap['key'] == 'update')
+        updateTimetable(ref);
     }
 
-    if(messageMapList.isNotEmpty) {
+    if (messageMapList.isNotEmpty) {
       print('✅ 메세지 아이템 수신');
       ref.read(messageControllerProvider.notifier).messageDataHandler(
-        messageDataList: messageMapList,
-      );
+            messageDataList: messageMapList,
+          );
     }
 
-    if(mediaMapList.isNotEmpty) {
+    if (mediaMapList.isNotEmpty) {
       print('✅ 미디어 아이템 수신');
-      MediaController().mediaDataHandler(
-        mediaDataList: mediaMapList,
-        // timeRecord: timeRecord,
-      );
+      MediaController().mediaDataHandler(mediaDataList: mediaMapList, ref: ref
+          // timeRecord: timeRecord,
+          );
     }
-
   }
 }
 
@@ -102,13 +106,13 @@ DateTime? _parseTimeRecord(dynamic timeRecord) {
 
 /// 특정 key가 있는 경우, 해당 데이터를 리스트로 변환 후 핸들링
 void handleParsedData(
-    Map<String, dynamic> parsedData,
-    String key,
-    Function(List<Map<String, dynamic>>) handler,
-    ) {
+  Map<String, dynamic> parsedData,
+  String key,
+  Function(List<Map<String, dynamic>>) handler,
+) {
   if (parsedData.containsKey(key)) {
     final List<Map<String, dynamic>>? dataList =
-    (parsedData[key] as List?)?.map((item) {
+        (parsedData[key] as List?)?.map((item) {
       return item as Map<String, dynamic>;
     }).toList();
 
@@ -128,6 +132,7 @@ class MqttManager {
   final bool isSecure;
   final String userName;
   final String password;
+  WidgetRef? ref;
 
   MqttManager({
     required this.broker,
@@ -165,7 +170,7 @@ class MqttManager {
   }
 
   /// MQTT 서버 연결
-  Future<bool> connect() async {
+  Future<bool> connect(WidgetRef ref) async {
     final connMessage = MqttConnectMessage()
         .withClientIdentifier(clientId)
         .authenticateAs(userName, password)

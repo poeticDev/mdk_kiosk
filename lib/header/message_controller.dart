@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:mdk_kiosk/header/model/message.dart';
 
@@ -22,7 +23,13 @@ class MessageController extends _$MessageController {
     };
 
     for (final newMsg in newMessageList) {
-      currentMap[newMsg.key] = newMsg; // 있으면 덮어쓰기, 없으면 추가
+      print('newMsg.until: ${newMsg.until}');
+
+      if (newMsg.until.isBefore(DateTime.now())) {
+        currentMap.remove(newMsg.key);
+      } else {
+        currentMap[newMsg.key] = newMsg; // 있으면 덮어쓰기, 없으면 추가
+      }
     }
 
     state = currentMap.values.toList();
@@ -31,7 +38,6 @@ class MessageController extends _$MessageController {
     // ..sort((a, b) => a.until.compareTo(b.until)); // 정렬은 필요에 따라
 
     for (Message m in state) _setAutoRemoveTimer(m);
-
   }
 
   // void syncMessageList(List<Message> messageList) {
@@ -111,9 +117,11 @@ class MessageController extends _$MessageController {
     List<Message> messageList = [];
 
     for (Map<String, dynamic> messageDataMap in messageDataList) {
-      final message = Message.fromMap(messageDataMap);
+      if (messageDataMap['roomId'].contains(globalData.roomId)) {
+        final message = Message.fromMap(messageDataMap);
 
-      messageList = [...messageList, message];
+        messageList = [...messageList, message];
+      }
     }
 
     upsertMessageList(messageList);
