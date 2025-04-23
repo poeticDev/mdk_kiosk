@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart' show BoxFit;
 
@@ -37,6 +39,8 @@ class MediaItem extends Table {
   /// 9) 마지막 수정 일시
   DateTimeColumn get lastUpdated =>
       dateTime().withDefault(currentDateAndTime)();
+
+  BoolColumn get isDead => boolean().withDefault(const Constant(false))();
 }
 
 // class ItemModel {

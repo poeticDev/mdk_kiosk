@@ -51,6 +51,12 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/fluttertoast_release.kotlin_module'
+        }
+    }
 }
 
 flutter {

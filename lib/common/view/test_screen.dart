@@ -30,24 +30,24 @@ class TestScreen extends StatelessWidget {
                   style: BODY_TEXT_STYLE,
                 ),
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  final db = GetIt.I<AppDatabase>();
-                  final List<MediaItemData> mediaItemList =
-                      await db.getMediaItemDataList();
-
-                  final message =
-                      MediaController().mediaItemDataListToJson(mediaItemList);
-                  ;
-
-                  // mqttManager.publish(
-                  //     'node-mdk/$KIOSK_NAME/$KIOSK_NAME', message);
-                },
-                child: Text(
-                  'mqtt publish',
-                  style: BODY_TEXT_STYLE,
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     final db = GetIt.I<AppDatabase>();
+              //     final List<MediaItemData> mediaItemList =
+              //         await db.getMediaItemDataList();
+              //
+              //     final message =
+              //         MediaController().mediaItemDataListToJson(mediaItemList);
+              //     ;
+              //
+              //     // mqttManager.publish(
+              //     //     'node-mdk/$KIOSK_NAME/$KIOSK_NAME', message);
+              //   },
+              //   child: Text(
+              //     'mqtt publish',
+              //     style: BODY_TEXT_STYLE,
+              //   ),
+              // ),
             ],
           ),
         ),

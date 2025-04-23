@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,8 +59,18 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
 
   void _initMessageList() async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(mqttManagerProvider).publish('/node-mdk/wall_hub/node-mdk/feedback', '메세지 리스트 발송 요청');
-      ref.read(mqttManagerProvider).publish('/node-mdk/wall_hub/node-mdk/feedback', '미디어 리스트 발송 요청');
+      final Map<String, dynamic> reqMap = {
+        "req": "startup",
+        "expired": false,
+        "isDead": false,
+      };
+
+      final String parsedMap = jsonEncode(reqMap);
+
+      ref
+          .read(mqttManagerProvider)
+          .publish('node-mdk/wall_hub/node-mdk/feedback', parsedMap);
+
     });
   }
 
@@ -185,11 +196,9 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
 
   @override
   Widget build(BuildContext context) {
-
     final messageWatcher = ref.watch(messageControllerProvider);
 
     final children = _childList(messageWatcher);
-
 
     // 헤더 수에 따라 오토슬라이드 설정
     if (childrenCount == null || childrenCount != children.length) {

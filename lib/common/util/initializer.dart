@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +14,7 @@ import 'package:mdk_kiosk/common/util/data/initial/initial_media_item.dart';
 import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
+import 'package:mdk_kiosk/multimedia/util/download_manager.dart';
 import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
 
 class AppInitializer {
@@ -259,7 +262,7 @@ class AppInitializer {
     final db = GetIt.I<AppDatabase>();
 
     // 최신 buttonData 불러오기
-    List<MediaItemData>? mediaItemDataList = await db.getMediaItemDataList();
+    List<MediaItemData> mediaItemDataList = await db.getMediaItemDataList();
 
     // 앱 첫 실행 시, 초기값을 가져와 기본 정보에 저장
     if (mediaItemDataList.isEmpty) {
@@ -291,7 +294,7 @@ class AppInitializer {
     print('MqttManager를 오픈 중입니다...');
     try {
       final mqttManager = ref.read(mqttManagerProvider);
-      await mqttManager.connect();
+      await mqttManager.connect(ref);
     } catch (e) {
       print('❌ MQTT 연결 실패: $e');
     }

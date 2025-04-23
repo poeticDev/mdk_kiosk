@@ -15,6 +15,7 @@ import 'package:mdk_kiosk/common/util/initializer.dart';
 import 'package:mdk_kiosk/common/util/route/router.dart';
 import 'package:mdk_kiosk/header/header_layout.dart';
 import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
+import 'package:mdk_kiosk/multimedia/util/download_manager.dart';
 
 class DefaultLayout extends StatefulWidget {
   final Color? backgroundColor;
@@ -44,16 +45,24 @@ class _DefaultLayoutState extends State<DefaultLayout> {
     // TODO: implement initState
     super.initState();
     assignContact();
-    _initRestartTimer();
+    _startDailyCleanupCheck();
   }
 
-  void _initRestartTimer() {
+  // void _initRestartTimer() {
+  //   _timer?.cancel();
+  //
+  //   _timer = Timer(Duration(hours: 4), () {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       context.go('/reinit');
+  //     });
+  //   });
+  // }
+
+  void _startDailyCleanupCheck() {
     _timer?.cancel();
 
-    _timer = Timer(Duration(hours: 4), () {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/reinit');
-      });
+    _timer = Timer.periodic(Duration(days: 1), (_) async {
+      await DownloadManager().clearOldFiles(days: 7);
     });
   }
 
@@ -130,7 +139,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 // 3. 멀티미디어
                 MorphContainer(
                   child:
-                  _MultiMedia(width: maxWidth, height: (maxWidth) * 9 / 16),
+                      _MultiMedia(width: maxWidth, height: (maxWidth) * 9 / 16),
                 ),
                 SizedBox(
                   height: betweenPadding * 0.7,
@@ -211,3 +220,4 @@ class _DefaultLayoutState extends State<DefaultLayout> {
     );
   }
 }
+
