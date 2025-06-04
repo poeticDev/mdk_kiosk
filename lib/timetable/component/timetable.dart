@@ -72,6 +72,7 @@ class _TimetableState extends ConsumerState<Timetable> {
           }
 
           return TimetableLayout(
+            key: Key(timetableWatcher.toString()),
             lectures: snapshot.data!,
           );
         });

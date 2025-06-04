@@ -91,6 +91,7 @@ class GoogleSheets {
     if (list1.length != list2.length) return false;
 
     for (int i = 0; i < list1.length; i++) {
+
       if (!_areRowsEqual(list1[i], list2[i])) return false;
     }
 
@@ -99,9 +100,12 @@ class GoogleSheets {
 
 // 행 비교 함수
   bool _areRowsEqual(Map<String, String> row1, Map<String, String> row2) {
+
     if (row1.length != row2.length) return false;
 
     for (var key in row1.keys) {
+      print('oldRow: ${row1[key]}');
+      print('newRow: ${row2[key]}');
       if (row1[key] != row2[key]) return false;
     }
 
