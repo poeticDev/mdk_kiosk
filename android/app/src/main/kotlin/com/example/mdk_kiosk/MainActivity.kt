@@ -1,4 +1,4 @@
-package com.example.mdk_kiosk
+package com.mdk.kiosk
 
 import io.flutter.embedding.android.FlutterActivity
 
