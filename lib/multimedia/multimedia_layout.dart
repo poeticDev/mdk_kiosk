@@ -10,6 +10,7 @@ import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'package:mdk_kiosk/common/util/data/initial/mqtt_json_sample.dart';
 import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
 import 'package:mdk_kiosk/common/view/splash_screen.dart';
+import 'package:mdk_kiosk/multimedia/studio/default_media_box.dart';
 import 'package:mdk_kiosk/multimedia/component/item_image.dart';
 import 'package:mdk_kiosk/multimedia/component/item_video.dart';
 import 'package:mdk_kiosk/multimedia/component/item_web_view.dart';
@@ -31,13 +32,13 @@ class _MultimediaLayoutState extends ConsumerState<MultimediaLayout> {
   final CarouselSliderController carouselSliderController =
   CarouselSliderController();
 
-  bool isAutoPlaying = true;
+  bool isAutoPlaying = false;
   Color iconColor = ICON_COLOR;
 
   DateTime? lastUpdated;
 
   List<Widget>? mediaItems;
-  bool _isLoading = true;
+  // bool _isLoading = true;
 
   void _stopAutoPlay() {
     setState(() {
@@ -57,59 +58,59 @@ class _MultimediaLayoutState extends ConsumerState<MultimediaLayout> {
     // _initializeMediaItems();
   }
 
-  Future<void> _initializeMediaItems() async {
-    final db = GetIt.I<AppDatabase>();
-
-    final List<MediaItemData> mediaItemDataList =
-        await db.getMediaItemDataList();
-
-    mediaItems = _RenderMediaItems(mediaItemDataList);
-  }
-
-  List<Widget> _RenderMediaItems(List<MediaItemData>? mediaItemDatas) {
-    List<Widget> items = [];
-
-    if (mediaItemDatas == null) return items;
-
-    for (MediaItemData mediaItemData in mediaItemDatas) {
-      if (mediaItemData.type == MediaType.image) {
-        items.add(ItemImage.fromMediaData(
-          mediaItemData,
-          onLoadingStart: _stopAutoPlay,
-          onLoadingEnd: _startAutoPlay,
-        ));
-      } else if (mediaItemData.type == MediaType.video) {
-        items.add(
-          ItemVideo.fromMediaData(
-            mediaItemData,
-            onPlayStart: _stopAutoPlay,
-            onPlayEnd: _startAutoPlay,
-          ),
-        );
-      } else if (mediaItemData.type == MediaType.webView) {
-        items.add(
-          ItemWebView(url: mediaItemData.url),
-        );
-      }
-    }
-
-    if (items.isEmpty) {
-      items.add(
-        Center(
-          child: Text(
-            '미디어 정보가 없습니다',
-            style: TextStyle(fontSize: 32),
-          ),
-        ),
-      );
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    return items;
-  }
+  // Future<void> _initializeMediaItems() async {
+  //   final db = GetIt.I<AppDatabase>();
+  //
+  //   final List<MediaItemData> mediaItemDataList =
+  //       await db.getMediaItemDataList();
+  //
+  //   mediaItems = _RenderMediaItems(mediaItemDataList);
+  // }
+  //
+  // List<Widget> _RenderMediaItems(List<MediaItemData>? mediaItemDatas) {
+  //   List<Widget> items = [];
+  //
+  //   if (mediaItemDatas == null) return items;
+  //
+  //   for (MediaItemData mediaItemData in mediaItemDatas) {
+  //     if (mediaItemData.type == MediaType.image) {
+  //       items.add(ItemImage.fromMediaData(
+  //         mediaItemData,
+  //         onLoadingStart: _stopAutoPlay,
+  //         onLoadingEnd: _startAutoPlay,
+  //       ));
+  //     } else if (mediaItemData.type == MediaType.video) {
+  //       items.add(
+  //         ItemVideo.fromMediaData(
+  //           mediaItemData,
+  //           onPlayStart: _stopAutoPlay,
+  //           onPlayEnd: _startAutoPlay,
+  //         ),
+  //       );
+  //     } else if (mediaItemData.type == MediaType.webView) {
+  //       items.add(
+  //         ItemWebView(url: mediaItemData.url),
+  //       );
+  //     }
+  //   }
+  //
+  //   if (items.isEmpty) {
+  //     items.add(
+  //       Center(
+  //         child: Text(
+  //           '미디어 정보가 없습니다',
+  //           style: TextStyle(fontSize: 32),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  //
+  //   return items;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -119,22 +120,22 @@ class _MultimediaLayoutState extends ConsumerState<MultimediaLayout> {
     // print('jsonEncode(nodeRedToFlutterData).runtimeType: ${jsonEncode(nodeRedToFlutterData).runtimeType}');
     // print('jsonDecode(jsonEncode(nodeRedToFlutterData)): ${jsonDecode(jsonEncode(nodeRedToFlutterData))}');
     // print('jsonDecode(jsonEncode(nodeRedToFlutterData)).runtimeType: ${jsonDecode(jsonEncode(nodeRedToFlutterData)).runtimeType}');
-
-    final mediaItemWatcher = ref.watch(mediaItemUpdater);
-    if (lastUpdated != mediaItemWatcher) {
-      setState(() {
-        _initializeMediaItems();
-      });
-    }
+    //
+    // final mediaItemWatcher = ref.watch(mediaItemUpdater);
+    // if (lastUpdated != mediaItemWatcher) {
+    //   setState(() {
+    //     // _initializeMediaItems();
+    //   });
+    // }
 
     return LayoutBuilder(builder: (context, constraints) {
       final mWidth = constraints.maxWidth;
       final mHeight = constraints.maxHeight;
       final iconSize = mHeight * 0.08;
 
-      if (_isLoading) {
-        return Center(child: SplashScreen()); // 로딩 화면
-      }
+      // if (_isLoading) {
+      //   return Center(child: SplashScreen()); // 로딩 화면
+      // }
 
       return Stack(
         children: [
@@ -154,7 +155,7 @@ class _MultimediaLayoutState extends ConsumerState<MultimediaLayout> {
                 }
               },
             ),
-            items: mediaItems,
+            items: [DefaultMediaBox()],
           ),
           // 컨트롤 버튼
           // _RenderCarouselController(iconSize: iconSize),
