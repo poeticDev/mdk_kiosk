@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -17,6 +19,36 @@ class Timetable extends ConsumerStatefulWidget {
 class _TimetableState extends ConsumerState<Timetable> {
   // Future<List<Lecture>> lectures;
   final GoogleSheets gSheet = GetIt.I<GoogleSheets>();
+  Timer? _timetableTimer;
+
+  @override
+  void initState() {
+    _startTimetableAutoUpdater();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _stopTimetableAutoUpdater();
+    super.dispose();
+  }
+
+  void _startTimetableAutoUpdater() {
+    const duration = Duration(minutes: 10); // 원하는 주기
+
+    // 기존 타이머 정지
+    _timetableTimer?.cancel();
+
+    // 새 타이머 시작
+    _timetableTimer = Timer.periodic(duration, (_) async {
+      await gSheet.compareNFetchWorksheet(ref);
+    });
+  }
+
+  void _stopTimetableAutoUpdater() {
+    _timetableTimer?.cancel();
+    _timetableTimer = null;
+  }
 
   @override
   Widget build(BuildContext context) {

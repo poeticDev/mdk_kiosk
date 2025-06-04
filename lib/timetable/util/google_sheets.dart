@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gsheets/gsheets.dart';
+import 'package:mdk_kiosk/common/util/data/updaters.dart';
 import 'package:mdk_kiosk/timetable/model/lecture.dart';
 
 class GoogleSheets {
@@ -11,7 +13,8 @@ class GoogleSheets {
   GoogleSheets({required this.sheetName});
 
   Future<Map<String, dynamic>> loadCredentials() async {
-    final jsonString = await rootBundle.loadString('asset/env/credentials.json');
+    final jsonString =
+        await rootBundle.loadString('asset/env/credentials.json');
     return jsonDecode(jsonString);
   }
 
@@ -35,6 +38,7 @@ class GoogleSheets {
 
   static final _sheet = GSheets(_credentials); // 스프레드시트
   static Worksheet? _worksheet; // 스프레드시트 중 작업 대상 시트
+  static Worksheet? _tempWorksheet;
 
   Future<void> initialize() async {
     _credentials = await loadCredentials();
@@ -50,6 +54,58 @@ class GoogleSheets {
       await _sheet.spreadsheet(_spreadSheetId),
       title: sheetName.toString(),
     );
+  }
+
+// ref는 외부에서 주입받아야 하니까 매개변수로 받아오자
+  Future<void> compareNFetchWorksheet(WidgetRef ref) async {
+    // 최신 시트 가져오기
+    _tempWorksheet = await _getWorksheet(
+        await _sheet.spreadsheet(_spreadSheetId),
+        title: sheetName.toString());
+
+    // 기존 시트 데이터
+    final oldRows = await _worksheet!.values.map.allRows(fromRow: 3);
+    final newRows = await _tempWorksheet!.values.map.allRows(fromRow: 3);
+
+    // 널 처리
+    final oldList = oldRows ?? [];
+    final newList = newRows ?? [];
+
+    // 비교
+    final isDifferent = !_areRowListsEqual(oldList, newList);
+
+    if (isDifferent) {
+      print('🟢 변경사항 감지됨 → _worksheet 갱신');
+      _worksheet = _tempWorksheet;
+
+      // 프로바이더 업데이트 → UI 새로고침 트리거
+      ref.read(timetableUpdater.notifier).state = DateTime.now();
+    } else {
+      print('⚪ 변경사항 없음 → 유지');
+    }
+  }
+
+// 리스트 비교 함수
+  bool _areRowListsEqual(
+      List<Map<String, String>> list1, List<Map<String, String>> list2) {
+    if (list1.length != list2.length) return false;
+
+    for (int i = 0; i < list1.length; i++) {
+      if (!_areRowsEqual(list1[i], list2[i])) return false;
+    }
+
+    return true;
+  }
+
+// 행 비교 함수
+  bool _areRowsEqual(Map<String, String> row1, Map<String, String> row2) {
+    if (row1.length != row2.length) return false;
+
+    for (var key in row1.keys) {
+      if (row1[key] != row2[key]) return false;
+    }
+
+    return true;
   }
 
   /// 먼저 시트를 생성하고, 이미 있을 경우는 해당 시트를 가져온다.
