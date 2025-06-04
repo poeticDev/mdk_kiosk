@@ -3,7 +3,7 @@ import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
 
 const List<MediaItemCompanion> DEFAULT_MEDIA_ITEM = [
-  // 2025 경상대 새해복
+
   MediaItemCompanion(
     key: Value('initialData'),
     type: Value(MediaType.image),
