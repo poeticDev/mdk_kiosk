@@ -69,8 +69,8 @@ class _DefaultLayoutState extends State<DefaultLayout> {
   Future<void> assignContact() async {
     final db = GetIt.I<AppDatabase>();
     ButtonData? contactData = await db.getButtonByName('contact');
-    contactName = contactData?.queryString ?? '교육혁신처';
-    contactNumber = contactData?.message ?? '055-772-4864';
+    contactName = contactData?.queryString ?? '    ';
+    contactNumber = contactData?.message ?? '    ';
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setState(() {});
     });
@@ -198,7 +198,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                           color: Colors.transparent,
                           height: 72,
                           width: 138,
-                          child: Image.asset('asset/img/gnu_logo.png'),
+                          child: Image.asset('asset/img/ghu_logo.gif'),
                         ),
                       ),
                     ],

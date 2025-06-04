@@ -7,9 +7,9 @@ const List<MediaItemCompanion> DEFAULT_MEDIA_ITEM = [
   MediaItemCompanion(
     key: Value('initialData'),
     type: Value(MediaType.image),
-    title: Value('2025새해복'),
+    title: Value('chatGPT광주보건대'),
     url: Value(
-        'https://www.gnu.ac.kr/upload/main/na/bbs_5171/ntt_2264748/img_44ab9c58-a741-4b93-bd7b-ddeee17c0ac11736728581323.png'),
+        'https://www.ghu.ac.kr/storage/board/74/content/20250403090137FSxSpXIdmfUD0627Y7ZM.png'),
     from: Value(MediaFrom.etc),
     orderNum: Value(1),
   ),

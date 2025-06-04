@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_kiosk/common/util/data/updaters.dart';
 import 'package:mdk_kiosk/header/message_controller.dart';
+import 'package:mdk_kiosk/header/model/studio_state_model.dart';
+import 'package:mdk_kiosk/header/util/state_manager.dart';
 import 'package:mdk_kiosk/multimedia/util/media_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
@@ -14,6 +16,7 @@ const KIOSK_NAME = 'wall_hub';
 
 const List<String> SUBSCRIBING_TOPICS = [
   'node-mdk/+/$KIOSK_NAME',
+  'node-mdk/+/ON_AIR_2',
   'node-mdk/states',
 ];
 
@@ -37,6 +40,12 @@ void onMqttReceived(WidgetRef ref, String topic, String message) {
   }
   // states
   else if (topic == 'node-mdk/states') {}
+  else if (topic == 'node-mdk/command/ON_AIR_2') {
+    /// 스테이트 변경 로직
+    final parsedInt = int.tryParse(message) ?? 0;
+    ref.read(studioStateProvider.notifier).state =
+    STATE_LIST[parsedInt];
+  }
 }
 
 /// Kiosk Data 핸들링

@@ -9,6 +9,7 @@ import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/header/component/message_container.dart';
+import 'package:mdk_kiosk/header/component/state_indicator.dart';
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/header/model/message.dart';
 
@@ -70,7 +71,6 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
       ref
           .read(mqttManagerProvider)
           .publish('node-mdk/wall_hub/node-mdk/feedback', parsedMap);
-
     });
   }
 
@@ -248,7 +248,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
       height: widget.height,
       child: MorphContainer(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: widget.padding),
+          padding: EdgeInsets.only(left: widget.padding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -256,10 +256,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
                 globalData.roomName,
                 style: TITLE_TEXT_STYLE.copyWith(fontSize: widget.fontSize),
               ),
-              Text(
-                globalData.titleText,
-                style: TITLE_TEXT_STYLE.copyWith(fontSize: widget.fontSize),
-              ),
+              SizedBox(width: 220, child: StateIndicator(fontSize: widget.fontSize)),
             ],
           ),
         ),
