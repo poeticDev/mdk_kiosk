@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/common/util/data/updaters.dart';
+import 'package:mdk_kiosk/multimedia/studio/lecture_box_for_media_box.dart';
 import 'package:mdk_kiosk/multimedia/studio/state_indicator_for_mediabox.dart';
+import 'package:mdk_kiosk/timetable/model/lecture.dart';
+import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
 
 class DefaultMediaBox extends ConsumerWidget {
-  const DefaultMediaBox({super.key});
+  DefaultMediaBox({super.key});
+
+  final GoogleSheets gSheet = GetIt.I<GoogleSheets>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final timetableWatcher = ref.watch(timetableUpdater);
+    final List<Lecture> lectureList = gSheet.getLecturesForToday();
+
 
     return LayoutBuilder(builder: (context, constraints) {
       final double mWidth = constraints.maxWidth;
@@ -33,18 +41,7 @@ class DefaultMediaBox extends ConsumerWidget {
                 color: TEXT_COLOR,
               ),
             ),
-            Text(
-              '00:00 ~ 12:00',
-              style: TITLE_TEXT_STYLE,
-            ),
-            Text(
-              '촬영명',
-              style: TITLE_TEXT_STYLE,
-            ),
-            Text(
-              '예약자명',
-              style: TITLE_TEXT_STYLE,
-            ),
+            LectureBoxForMediaBox(lecture: lectureList.first),
             StateIndicatorForMediaBox(
               fontSize: 80,
               width: mWidth * 0.9,

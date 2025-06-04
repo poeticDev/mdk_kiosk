@@ -15,7 +15,7 @@ class LectureBoxForMediaBox extends StatelessWidget {
       runSpacing: 16.0,
       children: [
         Text(
-          '${lecture.startAt.hour}:${lecture.startAt.minute}',
+          '${lecture.startAt.hour}:${lecture.startAt.minute.toString().padLeft(2, '0')}~${lecture.endAt.hour}:${lecture.endAt.minute.toString().padLeft(2, '0')}',
           style: TITLE_TEXT_STYLE,
         ),
         Text(
