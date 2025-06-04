@@ -5,7 +5,7 @@ import 'package:gsheets/gsheets.dart';
 import 'package:mdk_kiosk/timetable/model/lecture.dart';
 
 class GoogleSheets {
-  static const _spreadSheetId = '1cDSkWV4GQohzon0JH_Wf58OM9mWjSxsUnu2yIm9y2rY';
+  static const _spreadSheetId = '1YDH2-1QRNRXxJVO1HW-F2YxXpUAUzQ447Gcl03-lhn4';
   final String sheetName;
 
   GoogleSheets({required this.sheetName});
