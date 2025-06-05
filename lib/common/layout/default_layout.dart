@@ -15,6 +15,7 @@ import 'package:mdk_kiosk/common/util/initializer.dart';
 import 'package:mdk_kiosk/common/util/route/router.dart';
 import 'package:mdk_kiosk/header/header_layout.dart';
 import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
+import 'package:mdk_kiosk/multimedia/studio/state_indicator_for_mediabox.dart';
 import 'package:mdk_kiosk/multimedia/util/download_manager.dart';
 
 class DefaultLayout extends StatefulWidget {
@@ -81,7 +82,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
     final maxWidth = MediaQuery.of(context).size.width;
     final maxHeight = MediaQuery.of(context).size.height;
     const double layoutPadding = 60.0;
-    const double betweenPadding = 40.0;
+    const double betweenPadding = 30.0;
 
     return Scaffold(
       backgroundColor: widget.backgroundColor ?? BG_COLOR,
@@ -136,15 +137,21 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 SizedBox(
                   height: betweenPadding,
                 ),
-                // 3. 멀티미디어
+                // 3. 온에어
                 MorphContainer(
-                  child:
-                      _MultiMedia(width: maxWidth, height: (maxWidth) * 9 / 16),
+                    child: StateIndicatorForMediaBox(
+                        fontSize: 90, width: maxWidth, height: 160)),
+                SizedBox(
+                  height: betweenPadding,
+                ),
+                // 4. 멀티미디어
+                MorphContainer(
+                  child: _MultiMedia(width: maxWidth, height: 400),
                 ),
                 SizedBox(
                   height: betweenPadding * 0.7,
                 ),
-                // 4. 푸터 : 연락처 & 로고
+                // 5. 푸터 : 연락처 & 로고
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
@@ -220,4 +227,3 @@ class _DefaultLayoutState extends State<DefaultLayout> {
     );
   }
 }
-

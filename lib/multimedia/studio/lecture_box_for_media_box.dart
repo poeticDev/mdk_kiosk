@@ -31,7 +31,7 @@ class LectureBoxForMediaBox extends StatelessWidget {
         children: [
           SizedBox(width: 8.0),
           Text(
-            '${lecture.startAt.hour}:${lecture.startAt.minute.toString().padLeft(2, '0')}~${lecture.endAt.hour}:${lecture.endAt.minute.toString().padLeft(2, '0')}',
+            '${lecture.startAt.hour.toString().padLeft(2, '0')}:${lecture.startAt.minute.toString().padLeft(2, '0')} ~ ${lecture.endAt.hour}:${lecture.endAt.minute.toString().padLeft(2, '0')}',
             style: TITLE_TEXT_STYLE,
           ),
           Text(
