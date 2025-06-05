@@ -5,3 +5,11 @@ import 'package:mdk_kiosk/header/model/studio_state_model.dart';
 final studioStateProvider = StateProvider<StudioState>((ref) {
   return STATE_READY;
 });
+
+final temperatureProvider = StateProvider<double>((ref) {
+  return 0.0;
+});
+
+final humidityProvider = StateProvider<double>((ref) {
+  return 0.0;
+});
