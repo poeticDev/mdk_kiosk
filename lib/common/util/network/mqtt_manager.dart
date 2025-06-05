@@ -16,7 +16,7 @@ const KIOSK_NAME = 'wall_hub';
 
 const List<String> SUBSCRIBING_TOPICS = [
   'node-mdk/+/$KIOSK_NAME',
-  'node-mdk/+/ON_AIR_2',
+  'node-mdk/+/ON_AIR_1',
   'node-mdk/states',
 ];
 
@@ -134,7 +134,7 @@ void stateHandler(WidgetRef ref, String dataJson) {
   print('✅ MQTT State 수신');
   final Map<String, dynamic> parsedData = jsonDecode(dataJson);
 
-  final sensor = parsedData['sensor2'];
+  final sensor = parsedData['sensor1'];
   if (sensor is Map<String, dynamic>) {
     if (sensor.containsKey('temperature')) {
       final raw = double.tryParse(sensor['temperature'].toString());

@@ -3,8 +3,8 @@
 /// 자주 사용하여 디폴트로 만들어둔 값으로
 /// 변경할 필요가 있을 때만 주석 해제하여 작성함
 /// 1. 강의실 정보
-const String initialRoomId = 'ghu_self_studio';
-const String initialRoomName = '셀프 스튜디오';
+const String initialRoomId = 'ghu_main_studio';
+const String initialRoomName = '메인 스튜디오';
 const String initialImagePath = 'asset/img/ghu_logo.gif';
 const String initialWifiName ='mdk';
 const String initialTitleText = "미디어센터";
