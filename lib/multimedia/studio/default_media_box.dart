@@ -66,7 +66,7 @@ class DefaultMediaBox extends ConsumerWidget {
               ),
             ),
             StateIndicatorForMediaBox(
-              fontSize: 80,
+              fontSize: 88,
               width: mWidth * 0.9,
               height: mHeight / 3,
             ),
