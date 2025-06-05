@@ -10,6 +10,7 @@ import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/header/component/message_container.dart';
 import 'package:mdk_kiosk/header/component/simple_clock.dart';
+import 'package:mdk_kiosk/header/component/simple_meters.dart';
 import 'package:mdk_kiosk/header/component/state_indicator.dart';
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/header/model/message.dart';
@@ -257,6 +258,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
                 globalData.roomName,
                 style: TITLE_TEXT_STYLE.copyWith(fontSize: widget.fontSize),
               ),
+              SimpleMeters(),
               // SizedBox(width: 220, child: StateIndicator(fontSize: widget.fontSize)),
               SimpleClock(fontSize: widget.fontSize)
             ],

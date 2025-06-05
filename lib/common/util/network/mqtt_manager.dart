@@ -40,13 +40,11 @@ void onMqttReceived(WidgetRef ref, String topic, String message) {
   }
   // states : 온습도
   else if (topic == 'node-mdk/states') {
-
-  }
-  else if (topic == 'node-mdk/command/ON_AIR_2') {
+    stateHandler(ref, message);
+  } else if (topic == 'node-mdk/command/ON_AIR_2') {
     /// 스테이트 변경 로직
     final parsedInt = int.tryParse(message) ?? 0;
-    ref.read(studioStateProvider.notifier).state =
-    STATE_LIST[parsedInt];
+    ref.read(studioStateProvider.notifier).state = STATE_LIST[parsedInt];
   }
 }
 
@@ -86,8 +84,7 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
         messageMapList.add(dataMap);
       else if (dataMap['key'].contains('mediaItem'))
         mediaMapList.add(dataMap);
-      else if (dataMap['key'] == 'update')
-        updateTimetable(ref);
+      else if (dataMap['key'] == 'update') updateTimetable(ref);
     }
 
     if (messageMapList.isNotEmpty) {
@@ -130,6 +127,28 @@ void handleParsedData(
     if (dataList != null) {
       handler(dataList);
     }
+  }
+}
+
+void stateHandler(WidgetRef ref, String dataJson) {
+  print('✅ MQTT State 수신');
+  final Map<String, dynamic> parsedData = jsonDecode(dataJson);
+
+  final sensor = parsedData['sensor2'];
+  if (sensor is Map<String, dynamic>) {
+    if (sensor.containsKey('temperature')) {
+      final raw = double.tryParse(sensor['temperature'].toString());
+      final double temperature = raw != null ? (raw * 10).round() / 10 : -999.0;
+      ref.read(temperatureProvider.notifier).state = temperature;
+    }
+
+    if (sensor.containsKey('humidity')) {
+      final raw = double.tryParse(sensor['humidity'].toString());
+      final double humidity = raw != null ? (raw * 10).round() / 10 : -999.0;
+      ref.read(humidityProvider.notifier).state = humidity;
+    }
+  } else {
+    print('❌ sensor 필드가 없거나 형식이 잘못됨: $parsedData');
   }
 }
 
