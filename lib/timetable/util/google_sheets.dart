@@ -108,6 +108,8 @@ class GoogleSheets {
     if (row1.length != row2.length) return false;
 
     for (var key in row1.keys) {
+      print('oldRow: ${row1[key]}');
+      print('newRow: ${row2[key]}');
       if (row1[key] != row2[key]) return false;
     }
 
