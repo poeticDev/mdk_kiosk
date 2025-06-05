@@ -51,7 +51,8 @@ class DefaultMediaBox extends ConsumerWidget {
               height: lectureListHeight,
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  spacing: 16.0,
                   children: lectureList
                       .map(
                         (lecture) => LectureBoxForMediaBox(
