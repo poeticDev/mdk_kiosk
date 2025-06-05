@@ -36,7 +36,7 @@ class _TimetableState extends ConsumerState<Timetable> {
     _timetableTimer?.cancel();
 
     _timetableTimer = Timer.periodic(duration, (_) async {
-      await gSheet.compareNFetchWorksheet(ref);
+      await gSheet.compareNFetchLectureCache(ref);
     });
 
     print('✅ Timetable Auto Updater started (every ${duration.inMinutes} min)');
