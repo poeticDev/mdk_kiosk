@@ -19,10 +19,15 @@ class DefaultMediaBox extends ConsumerWidget {
     final timetableWatcher = ref.watch(timetableUpdater);
     final List<Lecture> lectureList = gSheet.getLecturesForToday();
 
-
     return LayoutBuilder(builder: (context, constraints) {
       final double mWidth = constraints.maxWidth;
       final double mHeight = constraints.maxHeight;
+
+      final onAirHeight = mHeight / 3;
+      final lectureListHeight = mHeight - onAirHeight - 80;
+
+      final double lectureBoxWidth = mWidth * 0.9;
+      final double lectureBoxHeight = 80;
 
       return Container(
         width: mWidth,
@@ -41,7 +46,24 @@ class DefaultMediaBox extends ConsumerWidget {
                 color: TEXT_COLOR,
               ),
             ),
-            LectureBoxForMediaBox(lecture: lectureList.first),
+            SizedBox(
+              width: mWidth,
+              height: lectureListHeight,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: lectureList
+                      .map(
+                        (lecture) => LectureBoxForMediaBox(
+                          lecture: lecture,
+                          width: lectureBoxWidth,
+                          height: lectureBoxHeight,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
             StateIndicatorForMediaBox(
               fontSize: 80,
               width: mWidth * 0.9,
