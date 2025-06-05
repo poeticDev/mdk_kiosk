@@ -41,7 +41,7 @@ void onMqttReceived(WidgetRef ref, String topic, String message) {
   // states : 온습도
   else if (topic == 'node-mdk/states') {
     stateHandler(ref, message);
-  } else if (topic == 'node-mdk/command/ON_AIR_2') {
+  } else if (topic == 'node-mdk/command/ON_AIR_1') {
     /// 스테이트 변경 로직
     final parsedInt = int.tryParse(message) ?? 0;
     ref.read(studioStateProvider.notifier).state = STATE_LIST[parsedInt];

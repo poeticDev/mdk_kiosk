@@ -32,13 +32,13 @@ final StudioState STATE_READY = StudioState(
 );
 
 final StudioState STATE_CHECK = StudioState(
-  text: '자동\n점검 중',
+  text: '자동 점검 중',
   bgColor: NORMAL_BLUE,
   fontColor: WHITE_TEXT_COLOR,
 );
 
 final StudioState STATE_CHECK_END = StudioState(
-  text: '점검\n종료',
+  text: '점검 종료',
   bgColor: Colors.yellow,
   fontColor: BODY_TEXT_COLOR,
 );
