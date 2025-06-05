@@ -38,17 +38,18 @@ class DefaultMediaBox extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(
-              '오늘의 촬영 스케쥴',
-              style: TextStyle(
-                fontSize: 32.0,
-                fontWeight: FontWeight.w600,
-                color: TEXT_COLOR,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                '오늘의 촬영 스케쥴',
+                style: TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.w600,
+                  color: TEXT_COLOR,
+                ),
               ),
             ),
-            SizedBox(
-              width: mWidth,
-              height: lectureListHeight,
+            Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -65,11 +66,11 @@ class DefaultMediaBox extends ConsumerWidget {
                 ),
               ),
             ),
-            StateIndicatorForMediaBox(
-              fontSize: 88,
-              width: mWidth * 0.9,
-              height: mHeight / 3,
-            ),
+            // StateIndicatorForMediaBox(
+            //   fontSize: 88,
+            //   width: mWidth * 0.9,
+            //   height: mHeight / 3,
+            // ),
           ],
         ),
       );
