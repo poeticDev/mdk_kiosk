@@ -38,8 +38,10 @@ void onMqttReceived(WidgetRef ref, String topic, String message) {
   if (splitedTopicList.last == KIOSK_NAME) {
     mqttDataHandler(ref, message);
   }
-  // states
-  else if (topic == 'node-mdk/states') {}
+  // states : 온습도
+  else if (topic == 'node-mdk/states') {
+
+  }
   else if (topic == 'node-mdk/command/ON_AIR_2') {
     /// 스테이트 변경 로직
     final parsedInt = int.tryParse(message) ?? 0;
