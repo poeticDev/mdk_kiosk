@@ -112,6 +112,7 @@ class _DefaultMediaBoxState extends ConsumerState<DefaultMediaBox> {
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
+                  spacing: 16.0,
                   children: lectureList
                       .map(
                         (lecture) => LectureBoxForMediaBox(
