@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -268,6 +269,7 @@ class MqttManager {
   /// 연결 해제 콜백
   void _onDisconnected() {
     print('❌ MQTT 서버 연결 해제됨');
+    if (ref != null) retryConnect(ref!);
   }
 
   /// 구독 성공 콜백
@@ -288,5 +290,39 @@ class MqttManager {
   /// Ping 요청 콜백
   void _pingCallback() {
     print('🔄 Ping 요청 전송');
+  }
+
+
+  Timer? _retryTimer;
+
+  Future<void> connectAndHandle(WidgetRef ref) async {
+    this.ref = ref;
+
+    final success = await connect(ref);
+    if (success) {
+      _retryTimer?.cancel();
+      _retryTimer = null;
+
+      // 연결 후 토픽 구독 + 수신 핸들러 등록
+      for (var topic in SUBSCRIBING_TOPICS) {
+        subscribe(topic);
+      }
+
+      listen((topic, message) {
+        onMqttReceived(ref, topic, message);
+      });
+    } else {
+      retryConnect(ref);
+    }
+  }
+
+  void retryConnect(WidgetRef ref) {
+    if (_retryTimer != null) return;
+
+    _retryTimer = Timer(Duration(minutes: 5), () async {
+      _retryTimer = null;
+      print('🔁 MQTT 재연결 시도 중...');
+      await connectAndHandle(ref);
+    });
   }
 }
