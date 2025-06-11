@@ -81,8 +81,8 @@ class AppInitializer {
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
-    await openMqttManager(ref);
-    subscribeTopics(ref);
+    await openMqttManager(ref).timeout(Duration(seconds: 10));;
+    // subscribeTopics(ref);
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
@@ -112,9 +112,7 @@ class AppInitializer {
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
     try {
-      await openMqttManager(ref).then((_) {
-        subscribeTopics(ref);
-      }).timeout(
+      await openMqttManager(ref).timeout(
         Duration(seconds: 10),
       );
     } catch (e) {
@@ -294,7 +292,7 @@ class AppInitializer {
     print('MqttManager를 오픈 중입니다...');
     try {
       final mqttManager = ref.read(mqttManagerProvider);
-      await mqttManager.connect(ref);
+      await mqttManager.connectAndHandle(ref);
     } catch (e) {
       print('❌ MQTT 연결 실패: $e');
     }
