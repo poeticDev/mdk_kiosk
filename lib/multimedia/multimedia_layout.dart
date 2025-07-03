@@ -9,6 +9,7 @@ import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'package:mdk_kiosk/common/util/data/initial/mqtt_json_sample.dart';
 import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
+import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/common/view/splash_screen.dart';
 import 'package:mdk_kiosk/multimedia/studio/default_media_box.dart';
 import 'package:mdk_kiosk/multimedia/component/item_image.dart';
@@ -56,6 +57,8 @@ class _MultimediaLayoutState extends ConsumerState<MultimediaLayout> {
   void initState() {
     super.initState();
     // _initializeMediaItems();
+
+    ref.read(mqttManagerProvider).registerRef(ref);
   }
 
   // Future<void> _initializeMediaItems() async {

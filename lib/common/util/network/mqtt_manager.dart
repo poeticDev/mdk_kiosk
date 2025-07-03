@@ -200,6 +200,11 @@ class MqttManager {
     _client.setProtocolV311();
   }
 
+  // 외부에서 ref 등록
+  void registerRef(WidgetRef ref) {
+    this.ref = ref;
+  }
+
   /// MQTT 서버 연결
   Future<bool> connect(WidgetRef ref) async {
     final connMessage = MqttConnectMessage()
