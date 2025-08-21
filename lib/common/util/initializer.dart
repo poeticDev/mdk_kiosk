@@ -82,7 +82,7 @@ class AppInitializer {
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
     await openMqttManager(ref);
-    subscribeTopics(ref);
+    // subscribeTopics(ref);
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
