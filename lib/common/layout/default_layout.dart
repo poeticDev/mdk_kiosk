@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic_plus/flutter_neumorphic.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mdk_kiosk/common/component/black_overlay.dart';
 import 'package:mdk_kiosk/common/component/custom_snack_bar.dart';
 import 'package:mdk_kiosk/common/component/editor_dialog.dart';
 import 'package:mdk_kiosk/common/component/morph_container.dart';
@@ -13,6 +14,7 @@ import 'package:mdk_kiosk/common/util/app_editor_mode.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'package:mdk_kiosk/common/util/initializer.dart';
 import 'package:mdk_kiosk/common/util/route/router.dart';
+import 'package:mdk_kiosk/common/util/sleep_mode.dart';
 import 'package:mdk_kiosk/header/header_layout.dart';
 import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
 import 'package:mdk_kiosk/multimedia/studio/state_indicator_for_mediabox.dart';
@@ -41,12 +43,17 @@ class _DefaultLayoutState extends State<DefaultLayout> {
   String contactName = '';
   String contactNumber = '';
 
+  final dim = DimModeController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     assignContact();
     _startDailyCleanupCheck();
+
+    // 딤모드 컨트롤러 바인딩
+    dim.bind(context);
   }
 
   // void _initRestartTimer() {
@@ -76,6 +83,8 @@ class _DefaultLayoutState extends State<DefaultLayout> {
       setState(() {});
     });
   }
+
+  double brightness = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -125,6 +134,54 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 // ),
                 SizedBox(
                   height: betweenPadding,
+                ),
+                SizedBox(
+                  child: Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final DimModeController sleepMode =
+                              DimModeController();
+                          brightness = await sleepMode.systemBrightness;
+
+                          setState(() {});
+                        },
+                        child: Text('현재 밝기: $brightness'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final DimModeController sleepMode =
+                              DimModeController();
+                          await sleepMode.setSystemBrightness(1.0);
+                          setState(() {});
+                        },
+                        child: Text('밝기 최대화'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final DimModeController sleepMode =
+                              DimModeController();
+                          // await sleepMode.setSystemBrightness(0.01);
+                          await sleepMode.setApplicationBrightness(0.01);
+
+                          final _blackEntry = OverlayEntry(
+                              builder: (_) => const BlackoutOverlay());
+
+                          Overlay.of(context, rootOverlay: true)
+                              .insert(_blackEntry);
+
+                          setState(() {});
+
+                          Timer(Duration(seconds: 5), () async {
+                            // await sleepMode.setSystemBrightness(1.0);
+                            await sleepMode.setApplicationBrightness(1.0);
+                            _blackEntry.remove();
+                          });
+                        },
+                        child: Text('밝기 최소화'),
+                      ),
+                    ],
+                  ),
                 ),
                 // 2. 시간표
                 if (widget.midChild != null)
