@@ -66,7 +66,8 @@ class _BlackoutOverlayState extends State<BlackoutOverlay>
                 height: boxH,
                 child: Center(
                   child: Text(
-                    _timeText,
+                    // _timeText,
+                    '',
                     style: const TextStyle(
                         fontSize: 28.0,
                         fontWeight: FontWeight.w700,
@@ -86,7 +87,8 @@ class _BlackoutOverlayState extends State<BlackoutOverlay>
     setState(() {
       _timeText = '${now.hour.toString().padLeft(2, '0')}:'
           '${now.minute.toString().padLeft(2, '0')}:'
-          '${now.second.toString().padLeft(2, '0')}';
+          // '${now.second.toString().padLeft(2, '0')}'
+      ;
     });
   }
 
