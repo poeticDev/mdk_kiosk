@@ -1,51 +1,77 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart'; // TimeOfDay, Overlay 등을 위해
 import 'package:screen_brightness/screen_brightness.dart';
 
 import 'package:mdk_kiosk/common/component/black_overlay.dart';
 
+/// Dim(어둡게) 모드를 총괄 관리:
+/// - 오버레이(검은 화면) 표시/해제
+/// - 앱/시스템 화면 밝기 조절
+/// - 설정된 시각과 근무 요일에 맞춘 자동 진입/해제 스케줄링(주말 건너뜀)
 class DimModeController {
-  DimModeController();
+  /// 사용자가 바꿀 수 있는 스케줄 설정(기본값: 18:00 진입, 09:00 해제, 월~금 근무)
+  TimeOfDay dimEnterTime; // 예: 18:00
+  TimeOfDay dimExitTime;  // 예: 09:00
+  Set<int> workingDays;   // DateTime.monday ~ DateTime.friday
+
+  DimModeController({
+    TimeOfDay? enterTime,
+    TimeOfDay? exitTime,
+    Set<int>? days,
+  })  : dimEnterTime = enterTime ?? const TimeOfDay(hour: 18, minute: 0),
+        dimExitTime  = exitTime  ?? const TimeOfDay(hour: 9,  minute: 0),
+        workingDays  = days ?? {
+          DateTime.monday,
+          DateTime.tuesday,
+          DateTime.wednesday,
+          DateTime.thursday,
+          DateTime.friday,
+        };
 
   OverlayState? _overlayState;
   OverlayEntry? _overlayEntry;
 
-  Timer? _enterTimer; // 20:00 진입 예약
-  Timer? _exitTimer; // 08:00 해제 예약
+  Timer? _enterTimer; // 다음 "진입" 예약
+  Timer? _exitTimer;  // 다음 "해제" 예약
 
   bool _isDim = false;
 
-  // 최초 바인딩. 앱 시작 또는 최상위 화면에서 호출
+  /// 최초 1회 바인딩(앱 시작/최상위 화면에서 호출).
+  /// 여기서 루트 오버레이를 잡고, 현재 시간/요일에 따라 “다음 동작”만 예약한다.
   void bind(BuildContext context) {
     _overlayState = Overlay.of(context, rootOverlay: true);
-
-    // 앱 부팅 시 현재 시간에 따라 다음 Dim 스케쥴 예약
     scheduleNextByCurrentTime();
   }
 
+  /// Dim 모드로 진입:
+  /// - 검은 오버레이를 올리고
+  /// - 밝기를 극저로 낮춘 뒤
+  /// - “다음 근무일의 해제 시각(보통 아침)”에 exit를 예약
+  ///   (금요일에 진입하면 자동으로 그 다음 주 월요일 아침으로 잡힘)
   Future<void> enterDim() async {
     if (_isDim) {
-      _scheduleExitAt8AM(); // 이미 Dim이면 스케줄만 보장
+      _scheduleExitAt(dimExitTime); // 이미 Dim이면 해제 예약만 보장
       return;
     }
 
     try {
-      // 1) 검은 오버레이 최상단에 삽입
+      // 1) 검은 오버레이 올리기 (터치 흡수는 BlackoutOverlay 내부 처리 가정)
       if (_overlayEntry == null) {
         _overlayEntry = OverlayEntry(builder: (_) => const BlackoutOverlay());
         _overlayState?.insert(_overlayEntry!);
       }
 
-      // 2) 밝기 최소화 (앱 레벨 권장)
+      // 2) 밝기 극저로 (앱/시스템 모두 — 시스템은 WRITE_SETTINGS 권한 필요)
       await setApplicationBrightness(0.01);
       await setSystemBrightness(0.01);
 
-      // 3) 상태 마킹
+      // 3) 상태 변경
       _isDim = true;
 
-      // 4) 08:00에 exitDim() 예약
-      _scheduleExitAt8AM();
+      // 4) 다음 근무일 아침 해제 예약 (주말 자동 건너뜀)
+      _scheduleExitAt(dimExitTime);
 
       // 5) 반대편 타이머 정리
       _enterTimer?.cancel();
@@ -55,10 +81,13 @@ class DimModeController {
     }
   }
 
-  /// DIM 해제
+  /// Dim 모드 해제:
+  /// - 오버레이 제거
+  /// - 밝기 복구
+  /// - “다음 근무일의 진입 시각(보통 저녁)”에 enter를 예약
   Future<void> exitDim() async {
     if (!_isDim) {
-      _scheduleEnterAt8PM(); // 이미 해제 상태면 스케줄만 보장
+      _scheduleEnterAt(dimEnterTime); // 이미 해제면 진입 예약만 보장
       return;
     }
 
@@ -67,15 +96,15 @@ class DimModeController {
       _overlayEntry?.remove();
       _overlayEntry = null;
 
-      // 2) 밝기 복구
+      // 2) 밝기 복구 (운영 정책에 맞게 조정 가능)
       await setApplicationBrightness(1.0);
       await setSystemBrightness(1.0);
 
-      // 3) 상태 마킹
+      // 3) 상태 변경
       _isDim = false;
 
-      // 4) 20:00에 enterDim() 예약
-      _scheduleEnterAt8PM();
+      // 4) 다음 근무일 저녁 진입 예약 (주말 자동 건너뜀)
+      _scheduleEnterAt(dimEnterTime);
 
       // 5) 반대편 타이머 정리
       _exitTimer?.cancel();
@@ -85,59 +114,106 @@ class DimModeController {
     }
   }
 
-  // ====== 스케줄링 유틸 ======
+  // ---------------------------------------------------------------------------
+  // 스케줄링
+  // ---------------------------------------------------------------------------
 
-  void _scheduleExitAt8AM() {
-    _exitTimer?.cancel();
-    final now = DateTime.now();
-    final next = _nextAt(hour: 8, minute: 00, from: now);
-    final diff = next.difference(now);
-    _exitTimer = Timer(diff, () {
-      // 타이머 콜백에서 예외 터지지 않도록 안전 호출
-      exitDim();
-    });
-  }
-
-  void _scheduleEnterAt8PM() {
-    _enterTimer?.cancel();
-    final now = DateTime.now();
-    final next = _nextAt(hour: 20, minute: 00, from: now);
-    final diff = next.difference(now);
-    _enterTimer = Timer(diff, () {
-      enterDim();
-    });
-  }
-
-  DateTime _nextAt(
-      {required int hour, required int minute, required DateTime from}) {
-    final candidate = DateTime(from.year, from.month, from.day, hour, minute);
-    if (candidate.isAfter(from)) return candidate;
-    return candidate.add(const Duration(days: 1));
-    // 필요하면 요일 제한 등 추가 가능
-  }
-
-  /// 현재 시간을 판단해 다음 예약만 건다.
-  /// - 08:00 ~ 20:00: 밤 8시에 enterDim 예약
-  /// - 20:00 ~ 08:00: 아침 8시에 exitDim 예약
+  /// 지금 시각/요일 기준으로 “다음 동작만” 예약한다.
+  /// - 오늘이 근무일이고, 해제~진입 사이(업무시간)이면: 오늘 저녁에 진입 예약
+  /// - 그 외(야간/주말/업무 시작 전 등): 다음 근무일 아침에 해제 예약
   void scheduleNextByCurrentTime({DateTime? now}) {
     final t = now ?? DateTime.now();
-    if (t.hour >= 8 && t.hour < 20) {
-      _scheduleEnterAt8PM();
+    final todayIsWorking = workingDays.contains(t.weekday);
+
+    final todayExit  = _combine(t, dimExitTime);
+    final todayEnter = _combine(t, dimEnterTime);
+
+    if (todayIsWorking && t.isAfter(todayExit) && t.isBefore(todayEnter)) {
+      _scheduleEnterAt(dimEnterTime); // 업무시간: 오늘 저녁에 진입
     } else {
-      _scheduleExitAt8AM();
+      _scheduleExitAt(dimExitTime);   // 그 외: 다음 근무일 아침에 해제
     }
   }
 
-  // ====== 밝기 유틸 ======
+  /// 지정된 “해제 시각”으로 다음 근무일(오늘 포함) 예약.
+  /// - mustBeAfterNow=true 이므로, 이미 지난 시각이면 다음 근무일로 넘어간다.
+  void _scheduleExitAt(TimeOfDay time) {
+    _exitTimer?.cancel();
+    final now = DateTime.now();
+    final next = _nextOccurrenceOnWorkingDay(
+      time,
+      from: now,
+      includeToday: true,
+      mustBeAfterNow: true,
+    );
+    _exitTimer = Timer(next.difference(now), () => exitDim());
+  }
+
+  /// 지정된 “진입 시각”으로 다음 근무일(오늘 포함) 예약.
+  /// - mustBeAfterNow=true 이므로, 이미 지난 시각이면 다음 근무일로 넘어간다.
+  void _scheduleEnterAt(TimeOfDay time) {
+    _enterTimer?.cancel();
+    final now = DateTime.now();
+    final next = _nextOccurrenceOnWorkingDay(
+      time,
+      from: now,
+      includeToday: true,
+      mustBeAfterNow: true,
+    );
+    _enterTimer = Timer(next.difference(now), () => enterDim());
+  }
+
+  /// 기준 시각[from]에서 시작해, workingDays에 해당하는 “다음 근무일의 [time]”을 찾는다.
+  /// - includeToday: 오늘이 근무일이면 오늘도 후보에 포함
+  /// - mustBeAfterNow: true면 “현재 시각 이후”인 후보만 유효
+  ///   (예: 오늘이 근무일이라도 이미 진입 시각이 지났다면 내일/다음 근무일로 넘어감)
+  DateTime _nextOccurrenceOnWorkingDay(
+      TimeOfDay time, {
+        required DateTime from,
+        required bool includeToday,
+        required bool mustBeAfterNow,
+      }) {
+    DateTime cursor = includeToday ? from : from.add(const Duration(days: 1));
+
+    // 최대 8일만 탐색(안전장치). 정상이라면 1~3일 내에 반드시 반환됨.
+    for (int i = 0; i < 8; i++) {
+      final isWorking = workingDays.contains(cursor.weekday);
+      final candidate = _combine(cursor, time);
+
+      if (isWorking) {
+        if (!mustBeAfterNow || candidate.isAfter(from)) {
+          return candidate;
+        }
+      }
+      // 자정 기준으로 +1일
+      cursor = DateTime(cursor.year, cursor.month, cursor.day)
+          .add(const Duration(days: 1));
+    }
+
+    // 폴백: 그냥 다음날 같은 시각
+    return _combine(from.add(const Duration(days: 1)), time);
+  }
+
+  /// DateTime(날짜) + TimeOfDay(시각)를 결합해 “해당 날짜의 특정 시각”을 만든다.
+  DateTime _combine(DateTime d, TimeOfDay t) =>
+      DateTime(d.year, d.month, d.day, t.hour, t.minute);
+
+  // ---------------------------------------------------------------------------
+  // 밝기 유틸
+  // ---------------------------------------------------------------------------
+
+  /// 시스템 전역 밝기(자동 밝기 OFF + WRITE_SETTINGS 권한 필요할 수 있음)
   Future<double> get systemBrightness async {
     try {
       return await ScreenBrightness.instance.system;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       throw 'Failed to get system brightness';
     }
   }
 
+  /// 시스템 전역 밝기 설정(0.0~1.0).
+  /// - WRITE_SETTINGS 권한이 없으면 실패할 수 있음.
   Future<void> setSystemBrightness(double brightness) async {
     try {
       await ScreenBrightness.instance.setSystemScreenBrightness(brightness);
@@ -147,6 +223,8 @@ class DimModeController {
     }
   }
 
+  /// 현재 앱(윈도우) 밝기 설정(0.0~1.0).
+  /// - Activity/Window가 살아있는 상태에서 호출해야 적용된다.
   Future<void> setApplicationBrightness(double brightness) async {
     try {
       await ScreenBrightness.instance
@@ -157,6 +235,7 @@ class DimModeController {
     }
   }
 
+  /// 컨트롤러 정리: 타이머/오버레이 해제
   void dispose() {
     _enterTimer?.cancel();
     _exitTimer?.cancel();
