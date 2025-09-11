@@ -39,6 +39,7 @@ class DimModeController {
 
       // 2) 밝기 최소화 (앱 레벨 권장)
       await setApplicationBrightness(0.01);
+      await setSystemBrightness(0.01);
 
       // 3) 상태 마킹
       _isDim = true;
@@ -66,7 +67,8 @@ class DimModeController {
       _overlayEntry?.remove();
       _overlayEntry = null;
 
-      // 2) 밝기 복구(요구사항대로 시스템 밝기를 1.0으로)
+      // 2) 밝기 복구
+      await setApplicationBrightness(1.0);
       await setSystemBrightness(1.0);
 
       // 3) 상태 마킹
@@ -88,7 +90,7 @@ class DimModeController {
   void _scheduleExitAt8AM() {
     _exitTimer?.cancel();
     final now = DateTime.now();
-    final next = _nextAt(hour: 8, minute: 0, from: now);
+    final next = _nextAt(hour: 8, minute: 00, from: now);
     final diff = next.difference(now);
     _exitTimer = Timer(diff, () {
       // 타이머 콜백에서 예외 터지지 않도록 안전 호출
@@ -99,7 +101,7 @@ class DimModeController {
   void _scheduleEnterAt8PM() {
     _enterTimer?.cancel();
     final now = DateTime.now();
-    final next = _nextAt(hour: 20, minute: 0, from: now);
+    final next = _nextAt(hour: 20, minute: 00, from: now);
     final diff = next.difference(now);
     _enterTimer = Timer(diff, () {
       enterDim();

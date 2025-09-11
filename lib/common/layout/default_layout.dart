@@ -162,7 +162,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 //         onPressed: () async {
                 //           final DimModeController sleepMode =
                 //               DimModeController();
-                //           // await sleepMode.setSystemBrightness(0.01);
+                //           await sleepMode.setSystemBrightness(0.01);
                 //           await sleepMode.setApplicationBrightness(0.01);
                 //
                 //           final _blackEntry = OverlayEntry(
@@ -174,7 +174,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 //           setState(() {});
                 //
                 //           Timer(Duration(seconds: 5), () async {
-                //             // await sleepMode.setSystemBrightness(1.0);
+                //             await sleepMode.setSystemBrightness(1.0);
                 //             await sleepMode.setApplicationBrightness(1.0);
                 //             _blackEntry.remove();
                 //           });
