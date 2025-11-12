@@ -16,11 +16,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.0.0+2
-build-name: GHU Studio
+version: 2.1.0
+build-name: ClassRoom TU
 
 environment:
-  sdk: ^3.5.4
+  sdk: ">=3.9.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -39,7 +39,7 @@ dependencies:
       url: https://github.com/poeticDev/osc.git
       ref: master
   uuid: ^4.5.1
-  network_info_plus: ^6.1.1
+  network_info_plus: ^7.0.0
   dart_ping: ^9.0.1
   dio: ^5.8.0+1
   #### 웹뷰
@@ -48,10 +48,10 @@ dependencies:
   flutter_inappwebview: ^6.1.5
 
   ### State Managing
-  get_it: ^8.0.2
-  flutter_riverpod: ^2.6.1
-  riverpod_annotation: ^2.6.1
-  go_router: ^14.7.1
+  get_it: ^9.0.5
+  flutter_riverpod: ^3.0.3
+  riverpod_annotation: ^3.0.3
+  go_router: ^17.0.0
 
   ### data tools
   drift: ^2.21.0
@@ -63,8 +63,8 @@ dependencies:
   #  syncfusion_flutter_datagrid: ^28.2.7
 
   ### device settings
-  kiosk_mode: ^0.5.1
-  permission_handler: ^11.3.1
+  kiosk_mode: ^0.7.0+1
+  permission_handler: ^12.0.1
   screen_brightness: ^2.1.7
 
   ### Design
@@ -82,7 +82,7 @@ dependencies:
   #### 상태 표시등
   loading_indicator: ^3.1.1
   #### alert
-  fluttertoast: ^8.2.8
+  fluttertoast: ^9.0.0
   #### 캐러슬 슬라이더(멀티미디어)
   carousel_slider: ^5.0.0
   video_player: ^2.8.1
@@ -92,7 +92,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   drift_dev: ^2.21.2
-  riverpod_generator: ^2.6.3
+  riverpod_generator: ^3.0.3
   build_runner: ^2.4.13
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -100,9 +100,9 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
-  custom_lint: ^0.7.0
-  riverpod_lint: ^2.6.3
+  flutter_lints: ^6.0.0
+  custom_lint: ^0.8.0
+  riverpod_lint: ^3.0.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
