@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_kiosk/common/util/data/updaters.dart';
+import 'package:mdk_kiosk/common/util/network/mqtt_connection_status.dart' hide MqttConnectionState;
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/header/model/studio_state_model.dart';
 import 'package:mdk_kiosk/header/util/state_manager.dart';
@@ -20,6 +21,14 @@ const List<String> SUBSCRIBING_TOPICS = [
   // 'node-mdk/+/ON_AIR_2',
   'node-mdk/states',
 ];
+
+final mqttManager = MqttManager(
+  broker: globalData.serverIp,
+  port: globalData.serverMqttPort,
+  userName: globalData.serverMqttId,
+  password: globalData.serverMqttPassword,
+  clientId: Uuid().v4(),
+);
 
 final mqttManagerProvider = Provider<MqttManager>((ref) {
   return MqttManager(
@@ -86,21 +95,24 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
         messageMapList.add(dataMap);
       else if (dataMap['key'].contains('mediaItem'))
         mediaMapList.add(dataMap);
-      else if (dataMap['key'] == 'update') updateTimetable(ref);
+      else if (dataMap['key'] == 'update')
+        updateTimetable(ref);
     }
 
     if (messageMapList.isNotEmpty) {
       print('✅ 메세지 아이템 수신');
-      ref.read(messageControllerProvider.notifier).messageDataHandler(
-            messageDataList: messageMapList,
-          );
+      ref
+          .read(messageControllerProvider.notifier)
+          .messageDataHandler(messageDataList: messageMapList);
     }
 
     if (mediaMapList.isNotEmpty) {
       print('✅ 미디어 아이템 수신');
-      MediaController().mediaDataHandler(mediaDataList: mediaMapList, ref: ref
-          // timeRecord: timeRecord,
-          );
+      MediaController().mediaDataHandler(
+        mediaDataList: mediaMapList,
+        ref: ref,
+        // timeRecord: timeRecord,
+      );
     }
   }
 }
@@ -121,10 +133,11 @@ void handleParsedData(
   Function(List<Map<String, dynamic>>) handler,
 ) {
   if (parsedData.containsKey(key)) {
-    final List<Map<String, dynamic>>? dataList =
-        (parsedData[key] as List?)?.map((item) {
-      return item as Map<String, dynamic>;
-    }).toList();
+    final List<Map<String, dynamic>>? dataList = (parsedData[key] as List?)
+        ?.map((item) {
+          return item as Map<String, dynamic>;
+        })
+        .toList();
 
     if (dataList != null) {
       handler(dataList);
@@ -155,6 +168,10 @@ void stateHandler(WidgetRef ref, String dataJson) {
 }
 
 class MqttManager {
+  static const Duration _connectTimeout = Duration(seconds: 10);
+  static const Duration _initialRetryDelay = Duration(seconds: 5);
+  static const Duration _stableRetryDelay = Duration(seconds: 30);
+
   final String broker;
   final String clientId;
   int port;
@@ -165,6 +182,8 @@ class MqttManager {
   final String userName;
   final String password;
   WidgetRef? ref;
+  Timer? _retryTimer;
+  Duration _nextRetryDelay = _initialRetryDelay;
 
   MqttManager({
     required this.broker,
@@ -202,7 +221,7 @@ class MqttManager {
   }
 
   /// MQTT 서버 연결
-  Future<bool> connect(WidgetRef ref) async {
+  Future<bool> connect() async {
     final connMessage = MqttConnectMessage()
         .withClientIdentifier(clientId)
         .authenticateAs(userName, password)
@@ -270,7 +289,14 @@ class MqttManager {
   /// 연결 해제 콜백
   void _onDisconnected() {
     print('❌ MQTT 서버 연결 해제됨');
-    if (ref != null) retryConnect(ref!);
+    final WidgetRef? currentRef = ref;
+    if (currentRef == null) {
+      return;
+    }
+    final MqttConnectionStateNotifier notifier = currentRef.read(
+      mqttConnectionStateProvider.notifier,
+    );
+    _handleFailure(currentRef, notifier, 'MQTT 연결이 끊어졌습니다.');
   }
 
   /// 구독 성공 콜백
@@ -293,34 +319,68 @@ class MqttManager {
     print('🔄 Ping 요청 전송');
   }
 
-
-  Timer? _retryTimer;
-
-  Future<void> connectAndHandle(WidgetRef ref) async {
+  Future<MqttInitResult> connectAndHandle(WidgetRef ref) async {
     this.ref = ref;
-
-    final success = await connect(ref);
-    if (success) {
-      _retryTimer?.cancel();
-      _retryTimer = null;
-
-      // 연결 후 토픽 구독 + 수신 핸들러 등록
-      for (var topic in SUBSCRIBING_TOPICS) {
-        subscribe(topic);
+    final MqttConnectionStateNotifier notifier = ref.read(
+      mqttConnectionStateProvider.notifier,
+    );
+    notifier.setConnecting();
+    try {
+      final bool isConnected = await _connectWithTimeout();
+      if (isConnected) {
+        return _handleSuccess(ref, notifier);
       }
-
-      listen((topic, message) {
-        onMqttReceived(ref, topic, message);
-      });
-    } else {
-      retryConnect(ref);
+      return _handleFailure(ref, notifier, 'MQTT 인증 실패');
+    } on TimeoutException {
+      return _handleFailure(ref, notifier, 'MQTT 연결 타임아웃');
+    } on SocketException catch (error) {
+      return _handleFailure(ref, notifier, '소켓 예외: $error');
+    } catch (error) {
+      return _handleFailure(ref, notifier, 'MQTT 연결 실패: $error');
     }
   }
 
-  void retryConnect(WidgetRef ref) {
-    if (_retryTimer != null) return;
+  Future<bool> _connectWithTimeout() {
+    return connect().timeout(_connectTimeout);
+  }
 
-    _retryTimer = Timer(Duration(minutes: 5), () async {
+  MqttInitResult _handleSuccess(
+    WidgetRef ref,
+    MqttConnectionStateNotifier notifier,
+  ) {
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    _nextRetryDelay = _initialRetryDelay;
+    for (final String topic in SUBSCRIBING_TOPICS) {
+      subscribe(topic);
+    }
+    listen((String topic, String message) {
+      onMqttReceived(ref, topic, message);
+    });
+    final MqttInitResult result = MqttInitResult.success();
+    notifier.setResult(result);
+    return result;
+  }
+
+  MqttInitResult _handleFailure(
+    WidgetRef ref,
+    MqttConnectionStateNotifier notifier,
+    String message,
+  ) {
+    final DateTime retryAt = DateTime.now().add(_nextRetryDelay);
+    final MqttInitResult result = MqttInitResult.failure(
+      message: message,
+      nextRetryAt: retryAt,
+    );
+    notifier.setResult(result);
+    _scheduleRetry(ref, _nextRetryDelay);
+    _nextRetryDelay = _stableRetryDelay;
+    return result;
+  }
+
+  void _scheduleRetry(WidgetRef ref, Duration delay) {
+    _retryTimer?.cancel();
+    _retryTimer = Timer(delay, () async {
       _retryTimer = null;
       print('🔁 MQTT 재연결 시도 중...');
       await connectAndHandle(ref);
