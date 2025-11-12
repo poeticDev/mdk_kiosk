@@ -81,7 +81,7 @@ class AppInitializer {
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
-    await openMqttManager(ref).timeout(Duration(seconds: 10));;
+    await openMqttManager(ref).timeout(Duration(seconds: 10));
     // subscribeTopics(ref);
 
     /// 4. 시간표 연결
