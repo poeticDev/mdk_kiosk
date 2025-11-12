@@ -263,7 +263,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                           color: Colors.transparent,
                           height: 72,
                           width: 138,
-                          child: Image.asset('asset/img/ghu_logo.gif'),
+                          child: Image.asset('asset/img/tu_logo.png'),
                         ),
                       ),
                     ],

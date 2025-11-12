@@ -4,15 +4,15 @@ import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
 
 const List<MediaItemCompanion> DEFAULT_MEDIA_ITEM = [
 
-  MediaItemCompanion(
-    key: Value('initialData'),
-    type: Value(MediaType.image),
-    title: Value('chatGPT광주보건대'),
-    url: Value(
-        'https://www.ghu.ac.kr/storage/board/74/content/20250403090137FSxSpXIdmfUD0627Y7ZM.png'),
-    from: Value(MediaFrom.etc),
-    orderNum: Value(1),
-  ),
+  // MediaItemCompanion(
+  //   key: Value('initialData'),
+  //   type: Value(MediaType.image),
+  //   title: Value('chatGPT광주보건대'),
+  //   url: Value(
+  //       'https://www.ghu.ac.kr/storage/board/74/content/20250403090137FSxSpXIdmfUD0627Y7ZM.png'),
+  //   from: Value(MediaFrom.etc),
+  //   orderNum: Value(1),
+  // ),
   // 2025-1학기 수강정정 기간 안내
   // MediaItemCompanion(
   //   type: Value(MediaType.image),
