@@ -12,208 +12,293 @@ class $BasicInfoTable extends BasicInfo
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
   static const VerificationMeta _roomIdMeta = const VerificationMeta('roomId');
   @override
   late final GeneratedColumn<String> roomId = GeneratedColumn<String>(
-      'room_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _roomNameMeta =
-      const VerificationMeta('roomName');
+    'room_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _roomNameMeta = const VerificationMeta(
+    'roomName',
+  );
   @override
   late final GeneratedColumn<String> roomName = GeneratedColumn<String>(
-      'room_name', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('000동 0000호'));
-  static const VerificationMeta _logoImageMeta =
-      const VerificationMeta('logoImage');
+    'room_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('000동 0000호'),
+  );
+  static const VerificationMeta _logoImageMeta = const VerificationMeta(
+    'logoImage',
+  );
   @override
   late final GeneratedColumn<Uint8List> logoImage = GeneratedColumn<Uint8List>(
-      'logo_image', aliasedName, false,
-      type: DriftSqlType.blob, requiredDuringInsert: true);
-  static const VerificationMeta _titleTextMeta =
-      const VerificationMeta('titleText');
+    'logo_image',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleTextMeta = const VerificationMeta(
+    'titleText',
+  );
   @override
   late final GeneratedColumn<String> titleText = GeneratedColumn<String>(
-      'title_text', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('Wall Hub'));
-  static const VerificationMeta _wifiNameMeta =
-      const VerificationMeta('wifiName');
+    'title_text',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('Wall Hub'),
+  );
+  static const VerificationMeta _wifiNameMeta = const VerificationMeta(
+    'wifiName',
+  );
   @override
   late final GeneratedColumn<String> wifiName = GeneratedColumn<String>(
-      'wifi_name', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('와이파이 이름'));
-  static const VerificationMeta _myOscPortMeta =
-      const VerificationMeta('myOscPort');
+    'wifi_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('와이파이 이름'),
+  );
+  static const VerificationMeta _myOscPortMeta = const VerificationMeta(
+    'myOscPort',
+  );
   @override
   late final GeneratedColumn<int> myOscPort = GeneratedColumn<int>(
-      'my_osc_port', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(3000));
-  static const VerificationMeta _myPasswordMeta =
-      const VerificationMeta('myPassword');
+    'my_osc_port',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(3000),
+  );
+  static const VerificationMeta _myPasswordMeta = const VerificationMeta(
+    'myPassword',
+  );
   @override
   late final GeneratedColumn<String> myPassword = GeneratedColumn<String>(
-      'my_password', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('12344321!'));
-  static const VerificationMeta _serverIpMeta =
-      const VerificationMeta('serverIp');
+    'my_password',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('12344321!'),
+  );
+  static const VerificationMeta _serverIpMeta = const VerificationMeta(
+    'serverIp',
+  );
   @override
   late final GeneratedColumn<String> serverIp = GeneratedColumn<String>(
-      'server_ip', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('192.168.11.120'));
-  static const VerificationMeta _serverOscPortMeta =
-      const VerificationMeta('serverOscPort');
+    'server_ip',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('192.168.11.120'),
+  );
+  static const VerificationMeta _serverOscPortMeta = const VerificationMeta(
+    'serverOscPort',
+  );
   @override
   late final GeneratedColumn<int> serverOscPort = GeneratedColumn<int>(
-      'server_osc_port', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(12321));
-  static const VerificationMeta _serverMqttPortMeta =
-      const VerificationMeta('serverMqttPort');
+    'server_osc_port',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(12321),
+  );
+  static const VerificationMeta _serverMqttPortMeta = const VerificationMeta(
+    'serverMqttPort',
+  );
   @override
   late final GeneratedColumn<int> serverMqttPort = GeneratedColumn<int>(
-      'server_mqtt_port', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(1883));
-  static const VerificationMeta _serverMqttIdMeta =
-      const VerificationMeta('serverMqttId');
+    'server_mqtt_port',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(1883),
+  );
+  static const VerificationMeta _serverMqttIdMeta = const VerificationMeta(
+    'serverMqttId',
+  );
   @override
   late final GeneratedColumn<String> serverMqttId = GeneratedColumn<String>(
-      'server_mqtt_id', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('mdk'));
+    'server_mqtt_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('mdk'),
+  );
   static const VerificationMeta _serverMqttPasswordMeta =
       const VerificationMeta('serverMqttPassword');
   @override
   late final GeneratedColumn<String> serverMqttPassword =
-      GeneratedColumn<String>('server_mqtt_password', aliasedName, false,
-          type: DriftSqlType.string,
-          requiredDuringInsert: false,
-          defaultValue: const Constant('12344321'));
-  static const VerificationMeta _createdAtMeta =
-      const VerificationMeta('createdAt');
+      GeneratedColumn<String>(
+        'server_mqtt_password',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('12344321'),
+      );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
   @override
   late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
-      'created_at', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      clientDefault: () => DateTime.now());
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now(),
+  );
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        roomId,
-        roomName,
-        logoImage,
-        titleText,
-        wifiName,
-        myOscPort,
-        myPassword,
-        serverIp,
-        serverOscPort,
-        serverMqttPort,
-        serverMqttId,
-        serverMqttPassword,
-        createdAt
-      ];
+    id,
+    roomId,
+    roomName,
+    logoImage,
+    titleText,
+    wifiName,
+    myOscPort,
+    myPassword,
+    serverIp,
+    serverOscPort,
+    serverMqttPort,
+    serverMqttId,
+    serverMqttPassword,
+    createdAt,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'basic_info';
   @override
-  VerificationContext validateIntegrity(Insertable<BasicInfoData> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<BasicInfoData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('room_id')) {
-      context.handle(_roomIdMeta,
-          roomId.isAcceptableOrUnknown(data['room_id']!, _roomIdMeta));
+      context.handle(
+        _roomIdMeta,
+        roomId.isAcceptableOrUnknown(data['room_id']!, _roomIdMeta),
+      );
     } else if (isInserting) {
       context.missing(_roomIdMeta);
     }
     if (data.containsKey('room_name')) {
-      context.handle(_roomNameMeta,
-          roomName.isAcceptableOrUnknown(data['room_name']!, _roomNameMeta));
+      context.handle(
+        _roomNameMeta,
+        roomName.isAcceptableOrUnknown(data['room_name']!, _roomNameMeta),
+      );
     }
     if (data.containsKey('logo_image')) {
-      context.handle(_logoImageMeta,
-          logoImage.isAcceptableOrUnknown(data['logo_image']!, _logoImageMeta));
+      context.handle(
+        _logoImageMeta,
+        logoImage.isAcceptableOrUnknown(data['logo_image']!, _logoImageMeta),
+      );
     } else if (isInserting) {
       context.missing(_logoImageMeta);
     }
     if (data.containsKey('title_text')) {
-      context.handle(_titleTextMeta,
-          titleText.isAcceptableOrUnknown(data['title_text']!, _titleTextMeta));
+      context.handle(
+        _titleTextMeta,
+        titleText.isAcceptableOrUnknown(data['title_text']!, _titleTextMeta),
+      );
     }
     if (data.containsKey('wifi_name')) {
-      context.handle(_wifiNameMeta,
-          wifiName.isAcceptableOrUnknown(data['wifi_name']!, _wifiNameMeta));
+      context.handle(
+        _wifiNameMeta,
+        wifiName.isAcceptableOrUnknown(data['wifi_name']!, _wifiNameMeta),
+      );
     }
     if (data.containsKey('my_osc_port')) {
       context.handle(
-          _myOscPortMeta,
-          myOscPort.isAcceptableOrUnknown(
-              data['my_osc_port']!, _myOscPortMeta));
+        _myOscPortMeta,
+        myOscPort.isAcceptableOrUnknown(data['my_osc_port']!, _myOscPortMeta),
+      );
     }
     if (data.containsKey('my_password')) {
       context.handle(
-          _myPasswordMeta,
-          myPassword.isAcceptableOrUnknown(
-              data['my_password']!, _myPasswordMeta));
+        _myPasswordMeta,
+        myPassword.isAcceptableOrUnknown(data['my_password']!, _myPasswordMeta),
+      );
     }
     if (data.containsKey('server_ip')) {
-      context.handle(_serverIpMeta,
-          serverIp.isAcceptableOrUnknown(data['server_ip']!, _serverIpMeta));
+      context.handle(
+        _serverIpMeta,
+        serverIp.isAcceptableOrUnknown(data['server_ip']!, _serverIpMeta),
+      );
     }
     if (data.containsKey('server_osc_port')) {
       context.handle(
+        _serverOscPortMeta,
+        serverOscPort.isAcceptableOrUnknown(
+          data['server_osc_port']!,
           _serverOscPortMeta,
-          serverOscPort.isAcceptableOrUnknown(
-              data['server_osc_port']!, _serverOscPortMeta));
+        ),
+      );
     }
     if (data.containsKey('server_mqtt_port')) {
       context.handle(
+        _serverMqttPortMeta,
+        serverMqttPort.isAcceptableOrUnknown(
+          data['server_mqtt_port']!,
           _serverMqttPortMeta,
-          serverMqttPort.isAcceptableOrUnknown(
-              data['server_mqtt_port']!, _serverMqttPortMeta));
+        ),
+      );
     }
     if (data.containsKey('server_mqtt_id')) {
       context.handle(
+        _serverMqttIdMeta,
+        serverMqttId.isAcceptableOrUnknown(
+          data['server_mqtt_id']!,
           _serverMqttIdMeta,
-          serverMqttId.isAcceptableOrUnknown(
-              data['server_mqtt_id']!, _serverMqttIdMeta));
+        ),
+      );
     }
     if (data.containsKey('server_mqtt_password')) {
       context.handle(
+        _serverMqttPasswordMeta,
+        serverMqttPassword.isAcceptableOrUnknown(
+          data['server_mqtt_password']!,
           _serverMqttPasswordMeta,
-          serverMqttPassword.isAcceptableOrUnknown(
-              data['server_mqtt_password']!, _serverMqttPasswordMeta));
+        ),
+      );
     }
     if (data.containsKey('created_at')) {
-      context.handle(_createdAtMeta,
-          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
     }
     return context;
   }
@@ -224,34 +309,62 @@ class $BasicInfoTable extends BasicInfo
   BasicInfoData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return BasicInfoData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      roomId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}room_id'])!,
-      roomName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}room_name'])!,
-      logoImage: attachedDatabase.typeMapping
-          .read(DriftSqlType.blob, data['${effectivePrefix}logo_image'])!,
-      titleText: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title_text'])!,
-      wifiName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}wifi_name'])!,
-      myOscPort: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}my_osc_port'])!,
-      myPassword: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}my_password'])!,
-      serverIp: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}server_ip'])!,
-      serverOscPort: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}server_osc_port'])!,
-      serverMqttPort: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}server_mqtt_port'])!,
-      serverMqttId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}server_mqtt_id'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      roomId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}room_id'],
+      )!,
+      roomName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}room_name'],
+      )!,
+      logoImage: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}logo_image'],
+      )!,
+      titleText: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title_text'],
+      )!,
+      wifiName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}wifi_name'],
+      )!,
+      myOscPort: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}my_osc_port'],
+      )!,
+      myPassword: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}my_password'],
+      )!,
+      serverIp: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}server_ip'],
+      )!,
+      serverOscPort: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_osc_port'],
+      )!,
+      serverMqttPort: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}server_mqtt_port'],
+      )!,
+      serverMqttId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}server_mqtt_id'],
+      )!,
       serverMqttPassword: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}server_mqtt_password'])!,
-      createdAt: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+        DriftSqlType.string,
+        data['${effectivePrefix}server_mqtt_password'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
     );
   }
 
@@ -285,21 +398,22 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
 
   ///4. 생성일
   final DateTime createdAt;
-  const BasicInfoData(
-      {required this.id,
-      required this.roomId,
-      required this.roomName,
-      required this.logoImage,
-      required this.titleText,
-      required this.wifiName,
-      required this.myOscPort,
-      required this.myPassword,
-      required this.serverIp,
-      required this.serverOscPort,
-      required this.serverMqttPort,
-      required this.serverMqttId,
-      required this.serverMqttPassword,
-      required this.createdAt});
+  const BasicInfoData({
+    required this.id,
+    required this.roomId,
+    required this.roomName,
+    required this.logoImage,
+    required this.titleText,
+    required this.wifiName,
+    required this.myOscPort,
+    required this.myPassword,
+    required this.serverIp,
+    required this.serverOscPort,
+    required this.serverMqttPort,
+    required this.serverMqttId,
+    required this.serverMqttPassword,
+    required this.createdAt,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -339,8 +453,10 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     );
   }
 
-  factory BasicInfoData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory BasicInfoData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return BasicInfoData(
       id: serializer.fromJson<int>(json['id']),
@@ -355,8 +471,9 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       serverOscPort: serializer.fromJson<int>(json['serverOscPort']),
       serverMqttPort: serializer.fromJson<int>(json['serverMqttPort']),
       serverMqttId: serializer.fromJson<String>(json['serverMqttId']),
-      serverMqttPassword:
-          serializer.fromJson<String>(json['serverMqttPassword']),
+      serverMqttPassword: serializer.fromJson<String>(
+        json['serverMqttPassword'],
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
@@ -381,37 +498,37 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     };
   }
 
-  BasicInfoData copyWith(
-          {int? id,
-          String? roomId,
-          String? roomName,
-          Uint8List? logoImage,
-          String? titleText,
-          String? wifiName,
-          int? myOscPort,
-          String? myPassword,
-          String? serverIp,
-          int? serverOscPort,
-          int? serverMqttPort,
-          String? serverMqttId,
-          String? serverMqttPassword,
-          DateTime? createdAt}) =>
-      BasicInfoData(
-        id: id ?? this.id,
-        roomId: roomId ?? this.roomId,
-        roomName: roomName ?? this.roomName,
-        logoImage: logoImage ?? this.logoImage,
-        titleText: titleText ?? this.titleText,
-        wifiName: wifiName ?? this.wifiName,
-        myOscPort: myOscPort ?? this.myOscPort,
-        myPassword: myPassword ?? this.myPassword,
-        serverIp: serverIp ?? this.serverIp,
-        serverOscPort: serverOscPort ?? this.serverOscPort,
-        serverMqttPort: serverMqttPort ?? this.serverMqttPort,
-        serverMqttId: serverMqttId ?? this.serverMqttId,
-        serverMqttPassword: serverMqttPassword ?? this.serverMqttPassword,
-        createdAt: createdAt ?? this.createdAt,
-      );
+  BasicInfoData copyWith({
+    int? id,
+    String? roomId,
+    String? roomName,
+    Uint8List? logoImage,
+    String? titleText,
+    String? wifiName,
+    int? myOscPort,
+    String? myPassword,
+    String? serverIp,
+    int? serverOscPort,
+    int? serverMqttPort,
+    String? serverMqttId,
+    String? serverMqttPassword,
+    DateTime? createdAt,
+  }) => BasicInfoData(
+    id: id ?? this.id,
+    roomId: roomId ?? this.roomId,
+    roomName: roomName ?? this.roomName,
+    logoImage: logoImage ?? this.logoImage,
+    titleText: titleText ?? this.titleText,
+    wifiName: wifiName ?? this.wifiName,
+    myOscPort: myOscPort ?? this.myOscPort,
+    myPassword: myPassword ?? this.myPassword,
+    serverIp: serverIp ?? this.serverIp,
+    serverOscPort: serverOscPort ?? this.serverOscPort,
+    serverMqttPort: serverMqttPort ?? this.serverMqttPort,
+    serverMqttId: serverMqttId ?? this.serverMqttId,
+    serverMqttPassword: serverMqttPassword ?? this.serverMqttPassword,
+    createdAt: createdAt ?? this.createdAt,
+  );
   BasicInfoData copyWithCompanion(BasicInfoCompanion data) {
     return BasicInfoData(
       id: data.id.present ? data.id.value : this.id,
@@ -421,8 +538,9 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       titleText: data.titleText.present ? data.titleText.value : this.titleText,
       wifiName: data.wifiName.present ? data.wifiName.value : this.wifiName,
       myOscPort: data.myOscPort.present ? data.myOscPort.value : this.myOscPort,
-      myPassword:
-          data.myPassword.present ? data.myPassword.value : this.myPassword,
+      myPassword: data.myPassword.present
+          ? data.myPassword.value
+          : this.myPassword,
       serverIp: data.serverIp.present ? data.serverIp.value : this.serverIp,
       serverOscPort: data.serverOscPort.present
           ? data.serverOscPort.value
@@ -463,20 +581,21 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
 
   @override
   int get hashCode => Object.hash(
-      id,
-      roomId,
-      roomName,
-      $driftBlobEquality.hash(logoImage),
-      titleText,
-      wifiName,
-      myOscPort,
-      myPassword,
-      serverIp,
-      serverOscPort,
-      serverMqttPort,
-      serverMqttId,
-      serverMqttPassword,
-      createdAt);
+    id,
+    roomId,
+    roomName,
+    $driftBlobEquality.hash(logoImage),
+    titleText,
+    wifiName,
+    myOscPort,
+    myPassword,
+    serverIp,
+    serverOscPort,
+    serverMqttPort,
+    serverMqttId,
+    serverMqttPassword,
+    createdAt,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -543,8 +662,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     this.serverMqttId = const Value.absent(),
     this.serverMqttPassword = const Value.absent(),
     this.createdAt = const Value.absent(),
-  })  : roomId = Value(roomId),
-        logoImage = Value(logoImage);
+  }) : roomId = Value(roomId),
+       logoImage = Value(logoImage);
   static Insertable<BasicInfoData> custom({
     Expression<int>? id,
     Expression<String>? roomId,
@@ -580,21 +699,22 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     });
   }
 
-  BasicInfoCompanion copyWith(
-      {Value<int>? id,
-      Value<String>? roomId,
-      Value<String>? roomName,
-      Value<Uint8List>? logoImage,
-      Value<String>? titleText,
-      Value<String>? wifiName,
-      Value<int>? myOscPort,
-      Value<String>? myPassword,
-      Value<String>? serverIp,
-      Value<int>? serverOscPort,
-      Value<int>? serverMqttPort,
-      Value<String>? serverMqttId,
-      Value<String>? serverMqttPassword,
-      Value<DateTime>? createdAt}) {
+  BasicInfoCompanion copyWith({
+    Value<int>? id,
+    Value<String>? roomId,
+    Value<String>? roomName,
+    Value<Uint8List>? logoImage,
+    Value<String>? titleText,
+    Value<String>? wifiName,
+    Value<int>? myOscPort,
+    Value<String>? myPassword,
+    Value<String>? serverIp,
+    Value<int>? serverOscPort,
+    Value<int>? serverMqttPort,
+    Value<String>? serverMqttId,
+    Value<String>? serverMqttPassword,
+    Value<DateTime>? createdAt,
+  }) {
     return BasicInfoCompanion(
       id: id ?? this.id,
       roomId: roomId ?? this.roomId,
@@ -691,24 +811,38 @@ class $PageTable extends Page with TableInfo<$PageTable, PageData> {
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, true,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _pageNameMeta =
-      const VerificationMeta('pageName');
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _pageNameMeta = const VerificationMeta(
+    'pageName',
+  );
   @override
   late final GeneratedColumn<String> pageName = GeneratedColumn<String>(
-      'page_name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _pageNumMeta =
-      const VerificationMeta('pageNum');
+    'page_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _pageNumMeta = const VerificationMeta(
+    'pageNum',
+  );
   @override
   late final GeneratedColumn<int> pageNum = GeneratedColumn<int>(
-      'page_num', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+    'page_num',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   @override
   List<GeneratedColumn> get $columns => [id, pageName, pageNum];
   @override
@@ -717,22 +851,28 @@ class $PageTable extends Page with TableInfo<$PageTable, PageData> {
   String get actualTableName => $name;
   static const String $name = 'page';
   @override
-  VerificationContext validateIntegrity(Insertable<PageData> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<PageData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
     if (data.containsKey('page_name')) {
-      context.handle(_pageNameMeta,
-          pageName.isAcceptableOrUnknown(data['page_name']!, _pageNameMeta));
+      context.handle(
+        _pageNameMeta,
+        pageName.isAcceptableOrUnknown(data['page_name']!, _pageNameMeta),
+      );
     } else if (isInserting) {
       context.missing(_pageNameMeta);
     }
     if (data.containsKey('page_num')) {
-      context.handle(_pageNumMeta,
-          pageNum.isAcceptableOrUnknown(data['page_num']!, _pageNumMeta));
+      context.handle(
+        _pageNumMeta,
+        pageNum.isAcceptableOrUnknown(data['page_num']!, _pageNumMeta),
+      );
     } else if (isInserting) {
       context.missing(_pageNumMeta);
     }
@@ -745,12 +885,18 @@ class $PageTable extends Page with TableInfo<$PageTable, PageData> {
   PageData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return PageData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id']),
-      pageName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}page_name'])!,
-      pageNum: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}page_num'])!,
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      pageName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}page_name'],
+      )!,
+      pageNum: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}page_num'],
+      )!,
     );
   }
 
@@ -762,20 +908,22 @@ class $PageTable extends Page with TableInfo<$PageTable, PageData> {
 
 class PageData extends DataClass implements Insertable<PageData> {
   /// 1) 식별 아이디
-  final int? id;
+  final int id;
 
   /// 2) 페이지 명
   final String pageName;
 
   /// 3) 페이지 번호
   final int pageNum;
-  const PageData({this.id, required this.pageName, required this.pageNum});
+  const PageData({
+    required this.id,
+    required this.pageName,
+    required this.pageNum,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<int>(id);
-    }
+    map['id'] = Variable<int>(id);
     map['page_name'] = Variable<String>(pageName);
     map['page_num'] = Variable<int>(pageNum);
     return map;
@@ -783,17 +931,19 @@ class PageData extends DataClass implements Insertable<PageData> {
 
   PageCompanion toCompanion(bool nullToAbsent) {
     return PageCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       pageName: Value(pageName),
       pageNum: Value(pageNum),
     );
   }
 
-  factory PageData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory PageData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PageData(
-      id: serializer.fromJson<int?>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       pageName: serializer.fromJson<String>(json['pageName']),
       pageNum: serializer.fromJson<int>(json['pageNum']),
     );
@@ -802,21 +952,17 @@ class PageData extends DataClass implements Insertable<PageData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int?>(id),
+      'id': serializer.toJson<int>(id),
       'pageName': serializer.toJson<String>(pageName),
       'pageNum': serializer.toJson<int>(pageNum),
     };
   }
 
-  PageData copyWith(
-          {Value<int?> id = const Value.absent(),
-          String? pageName,
-          int? pageNum}) =>
-      PageData(
-        id: id.present ? id.value : this.id,
-        pageName: pageName ?? this.pageName,
-        pageNum: pageNum ?? this.pageNum,
-      );
+  PageData copyWith({int? id, String? pageName, int? pageNum}) => PageData(
+    id: id ?? this.id,
+    pageName: pageName ?? this.pageName,
+    pageNum: pageNum ?? this.pageNum,
+  );
   PageData copyWithCompanion(PageCompanion data) {
     return PageData(
       id: data.id.present ? data.id.value : this.id,
@@ -847,7 +993,7 @@ class PageData extends DataClass implements Insertable<PageData> {
 }
 
 class PageCompanion extends UpdateCompanion<PageData> {
-  final Value<int?> id;
+  final Value<int> id;
   final Value<String> pageName;
   final Value<int> pageNum;
   const PageCompanion({
@@ -859,8 +1005,8 @@ class PageCompanion extends UpdateCompanion<PageData> {
     this.id = const Value.absent(),
     required String pageName,
     required int pageNum,
-  })  : pageName = Value(pageName),
-        pageNum = Value(pageNum);
+  }) : pageName = Value(pageName),
+       pageNum = Value(pageNum);
   static Insertable<PageData> custom({
     Expression<int>? id,
     Expression<String>? pageName,
@@ -873,8 +1019,11 @@ class PageCompanion extends UpdateCompanion<PageData> {
     });
   }
 
-  PageCompanion copyWith(
-      {Value<int?>? id, Value<String>? pageName, Value<int>? pageNum}) {
+  PageCompanion copyWith({
+    Value<int>? id,
+    Value<String>? pageName,
+    Value<int>? pageNum,
+  }) {
     return PageCompanion(
       id: id ?? this.id,
       pageName: pageName ?? this.pageName,
@@ -916,94 +1065,130 @@ class $ButtonTable extends Button with TableInfo<$ButtonTable, ButtonData> {
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, true,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _buttonNameMeta =
-      const VerificationMeta('buttonName');
+    'id',
+    aliasedName,
+    true,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _buttonNameMeta = const VerificationMeta(
+    'buttonName',
+  );
   @override
   late final GeneratedColumn<String> buttonName = GeneratedColumn<String>(
-      'button_name', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('버튼명을 적어주세요'));
-  static const VerificationMeta _isUsingButtonMeta =
-      const VerificationMeta('isUsingButton');
+    'button_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('버튼명을 적어주세요'),
+  );
+  static const VerificationMeta _isUsingButtonMeta = const VerificationMeta(
+    'isUsingButton',
+  );
   @override
   late final GeneratedColumn<bool> isUsingButton = GeneratedColumn<bool>(
-      'is_using_button', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("is_using_button" IN (0, 1))'),
-      defaultValue: const Constant(true));
+    'is_using_button',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_using_button" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
   static const VerificationMeta _pageMeta = const VerificationMeta('page');
   @override
   late final GeneratedColumn<int> page = GeneratedColumn<int>(
-      'page', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES page (id) ON UPDATE CASCADE'),
-      defaultValue: const Constant(0));
+    'page',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES page (id) ON UPDATE CASCADE',
+    ),
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _rowMeta = const VerificationMeta('row');
   @override
   late final GeneratedColumn<int> row = GeneratedColumn<int>(
-      'row', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
+    'row',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   static const VerificationMeta _columnMeta = const VerificationMeta('column');
   @override
   late final GeneratedColumn<int> column = GeneratedColumn<int>(
-      'column', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultValue: const Constant(0));
-  static const VerificationMeta _commandMeta =
-      const VerificationMeta('command');
+    'column',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
   @override
   late final GeneratedColumnWithTypeConverter<Command, String> command =
-      GeneratedColumn<String>('command', aliasedName, false,
-              type: DriftSqlType.string,
-              requiredDuringInsert: false,
-              defaultValue: const Constant('press'))
-          .withConverter<Command>($ButtonTable.$convertercommand);
-  static const VerificationMeta _queryStringMeta =
-      const VerificationMeta('queryString');
+      GeneratedColumn<String>(
+        'command',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('press'),
+      ).withConverter<Command>($ButtonTable.$convertercommand);
+  static const VerificationMeta _queryStringMeta = const VerificationMeta(
+    'queryString',
+  );
   @override
   late final GeneratedColumn<String> queryString = GeneratedColumn<String>(
-      'query_string', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _messageMeta =
-      const VerificationMeta('message');
+    'query_string',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _messageMeta = const VerificationMeta(
+    'message',
+  );
   @override
   late final GeneratedColumn<String> message = GeneratedColumn<String>(
-      'message', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+    'message',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        buttonName,
-        isUsingButton,
-        page,
-        row,
-        column,
-        command,
-        queryString,
-        message
-      ];
+    id,
+    buttonName,
+    isUsingButton,
+    page,
+    row,
+    column,
+    command,
+    queryString,
+    message,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'button';
   @override
-  VerificationContext validateIntegrity(Insertable<ButtonData> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<ButtonData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
@@ -1011,38 +1196,51 @@ class $ButtonTable extends Button with TableInfo<$ButtonTable, ButtonData> {
     }
     if (data.containsKey('button_name')) {
       context.handle(
-          _buttonNameMeta,
-          buttonName.isAcceptableOrUnknown(
-              data['button_name']!, _buttonNameMeta));
+        _buttonNameMeta,
+        buttonName.isAcceptableOrUnknown(data['button_name']!, _buttonNameMeta),
+      );
     }
     if (data.containsKey('is_using_button')) {
       context.handle(
+        _isUsingButtonMeta,
+        isUsingButton.isAcceptableOrUnknown(
+          data['is_using_button']!,
           _isUsingButtonMeta,
-          isUsingButton.isAcceptableOrUnknown(
-              data['is_using_button']!, _isUsingButtonMeta));
+        ),
+      );
     }
     if (data.containsKey('page')) {
       context.handle(
-          _pageMeta, page.isAcceptableOrUnknown(data['page']!, _pageMeta));
+        _pageMeta,
+        page.isAcceptableOrUnknown(data['page']!, _pageMeta),
+      );
     }
     if (data.containsKey('row')) {
       context.handle(
-          _rowMeta, row.isAcceptableOrUnknown(data['row']!, _rowMeta));
+        _rowMeta,
+        row.isAcceptableOrUnknown(data['row']!, _rowMeta),
+      );
     }
     if (data.containsKey('column')) {
-      context.handle(_columnMeta,
-          column.isAcceptableOrUnknown(data['column']!, _columnMeta));
+      context.handle(
+        _columnMeta,
+        column.isAcceptableOrUnknown(data['column']!, _columnMeta),
+      );
     }
-    context.handle(_commandMeta, const VerificationResult.success());
     if (data.containsKey('query_string')) {
       context.handle(
+        _queryStringMeta,
+        queryString.isAcceptableOrUnknown(
+          data['query_string']!,
           _queryStringMeta,
-          queryString.isAcceptableOrUnknown(
-              data['query_string']!, _queryStringMeta));
+        ),
+      );
     }
     if (data.containsKey('message')) {
-      context.handle(_messageMeta,
-          message.isAcceptableOrUnknown(data['message']!, _messageMeta));
+      context.handle(
+        _messageMeta,
+        message.isAcceptableOrUnknown(data['message']!, _messageMeta),
+      );
     }
     return context;
   }
@@ -1053,25 +1251,44 @@ class $ButtonTable extends Button with TableInfo<$ButtonTable, ButtonData> {
   ButtonData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ButtonData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id']),
-      buttonName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}button_name'])!,
-      isUsingButton: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_using_button'])!,
-      page: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}page'])!,
-      row: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}row'])!,
-      column: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}column'])!,
-      command: $ButtonTable.$convertercommand.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}command'])!),
-      queryString: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}query_string']),
-      message: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}message']),
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      ),
+      buttonName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}button_name'],
+      )!,
+      isUsingButton: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_using_button'],
+      )!,
+      page: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}page'],
+      )!,
+      row: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}row'],
+      )!,
+      column: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}column'],
+      )!,
+      command: $ButtonTable.$convertercommand.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}command'],
+        )!,
+      ),
+      queryString: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}query_string'],
+      ),
+      message: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}message'],
+      ),
     );
   }
 
@@ -1112,16 +1329,17 @@ class ButtonData extends DataClass implements Insertable<ButtonData> {
 
   /// 9) 메세지
   final String? message;
-  const ButtonData(
-      {this.id,
-      required this.buttonName,
-      required this.isUsingButton,
-      required this.page,
-      required this.row,
-      required this.column,
-      required this.command,
-      this.queryString,
-      this.message});
+  const ButtonData({
+    this.id,
+    required this.buttonName,
+    required this.isUsingButton,
+    required this.page,
+    required this.row,
+    required this.column,
+    required this.command,
+    this.queryString,
+    this.message,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1134,8 +1352,9 @@ class ButtonData extends DataClass implements Insertable<ButtonData> {
     map['row'] = Variable<int>(row);
     map['column'] = Variable<int>(column);
     {
-      map['command'] =
-          Variable<String>($ButtonTable.$convertercommand.toSql(command));
+      map['command'] = Variable<String>(
+        $ButtonTable.$convertercommand.toSql(command),
+      );
     }
     if (!nullToAbsent || queryString != null) {
       map['query_string'] = Variable<String>(queryString);
@@ -1164,8 +1383,10 @@ class ButtonData extends DataClass implements Insertable<ButtonData> {
     );
   }
 
-  factory ButtonData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory ButtonData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ButtonData(
       id: serializer.fromJson<int?>(json['id']),
@@ -1174,8 +1395,9 @@ class ButtonData extends DataClass implements Insertable<ButtonData> {
       page: serializer.fromJson<int>(json['page']),
       row: serializer.fromJson<int>(json['row']),
       column: serializer.fromJson<int>(json['column']),
-      command: $ButtonTable.$convertercommand
-          .fromJson(serializer.fromJson<String>(json['command'])),
+      command: $ButtonTable.$convertercommand.fromJson(
+        serializer.fromJson<String>(json['command']),
+      ),
       queryString: serializer.fromJson<String?>(json['queryString']),
       message: serializer.fromJson<String?>(json['message']),
     );
@@ -1190,39 +1412,41 @@ class ButtonData extends DataClass implements Insertable<ButtonData> {
       'page': serializer.toJson<int>(page),
       'row': serializer.toJson<int>(row),
       'column': serializer.toJson<int>(column),
-      'command': serializer
-          .toJson<String>($ButtonTable.$convertercommand.toJson(command)),
+      'command': serializer.toJson<String>(
+        $ButtonTable.$convertercommand.toJson(command),
+      ),
       'queryString': serializer.toJson<String?>(queryString),
       'message': serializer.toJson<String?>(message),
     };
   }
 
-  ButtonData copyWith(
-          {Value<int?> id = const Value.absent(),
-          String? buttonName,
-          bool? isUsingButton,
-          int? page,
-          int? row,
-          int? column,
-          Command? command,
-          Value<String?> queryString = const Value.absent(),
-          Value<String?> message = const Value.absent()}) =>
-      ButtonData(
-        id: id.present ? id.value : this.id,
-        buttonName: buttonName ?? this.buttonName,
-        isUsingButton: isUsingButton ?? this.isUsingButton,
-        page: page ?? this.page,
-        row: row ?? this.row,
-        column: column ?? this.column,
-        command: command ?? this.command,
-        queryString: queryString.present ? queryString.value : this.queryString,
-        message: message.present ? message.value : this.message,
-      );
+  ButtonData copyWith({
+    Value<int?> id = const Value.absent(),
+    String? buttonName,
+    bool? isUsingButton,
+    int? page,
+    int? row,
+    int? column,
+    Command? command,
+    Value<String?> queryString = const Value.absent(),
+    Value<String?> message = const Value.absent(),
+  }) => ButtonData(
+    id: id.present ? id.value : this.id,
+    buttonName: buttonName ?? this.buttonName,
+    isUsingButton: isUsingButton ?? this.isUsingButton,
+    page: page ?? this.page,
+    row: row ?? this.row,
+    column: column ?? this.column,
+    command: command ?? this.command,
+    queryString: queryString.present ? queryString.value : this.queryString,
+    message: message.present ? message.value : this.message,
+  );
   ButtonData copyWithCompanion(ButtonCompanion data) {
     return ButtonData(
       id: data.id.present ? data.id.value : this.id,
-      buttonName:
-          data.buttonName.present ? data.buttonName.value : this.buttonName,
+      buttonName: data.buttonName.present
+          ? data.buttonName.value
+          : this.buttonName,
       isUsingButton: data.isUsingButton.present
           ? data.isUsingButton.value
           : this.isUsingButton,
@@ -1230,8 +1454,9 @@ class ButtonData extends DataClass implements Insertable<ButtonData> {
       row: data.row.present ? data.row.value : this.row,
       column: data.column.present ? data.column.value : this.column,
       command: data.command.present ? data.command.value : this.command,
-      queryString:
-          data.queryString.present ? data.queryString.value : this.queryString,
+      queryString: data.queryString.present
+          ? data.queryString.value
+          : this.queryString,
       message: data.message.present ? data.message.value : this.message,
     );
   }
@@ -1253,8 +1478,17 @@ class ButtonData extends DataClass implements Insertable<ButtonData> {
   }
 
   @override
-  int get hashCode => Object.hash(id, buttonName, isUsingButton, page, row,
-      column, command, queryString, message);
+  int get hashCode => Object.hash(
+    id,
+    buttonName,
+    isUsingButton,
+    page,
+    row,
+    column,
+    command,
+    queryString,
+    message,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1326,16 +1560,17 @@ class ButtonCompanion extends UpdateCompanion<ButtonData> {
     });
   }
 
-  ButtonCompanion copyWith(
-      {Value<int?>? id,
-      Value<String>? buttonName,
-      Value<bool>? isUsingButton,
-      Value<int>? page,
-      Value<int>? row,
-      Value<int>? column,
-      Value<Command>? command,
-      Value<String?>? queryString,
-      Value<String?>? message}) {
+  ButtonCompanion copyWith({
+    Value<int?>? id,
+    Value<String>? buttonName,
+    Value<bool>? isUsingButton,
+    Value<int>? page,
+    Value<int>? row,
+    Value<int>? column,
+    Value<Command>? command,
+    Value<String?>? queryString,
+    Value<String?>? message,
+  }) {
     return ButtonCompanion(
       id: id ?? this.id,
       buttonName: buttonName ?? this.buttonName,
@@ -1371,8 +1606,9 @@ class ButtonCompanion extends UpdateCompanion<ButtonData> {
       map['column'] = Variable<int>(column.value);
     }
     if (command.present) {
-      map['command'] =
-          Variable<String>($ButtonTable.$convertercommand.toSql(command.value));
+      map['command'] = Variable<String>(
+        $ButtonTable.$convertercommand.toSql(command.value),
+      );
     }
     if (queryString.present) {
       map['query_string'] = Variable<String>(queryString.value);
@@ -1409,130 +1645,181 @@ class $MediaItemTable extends MediaItem
   static const VerificationMeta _keyMeta = const VerificationMeta('key');
   @override
   late final GeneratedColumn<String> key = GeneratedColumn<String>(
-      'key', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      defaultValue: const Constant('미디어 이름'));
-  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('미디어 이름'),
+  );
   @override
   late final GeneratedColumnWithTypeConverter<MediaType, String> type =
-      GeneratedColumn<String>('type', aliasedName, false,
-              type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<MediaType>($MediaItemTable.$convertertype);
+      GeneratedColumn<String>(
+        'type',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<MediaType>($MediaItemTable.$convertertype);
   static const VerificationMeta _urlMeta = const VerificationMeta('url');
   @override
   late final GeneratedColumn<String> url = GeneratedColumn<String>(
-      'url', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _fileNameMeta =
-      const VerificationMeta('fileName');
+    'url',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fileNameMeta = const VerificationMeta(
+    'fileName',
+  );
   @override
   late final GeneratedColumn<String> fileName = GeneratedColumn<String>(
-      'file_name', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _fromMeta = const VerificationMeta('from');
+    'file_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   late final GeneratedColumnWithTypeConverter<MediaFrom, String> from =
-      GeneratedColumn<String>('from', aliasedName, false,
-              type: DriftSqlType.string,
-              requiredDuringInsert: false,
-              defaultValue: const Constant('gDrive'))
-          .withConverter<MediaFrom>($MediaItemTable.$converterfrom);
-  static const VerificationMeta _fitMeta = const VerificationMeta('fit');
+      GeneratedColumn<String>(
+        'from',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('gDrive'),
+      ).withConverter<MediaFrom>($MediaItemTable.$converterfrom);
   @override
   late final GeneratedColumnWithTypeConverter<BoxFit?, String> fit =
-      GeneratedColumn<String>('fit', aliasedName, true,
-              type: DriftSqlType.string, requiredDuringInsert: false)
-          .withConverter<BoxFit?>($MediaItemTable.$converterfitn);
-  static const VerificationMeta _orderNumMeta =
-      const VerificationMeta('orderNum');
+      GeneratedColumn<String>(
+        'fit',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<BoxFit?>($MediaItemTable.$converterfitn);
+  static const VerificationMeta _orderNumMeta = const VerificationMeta(
+    'orderNum',
+  );
   @override
   late final GeneratedColumn<int> orderNum = GeneratedColumn<int>(
-      'order_num', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _lastUpdatedMeta =
-      const VerificationMeta('lastUpdated');
+    'order_num',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastUpdatedMeta = const VerificationMeta(
+    'lastUpdated',
+  );
   @override
   late final GeneratedColumn<DateTime> lastUpdated = GeneratedColumn<DateTime>(
-      'last_updated', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      defaultValue: currentDateAndTime);
+    'last_updated',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    defaultValue: currentDateAndTime,
+  );
   static const VerificationMeta _isDeadMeta = const VerificationMeta('isDead');
   @override
   late final GeneratedColumn<bool> isDead = GeneratedColumn<bool>(
-      'is_dead', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("is_dead" IN (0, 1))'),
-      defaultValue: const Constant(false));
+    'is_dead',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_dead" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   @override
   List<GeneratedColumn> get $columns => [
-        key,
-        title,
-        type,
-        url,
-        fileName,
-        from,
-        fit,
-        orderNum,
-        lastUpdated,
-        isDead
-      ];
+    key,
+    title,
+    type,
+    url,
+    fileName,
+    from,
+    fit,
+    orderNum,
+    lastUpdated,
+    isDead,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
   static const String $name = 'media_item';
   @override
-  VerificationContext validateIntegrity(Insertable<MediaItemData> instance,
-      {bool isInserting = false}) {
+  VerificationContext validateIntegrity(
+    Insertable<MediaItemData> instance, {
+    bool isInserting = false,
+  }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('key')) {
       context.handle(
-          _keyMeta, key.isAcceptableOrUnknown(data['key']!, _keyMeta));
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
     } else if (isInserting) {
       context.missing(_keyMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
     }
-    context.handle(_typeMeta, const VerificationResult.success());
     if (data.containsKey('url')) {
       context.handle(
-          _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
+        _urlMeta,
+        url.isAcceptableOrUnknown(data['url']!, _urlMeta),
+      );
     } else if (isInserting) {
       context.missing(_urlMeta);
     }
     if (data.containsKey('file_name')) {
-      context.handle(_fileNameMeta,
-          fileName.isAcceptableOrUnknown(data['file_name']!, _fileNameMeta));
+      context.handle(
+        _fileNameMeta,
+        fileName.isAcceptableOrUnknown(data['file_name']!, _fileNameMeta),
+      );
     }
-    context.handle(_fromMeta, const VerificationResult.success());
-    context.handle(_fitMeta, const VerificationResult.success());
     if (data.containsKey('order_num')) {
-      context.handle(_orderNumMeta,
-          orderNum.isAcceptableOrUnknown(data['order_num']!, _orderNumMeta));
+      context.handle(
+        _orderNumMeta,
+        orderNum.isAcceptableOrUnknown(data['order_num']!, _orderNumMeta),
+      );
     } else if (isInserting) {
       context.missing(_orderNumMeta);
     }
     if (data.containsKey('last_updated')) {
       context.handle(
+        _lastUpdatedMeta,
+        lastUpdated.isAcceptableOrUnknown(
+          data['last_updated']!,
           _lastUpdatedMeta,
-          lastUpdated.isAcceptableOrUnknown(
-              data['last_updated']!, _lastUpdatedMeta));
+        ),
+      );
     }
     if (data.containsKey('is_dead')) {
-      context.handle(_isDeadMeta,
-          isDead.isAcceptableOrUnknown(data['is_dead']!, _isDeadMeta));
+      context.handle(
+        _isDeadMeta,
+        isDead.isAcceptableOrUnknown(data['is_dead']!, _isDeadMeta),
+      );
     }
     return context;
   }
@@ -1543,26 +1830,52 @@ class $MediaItemTable extends MediaItem
   MediaItemData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return MediaItemData(
-      key: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}key'])!,
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      type: $MediaItemTable.$convertertype.fromSql(attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}type'])!),
-      url: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}url'])!,
-      fileName: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}file_name']),
-      from: $MediaItemTable.$converterfrom.fromSql(attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}from'])!),
-      fit: $MediaItemTable.$converterfitn.fromSql(attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}fit'])),
-      orderNum: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}order_num'])!,
-      lastUpdated: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
-      isDead: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_dead'])!,
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      type: $MediaItemTable.$convertertype.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}type'],
+        )!,
+      ),
+      url: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}url'],
+      )!,
+      fileName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}file_name'],
+      ),
+      from: $MediaItemTable.$converterfrom.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}from'],
+        )!,
+      ),
+      fit: $MediaItemTable.$converterfitn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}fit'],
+        ),
+      ),
+      orderNum: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}order_num'],
+      )!,
+      lastUpdated: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_updated'],
+      )!,
+      isDead: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_dead'],
+      )!,
     );
   }
 
@@ -1612,33 +1925,36 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
   /// 9) 마지막 수정 일시
   final DateTime lastUpdated;
   final bool isDead;
-  const MediaItemData(
-      {required this.key,
-      required this.title,
-      required this.type,
-      required this.url,
-      this.fileName,
-      required this.from,
-      this.fit,
-      required this.orderNum,
-      required this.lastUpdated,
-      required this.isDead});
+  const MediaItemData({
+    required this.key,
+    required this.title,
+    required this.type,
+    required this.url,
+    this.fileName,
+    required this.from,
+    this.fit,
+    required this.orderNum,
+    required this.lastUpdated,
+    required this.isDead,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['key'] = Variable<String>(key);
     map['title'] = Variable<String>(title);
     {
-      map['type'] =
-          Variable<String>($MediaItemTable.$convertertype.toSql(type));
+      map['type'] = Variable<String>(
+        $MediaItemTable.$convertertype.toSql(type),
+      );
     }
     map['url'] = Variable<String>(url);
     if (!nullToAbsent || fileName != null) {
       map['file_name'] = Variable<String>(fileName);
     }
     {
-      map['from'] =
-          Variable<String>($MediaItemTable.$converterfrom.toSql(from));
+      map['from'] = Variable<String>(
+        $MediaItemTable.$converterfrom.toSql(from),
+      );
     }
     if (!nullToAbsent || fit != null) {
       map['fit'] = Variable<String>($MediaItemTable.$converterfitn.toSql(fit));
@@ -1666,20 +1982,25 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
     );
   }
 
-  factory MediaItemData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
+  factory MediaItemData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MediaItemData(
       key: serializer.fromJson<String>(json['key']),
       title: serializer.fromJson<String>(json['title']),
-      type: $MediaItemTable.$convertertype
-          .fromJson(serializer.fromJson<String>(json['type'])),
+      type: $MediaItemTable.$convertertype.fromJson(
+        serializer.fromJson<String>(json['type']),
+      ),
       url: serializer.fromJson<String>(json['url']),
       fileName: serializer.fromJson<String?>(json['fileName']),
-      from: $MediaItemTable.$converterfrom
-          .fromJson(serializer.fromJson<String>(json['from'])),
-      fit: $MediaItemTable.$converterfitn
-          .fromJson(serializer.fromJson<String?>(json['fit'])),
+      from: $MediaItemTable.$converterfrom.fromJson(
+        serializer.fromJson<String>(json['from']),
+      ),
+      fit: $MediaItemTable.$converterfitn.fromJson(
+        serializer.fromJson<String?>(json['fit']),
+      ),
       orderNum: serializer.fromJson<int>(json['orderNum']),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
       isDead: serializer.fromJson<bool>(json['isDead']),
@@ -1691,43 +2012,46 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
     return <String, dynamic>{
       'key': serializer.toJson<String>(key),
       'title': serializer.toJson<String>(title),
-      'type': serializer
-          .toJson<String>($MediaItemTable.$convertertype.toJson(type)),
+      'type': serializer.toJson<String>(
+        $MediaItemTable.$convertertype.toJson(type),
+      ),
       'url': serializer.toJson<String>(url),
       'fileName': serializer.toJson<String?>(fileName),
-      'from': serializer
-          .toJson<String>($MediaItemTable.$converterfrom.toJson(from)),
-      'fit': serializer
-          .toJson<String?>($MediaItemTable.$converterfitn.toJson(fit)),
+      'from': serializer.toJson<String>(
+        $MediaItemTable.$converterfrom.toJson(from),
+      ),
+      'fit': serializer.toJson<String?>(
+        $MediaItemTable.$converterfitn.toJson(fit),
+      ),
       'orderNum': serializer.toJson<int>(orderNum),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
       'isDead': serializer.toJson<bool>(isDead),
     };
   }
 
-  MediaItemData copyWith(
-          {String? key,
-          String? title,
-          MediaType? type,
-          String? url,
-          Value<String?> fileName = const Value.absent(),
-          MediaFrom? from,
-          Value<BoxFit?> fit = const Value.absent(),
-          int? orderNum,
-          DateTime? lastUpdated,
-          bool? isDead}) =>
-      MediaItemData(
-        key: key ?? this.key,
-        title: title ?? this.title,
-        type: type ?? this.type,
-        url: url ?? this.url,
-        fileName: fileName.present ? fileName.value : this.fileName,
-        from: from ?? this.from,
-        fit: fit.present ? fit.value : this.fit,
-        orderNum: orderNum ?? this.orderNum,
-        lastUpdated: lastUpdated ?? this.lastUpdated,
-        isDead: isDead ?? this.isDead,
-      );
+  MediaItemData copyWith({
+    String? key,
+    String? title,
+    MediaType? type,
+    String? url,
+    Value<String?> fileName = const Value.absent(),
+    MediaFrom? from,
+    Value<BoxFit?> fit = const Value.absent(),
+    int? orderNum,
+    DateTime? lastUpdated,
+    bool? isDead,
+  }) => MediaItemData(
+    key: key ?? this.key,
+    title: title ?? this.title,
+    type: type ?? this.type,
+    url: url ?? this.url,
+    fileName: fileName.present ? fileName.value : this.fileName,
+    from: from ?? this.from,
+    fit: fit.present ? fit.value : this.fit,
+    orderNum: orderNum ?? this.orderNum,
+    lastUpdated: lastUpdated ?? this.lastUpdated,
+    isDead: isDead ?? this.isDead,
+  );
   MediaItemData copyWithCompanion(MediaItemCompanion data) {
     return MediaItemData(
       key: data.key.present ? data.key.value : this.key,
@@ -1738,8 +2062,9 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
       from: data.from.present ? data.from.value : this.from,
       fit: data.fit.present ? data.fit.value : this.fit,
       orderNum: data.orderNum.present ? data.orderNum.value : this.orderNum,
-      lastUpdated:
-          data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
+      lastUpdated: data.lastUpdated.present
+          ? data.lastUpdated.value
+          : this.lastUpdated,
       isDead: data.isDead.present ? data.isDead.value : this.isDead,
     );
   }
@@ -1762,8 +2087,18 @@ class MediaItemData extends DataClass implements Insertable<MediaItemData> {
   }
 
   @override
-  int get hashCode => Object.hash(key, title, type, url, fileName, from, fit,
-      orderNum, lastUpdated, isDead);
+  int get hashCode => Object.hash(
+    key,
+    title,
+    type,
+    url,
+    fileName,
+    from,
+    fit,
+    orderNum,
+    lastUpdated,
+    isDead,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1817,10 +2152,10 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     this.lastUpdated = const Value.absent(),
     this.isDead = const Value.absent(),
     this.rowid = const Value.absent(),
-  })  : key = Value(key),
-        type = Value(type),
-        url = Value(url),
-        orderNum = Value(orderNum);
+  }) : key = Value(key),
+       type = Value(type),
+       url = Value(url),
+       orderNum = Value(orderNum);
   static Insertable<MediaItemData> custom({
     Expression<String>? key,
     Expression<String>? title,
@@ -1849,18 +2184,19 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
     });
   }
 
-  MediaItemCompanion copyWith(
-      {Value<String>? key,
-      Value<String>? title,
-      Value<MediaType>? type,
-      Value<String>? url,
-      Value<String?>? fileName,
-      Value<MediaFrom>? from,
-      Value<BoxFit?>? fit,
-      Value<int>? orderNum,
-      Value<DateTime>? lastUpdated,
-      Value<bool>? isDead,
-      Value<int>? rowid}) {
+  MediaItemCompanion copyWith({
+    Value<String>? key,
+    Value<String>? title,
+    Value<MediaType>? type,
+    Value<String>? url,
+    Value<String?>? fileName,
+    Value<MediaFrom>? from,
+    Value<BoxFit?>? fit,
+    Value<int>? orderNum,
+    Value<DateTime>? lastUpdated,
+    Value<bool>? isDead,
+    Value<int>? rowid,
+  }) {
     return MediaItemCompanion(
       key: key ?? this.key,
       title: title ?? this.title,
@@ -1886,8 +2222,9 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
       map['title'] = Variable<String>(title.value);
     }
     if (type.present) {
-      map['type'] =
-          Variable<String>($MediaItemTable.$convertertype.toSql(type.value));
+      map['type'] = Variable<String>(
+        $MediaItemTable.$convertertype.toSql(type.value),
+      );
     }
     if (url.present) {
       map['url'] = Variable<String>(url.value);
@@ -1896,12 +2233,14 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
       map['file_name'] = Variable<String>(fileName.value);
     }
     if (from.present) {
-      map['from'] =
-          Variable<String>($MediaItemTable.$converterfrom.toSql(from.value));
+      map['from'] = Variable<String>(
+        $MediaItemTable.$converterfrom.toSql(from.value),
+      );
     }
     if (fit.present) {
-      map['fit'] =
-          Variable<String>($MediaItemTable.$converterfitn.toSql(fit.value));
+      map['fit'] = Variable<String>(
+        $MediaItemTable.$converterfitn.toSql(fit.value),
+      );
     }
     if (orderNum.present) {
       map['order_num'] = Variable<int>(orderNum.value);
@@ -1948,54 +2287,58 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [basicInfo, page, button, mediaItem];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    basicInfo,
+    page,
+    button,
+    mediaItem,
+  ];
   @override
-  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
-        [
-          WritePropagation(
-            on: TableUpdateQuery.onTableName('page',
-                limitUpdateKind: UpdateKind.update),
-            result: [
-              TableUpdate('button', kind: UpdateKind.update),
-            ],
-          ),
-        ],
-      );
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'page',
+        limitUpdateKind: UpdateKind.update,
+      ),
+      result: [TableUpdate('button', kind: UpdateKind.update)],
+    ),
+  ]);
 }
 
-typedef $$BasicInfoTableCreateCompanionBuilder = BasicInfoCompanion Function({
-  Value<int> id,
-  required String roomId,
-  Value<String> roomName,
-  required Uint8List logoImage,
-  Value<String> titleText,
-  Value<String> wifiName,
-  Value<int> myOscPort,
-  Value<String> myPassword,
-  Value<String> serverIp,
-  Value<int> serverOscPort,
-  Value<int> serverMqttPort,
-  Value<String> serverMqttId,
-  Value<String> serverMqttPassword,
-  Value<DateTime> createdAt,
-});
-typedef $$BasicInfoTableUpdateCompanionBuilder = BasicInfoCompanion Function({
-  Value<int> id,
-  Value<String> roomId,
-  Value<String> roomName,
-  Value<Uint8List> logoImage,
-  Value<String> titleText,
-  Value<String> wifiName,
-  Value<int> myOscPort,
-  Value<String> myPassword,
-  Value<String> serverIp,
-  Value<int> serverOscPort,
-  Value<int> serverMqttPort,
-  Value<String> serverMqttId,
-  Value<String> serverMqttPassword,
-  Value<DateTime> createdAt,
-});
+typedef $$BasicInfoTableCreateCompanionBuilder =
+    BasicInfoCompanion Function({
+      Value<int> id,
+      required String roomId,
+      Value<String> roomName,
+      required Uint8List logoImage,
+      Value<String> titleText,
+      Value<String> wifiName,
+      Value<int> myOscPort,
+      Value<String> myPassword,
+      Value<String> serverIp,
+      Value<int> serverOscPort,
+      Value<int> serverMqttPort,
+      Value<String> serverMqttId,
+      Value<String> serverMqttPassword,
+      Value<DateTime> createdAt,
+    });
+typedef $$BasicInfoTableUpdateCompanionBuilder =
+    BasicInfoCompanion Function({
+      Value<int> id,
+      Value<String> roomId,
+      Value<String> roomName,
+      Value<Uint8List> logoImage,
+      Value<String> titleText,
+      Value<String> wifiName,
+      Value<int> myOscPort,
+      Value<String> myPassword,
+      Value<String> serverIp,
+      Value<int> serverOscPort,
+      Value<int> serverMqttPort,
+      Value<String> serverMqttId,
+      Value<String> serverMqttPassword,
+      Value<DateTime> createdAt,
+    });
 
 class $$BasicInfoTableFilterComposer
     extends Composer<_$AppDatabase, $BasicInfoTable> {
@@ -2007,48 +2350,74 @@ class $$BasicInfoTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get roomId => $composableBuilder(
-      column: $table.roomId, builder: (column) => ColumnFilters(column));
+    column: $table.roomId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get roomName => $composableBuilder(
-      column: $table.roomName, builder: (column) => ColumnFilters(column));
+    column: $table.roomName,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<Uint8List> get logoImage => $composableBuilder(
-      column: $table.logoImage, builder: (column) => ColumnFilters(column));
+    column: $table.logoImage,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get titleText => $composableBuilder(
-      column: $table.titleText, builder: (column) => ColumnFilters(column));
+    column: $table.titleText,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get wifiName => $composableBuilder(
-      column: $table.wifiName, builder: (column) => ColumnFilters(column));
+    column: $table.wifiName,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get myOscPort => $composableBuilder(
-      column: $table.myOscPort, builder: (column) => ColumnFilters(column));
+    column: $table.myOscPort,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get myPassword => $composableBuilder(
-      column: $table.myPassword, builder: (column) => ColumnFilters(column));
+    column: $table.myPassword,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get serverIp => $composableBuilder(
-      column: $table.serverIp, builder: (column) => ColumnFilters(column));
+    column: $table.serverIp,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get serverOscPort => $composableBuilder(
-      column: $table.serverOscPort, builder: (column) => ColumnFilters(column));
+    column: $table.serverOscPort,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get serverMqttPort => $composableBuilder(
-      column: $table.serverMqttPort,
-      builder: (column) => ColumnFilters(column));
+    column: $table.serverMqttPort,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get serverMqttId => $composableBuilder(
-      column: $table.serverMqttId, builder: (column) => ColumnFilters(column));
+    column: $table.serverMqttId,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get serverMqttPassword => $composableBuilder(
-      column: $table.serverMqttPassword,
-      builder: (column) => ColumnFilters(column));
+    column: $table.serverMqttPassword,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$BasicInfoTableOrderingComposer
@@ -2061,50 +2430,74 @@ class $$BasicInfoTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get roomId => $composableBuilder(
-      column: $table.roomId, builder: (column) => ColumnOrderings(column));
+    column: $table.roomId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get roomName => $composableBuilder(
-      column: $table.roomName, builder: (column) => ColumnOrderings(column));
+    column: $table.roomName,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<Uint8List> get logoImage => $composableBuilder(
-      column: $table.logoImage, builder: (column) => ColumnOrderings(column));
+    column: $table.logoImage,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get titleText => $composableBuilder(
-      column: $table.titleText, builder: (column) => ColumnOrderings(column));
+    column: $table.titleText,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get wifiName => $composableBuilder(
-      column: $table.wifiName, builder: (column) => ColumnOrderings(column));
+    column: $table.wifiName,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get myOscPort => $composableBuilder(
-      column: $table.myOscPort, builder: (column) => ColumnOrderings(column));
+    column: $table.myOscPort,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get myPassword => $composableBuilder(
-      column: $table.myPassword, builder: (column) => ColumnOrderings(column));
+    column: $table.myPassword,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get serverIp => $composableBuilder(
-      column: $table.serverIp, builder: (column) => ColumnOrderings(column));
+    column: $table.serverIp,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get serverOscPort => $composableBuilder(
-      column: $table.serverOscPort,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.serverOscPort,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get serverMqttPort => $composableBuilder(
-      column: $table.serverMqttPort,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.serverMqttPort,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get serverMqttId => $composableBuilder(
-      column: $table.serverMqttId,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.serverMqttId,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get serverMqttPassword => $composableBuilder(
-      column: $table.serverMqttPassword,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.serverMqttPassword,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$BasicInfoTableAnnotationComposer
@@ -2138,44 +2531,58 @@ class $$BasicInfoTableAnnotationComposer
       $composableBuilder(column: $table.myOscPort, builder: (column) => column);
 
   GeneratedColumn<String> get myPassword => $composableBuilder(
-      column: $table.myPassword, builder: (column) => column);
+    column: $table.myPassword,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get serverIp =>
       $composableBuilder(column: $table.serverIp, builder: (column) => column);
 
   GeneratedColumn<int> get serverOscPort => $composableBuilder(
-      column: $table.serverOscPort, builder: (column) => column);
+    column: $table.serverOscPort,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get serverMqttPort => $composableBuilder(
-      column: $table.serverMqttPort, builder: (column) => column);
+    column: $table.serverMqttPort,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get serverMqttId => $composableBuilder(
-      column: $table.serverMqttId, builder: (column) => column);
+    column: $table.serverMqttId,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get serverMqttPassword => $composableBuilder(
-      column: $table.serverMqttPassword, builder: (column) => column);
+    column: $table.serverMqttPassword,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 }
 
-class $$BasicInfoTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $BasicInfoTable,
-    BasicInfoData,
-    $$BasicInfoTableFilterComposer,
-    $$BasicInfoTableOrderingComposer,
-    $$BasicInfoTableAnnotationComposer,
-    $$BasicInfoTableCreateCompanionBuilder,
-    $$BasicInfoTableUpdateCompanionBuilder,
-    (
-      BasicInfoData,
-      BaseReferences<_$AppDatabase, $BasicInfoTable, BasicInfoData>
-    ),
-    BasicInfoData,
-    PrefetchHooks Function()> {
+class $$BasicInfoTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BasicInfoTable,
+          BasicInfoData,
+          $$BasicInfoTableFilterComposer,
+          $$BasicInfoTableOrderingComposer,
+          $$BasicInfoTableAnnotationComposer,
+          $$BasicInfoTableCreateCompanionBuilder,
+          $$BasicInfoTableUpdateCompanionBuilder,
+          (
+            BasicInfoData,
+            BaseReferences<_$AppDatabase, $BasicInfoTable, BasicInfoData>,
+          ),
+          BasicInfoData,
+          PrefetchHooks Function()
+        > {
   $$BasicInfoTableTableManager(_$AppDatabase db, $BasicInfoTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2184,119 +2591,129 @@ class $$BasicInfoTableTableManager extends RootTableManager<
               $$BasicInfoTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$BasicInfoTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            Value<String> roomId = const Value.absent(),
-            Value<String> roomName = const Value.absent(),
-            Value<Uint8List> logoImage = const Value.absent(),
-            Value<String> titleText = const Value.absent(),
-            Value<String> wifiName = const Value.absent(),
-            Value<int> myOscPort = const Value.absent(),
-            Value<String> myPassword = const Value.absent(),
-            Value<String> serverIp = const Value.absent(),
-            Value<int> serverOscPort = const Value.absent(),
-            Value<int> serverMqttPort = const Value.absent(),
-            Value<String> serverMqttId = const Value.absent(),
-            Value<String> serverMqttPassword = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-          }) =>
-              BasicInfoCompanion(
-            id: id,
-            roomId: roomId,
-            roomName: roomName,
-            logoImage: logoImage,
-            titleText: titleText,
-            wifiName: wifiName,
-            myOscPort: myOscPort,
-            myPassword: myPassword,
-            serverIp: serverIp,
-            serverOscPort: serverOscPort,
-            serverMqttPort: serverMqttPort,
-            serverMqttId: serverMqttId,
-            serverMqttPassword: serverMqttPassword,
-            createdAt: createdAt,
-          ),
-          createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
-            required String roomId,
-            Value<String> roomName = const Value.absent(),
-            required Uint8List logoImage,
-            Value<String> titleText = const Value.absent(),
-            Value<String> wifiName = const Value.absent(),
-            Value<int> myOscPort = const Value.absent(),
-            Value<String> myPassword = const Value.absent(),
-            Value<String> serverIp = const Value.absent(),
-            Value<int> serverOscPort = const Value.absent(),
-            Value<int> serverMqttPort = const Value.absent(),
-            Value<String> serverMqttId = const Value.absent(),
-            Value<String> serverMqttPassword = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-          }) =>
-              BasicInfoCompanion.insert(
-            id: id,
-            roomId: roomId,
-            roomName: roomName,
-            logoImage: logoImage,
-            titleText: titleText,
-            wifiName: wifiName,
-            myOscPort: myOscPort,
-            myPassword: myPassword,
-            serverIp: serverIp,
-            serverOscPort: serverOscPort,
-            serverMqttPort: serverMqttPort,
-            serverMqttId: serverMqttId,
-            serverMqttPassword: serverMqttPassword,
-            createdAt: createdAt,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> roomId = const Value.absent(),
+                Value<String> roomName = const Value.absent(),
+                Value<Uint8List> logoImage = const Value.absent(),
+                Value<String> titleText = const Value.absent(),
+                Value<String> wifiName = const Value.absent(),
+                Value<int> myOscPort = const Value.absent(),
+                Value<String> myPassword = const Value.absent(),
+                Value<String> serverIp = const Value.absent(),
+                Value<int> serverOscPort = const Value.absent(),
+                Value<int> serverMqttPort = const Value.absent(),
+                Value<String> serverMqttId = const Value.absent(),
+                Value<String> serverMqttPassword = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => BasicInfoCompanion(
+                id: id,
+                roomId: roomId,
+                roomName: roomName,
+                logoImage: logoImage,
+                titleText: titleText,
+                wifiName: wifiName,
+                myOscPort: myOscPort,
+                myPassword: myPassword,
+                serverIp: serverIp,
+                serverOscPort: serverOscPort,
+                serverMqttPort: serverMqttPort,
+                serverMqttId: serverMqttId,
+                serverMqttPassword: serverMqttPassword,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String roomId,
+                Value<String> roomName = const Value.absent(),
+                required Uint8List logoImage,
+                Value<String> titleText = const Value.absent(),
+                Value<String> wifiName = const Value.absent(),
+                Value<int> myOscPort = const Value.absent(),
+                Value<String> myPassword = const Value.absent(),
+                Value<String> serverIp = const Value.absent(),
+                Value<int> serverOscPort = const Value.absent(),
+                Value<int> serverMqttPort = const Value.absent(),
+                Value<String> serverMqttId = const Value.absent(),
+                Value<String> serverMqttPassword = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => BasicInfoCompanion.insert(
+                id: id,
+                roomId: roomId,
+                roomName: roomName,
+                logoImage: logoImage,
+                titleText: titleText,
+                wifiName: wifiName,
+                myOscPort: myOscPort,
+                myPassword: myPassword,
+                serverIp: serverIp,
+                serverOscPort: serverOscPort,
+                serverMqttPort: serverMqttPort,
+                serverMqttId: serverMqttId,
+                serverMqttPassword: serverMqttPassword,
+                createdAt: createdAt,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$BasicInfoTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $BasicInfoTable,
-    BasicInfoData,
-    $$BasicInfoTableFilterComposer,
-    $$BasicInfoTableOrderingComposer,
-    $$BasicInfoTableAnnotationComposer,
-    $$BasicInfoTableCreateCompanionBuilder,
-    $$BasicInfoTableUpdateCompanionBuilder,
-    (
+typedef $$BasicInfoTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BasicInfoTable,
       BasicInfoData,
-      BaseReferences<_$AppDatabase, $BasicInfoTable, BasicInfoData>
-    ),
-    BasicInfoData,
-    PrefetchHooks Function()>;
-typedef $$PageTableCreateCompanionBuilder = PageCompanion Function({
-  Value<int?> id,
-  required String pageName,
-  required int pageNum,
-});
-typedef $$PageTableUpdateCompanionBuilder = PageCompanion Function({
-  Value<int?> id,
-  Value<String> pageName,
-  Value<int> pageNum,
-});
+      $$BasicInfoTableFilterComposer,
+      $$BasicInfoTableOrderingComposer,
+      $$BasicInfoTableAnnotationComposer,
+      $$BasicInfoTableCreateCompanionBuilder,
+      $$BasicInfoTableUpdateCompanionBuilder,
+      (
+        BasicInfoData,
+        BaseReferences<_$AppDatabase, $BasicInfoTable, BasicInfoData>,
+      ),
+      BasicInfoData,
+      PrefetchHooks Function()
+    >;
+typedef $$PageTableCreateCompanionBuilder =
+    PageCompanion Function({
+      Value<int> id,
+      required String pageName,
+      required int pageNum,
+    });
+typedef $$PageTableUpdateCompanionBuilder =
+    PageCompanion Function({
+      Value<int> id,
+      Value<String> pageName,
+      Value<int> pageNum,
+    });
 
 final class $$PageTableReferences
     extends BaseReferences<_$AppDatabase, $PageTable, PageData> {
   $$PageTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<$ButtonTable, List<ButtonData>> _buttonRefsTable(
-          _$AppDatabase db) =>
-      MultiTypedResultKey.fromTable(db.button,
-          aliasName: $_aliasNameGenerator(db.page.id, db.button.page));
+    _$AppDatabase db,
+  ) => MultiTypedResultKey.fromTable(
+    db.button,
+    aliasName: $_aliasNameGenerator(db.page.id, db.button.page),
+  );
 
   $$ButtonTableProcessedTableManager get buttonRefs {
-    final manager = $$ButtonTableTableManager($_db, $_db.button)
-        .filter((f) => f.page.id($_item.id));
+    final manager = $$ButtonTableTableManager(
+      $_db,
+      $_db.button,
+    ).filter((f) => f.page.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_buttonRefsTable($_db));
     return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: cache));
+      manager.$state.copyWith(prefetchedData: cache),
+    );
   }
 }
 
@@ -2309,32 +2726,42 @@ class $$PageTableFilterComposer extends Composer<_$AppDatabase, $PageTable> {
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get pageName => $composableBuilder(
-      column: $table.pageName, builder: (column) => ColumnFilters(column));
+    column: $table.pageName,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get pageNum => $composableBuilder(
-      column: $table.pageNum, builder: (column) => ColumnFilters(column));
+    column: $table.pageNum,
+    builder: (column) => ColumnFilters(column),
+  );
 
   Expression<bool> buttonRefs(
-      Expression<bool> Function($$ButtonTableFilterComposer f) f) {
+    Expression<bool> Function($$ButtonTableFilterComposer f) f,
+  ) {
     final $$ButtonTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.button,
-        getReferencedColumn: (t) => t.page,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ButtonTableFilterComposer(
-              $db: $db,
-              $table: $db.button,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.button,
+      getReferencedColumn: (t) => t.page,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ButtonTableFilterComposer(
+            $db: $db,
+            $table: $db.button,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
     return f(composer);
   }
 }
@@ -2348,13 +2775,19 @@ class $$PageTableOrderingComposer extends Composer<_$AppDatabase, $PageTable> {
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get pageName => $composableBuilder(
-      column: $table.pageName, builder: (column) => ColumnOrderings(column));
+    column: $table.pageName,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get pageNum => $composableBuilder(
-      column: $table.pageNum, builder: (column) => ColumnOrderings(column));
+    column: $table.pageNum,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PageTableAnnotationComposer
@@ -2376,41 +2809,49 @@ class $$PageTableAnnotationComposer
       $composableBuilder(column: $table.pageNum, builder: (column) => column);
 
   Expression<T> buttonRefs<T extends Object>(
-      Expression<T> Function($$ButtonTableAnnotationComposer a) f) {
+    Expression<T> Function($$ButtonTableAnnotationComposer a) f,
+  ) {
     final $$ButtonTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.id,
-        referencedTable: $db.button,
-        getReferencedColumn: (t) => t.page,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$ButtonTableAnnotationComposer(
-              $db: $db,
-              $table: $db.button,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.button,
+      getReferencedColumn: (t) => t.page,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$ButtonTableAnnotationComposer(
+            $db: $db,
+            $table: $db.button,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
     return f(composer);
   }
 }
 
-class $$PageTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $PageTable,
-    PageData,
-    $$PageTableFilterComposer,
-    $$PageTableOrderingComposer,
-    $$PageTableAnnotationComposer,
-    $$PageTableCreateCompanionBuilder,
-    $$PageTableUpdateCompanionBuilder,
-    (PageData, $$PageTableReferences),
-    PageData,
-    PrefetchHooks Function({bool buttonRefs})> {
+class $$PageTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PageTable,
+          PageData,
+          $$PageTableFilterComposer,
+          $$PageTableOrderingComposer,
+          $$PageTableAnnotationComposer,
+          $$PageTableCreateCompanionBuilder,
+          $$PageTableUpdateCompanionBuilder,
+          (PageData, $$PageTableReferences),
+          PageData,
+          PrefetchHooks Function({bool buttonRefs})
+        > {
   $$PageTableTableManager(_$AppDatabase db, $PageTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2419,29 +2860,27 @@ class $$PageTableTableManager extends RootTableManager<
               $$PageTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$PageTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int?> id = const Value.absent(),
-            Value<String> pageName = const Value.absent(),
-            Value<int> pageNum = const Value.absent(),
-          }) =>
-              PageCompanion(
-            id: id,
-            pageName: pageName,
-            pageNum: pageNum,
-          ),
-          createCompanionCallback: ({
-            Value<int?> id = const Value.absent(),
-            required String pageName,
-            required int pageNum,
-          }) =>
-              PageCompanion.insert(
-            id: id,
-            pageName: pageName,
-            pageNum: pageNum,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> pageName = const Value.absent(),
+                Value<int> pageNum = const Value.absent(),
+              }) => PageCompanion(id: id, pageName: pageName, pageNum: pageNum),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String pageName,
+                required int pageNum,
+              }) => PageCompanion.insert(
+                id: id,
+                pageName: pageName,
+                pageNum: pageNum,
+              ),
           withReferenceMapper: (p0) => p0
-              .map((e) =>
-                  (e.readTable(table), $$PageTableReferences(db, table, e)))
+              .map(
+                (e) =>
+                    (e.readTable(table), $$PageTableReferences(db, table, e)),
+              )
               .toList(),
           prefetchHooksCallback: ({buttonRefs = false}) {
             return PrefetchHooks(
@@ -2451,57 +2890,63 @@ class $$PageTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (buttonRefs)
-                    await $_getPrefetchedData(
-                        currentTable: table,
-                        referencedTable:
-                            $$PageTableReferences._buttonRefsTable(db),
-                        managerFromTypedResult: (p0) =>
-                            $$PageTableReferences(db, table, p0).buttonRefs,
-                        referencedItemsForCurrentItem:
-                            (item, referencedItems) =>
-                                referencedItems.where((e) => e.page == item.id),
-                        typedResults: items)
+                    await $_getPrefetchedData<PageData, $PageTable, ButtonData>(
+                      currentTable: table,
+                      referencedTable: $$PageTableReferences._buttonRefsTable(
+                        db,
+                      ),
+                      managerFromTypedResult: (p0) =>
+                          $$PageTableReferences(db, table, p0).buttonRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.page == item.id),
+                      typedResults: items,
+                    ),
                 ];
               },
             );
           },
-        ));
+        ),
+      );
 }
 
-typedef $$PageTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $PageTable,
-    PageData,
-    $$PageTableFilterComposer,
-    $$PageTableOrderingComposer,
-    $$PageTableAnnotationComposer,
-    $$PageTableCreateCompanionBuilder,
-    $$PageTableUpdateCompanionBuilder,
-    (PageData, $$PageTableReferences),
-    PageData,
-    PrefetchHooks Function({bool buttonRefs})>;
-typedef $$ButtonTableCreateCompanionBuilder = ButtonCompanion Function({
-  Value<int?> id,
-  Value<String> buttonName,
-  Value<bool> isUsingButton,
-  Value<int> page,
-  Value<int> row,
-  Value<int> column,
-  Value<Command> command,
-  Value<String?> queryString,
-  Value<String?> message,
-});
-typedef $$ButtonTableUpdateCompanionBuilder = ButtonCompanion Function({
-  Value<int?> id,
-  Value<String> buttonName,
-  Value<bool> isUsingButton,
-  Value<int> page,
-  Value<int> row,
-  Value<int> column,
-  Value<Command> command,
-  Value<String?> queryString,
-  Value<String?> message,
-});
+typedef $$PageTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PageTable,
+      PageData,
+      $$PageTableFilterComposer,
+      $$PageTableOrderingComposer,
+      $$PageTableAnnotationComposer,
+      $$PageTableCreateCompanionBuilder,
+      $$PageTableUpdateCompanionBuilder,
+      (PageData, $$PageTableReferences),
+      PageData,
+      PrefetchHooks Function({bool buttonRefs})
+    >;
+typedef $$ButtonTableCreateCompanionBuilder =
+    ButtonCompanion Function({
+      Value<int?> id,
+      Value<String> buttonName,
+      Value<bool> isUsingButton,
+      Value<int> page,
+      Value<int> row,
+      Value<int> column,
+      Value<Command> command,
+      Value<String?> queryString,
+      Value<String?> message,
+    });
+typedef $$ButtonTableUpdateCompanionBuilder =
+    ButtonCompanion Function({
+      Value<int?> id,
+      Value<String> buttonName,
+      Value<bool> isUsingButton,
+      Value<int> page,
+      Value<int> row,
+      Value<int> column,
+      Value<Command> command,
+      Value<String?> queryString,
+      Value<String?> message,
+    });
 
 final class $$ButtonTableReferences
     extends BaseReferences<_$AppDatabase, $ButtonTable, ButtonData> {
@@ -2511,12 +2956,17 @@ final class $$ButtonTableReferences
       db.page.createAlias($_aliasNameGenerator(db.button.page, db.page.id));
 
   $$PageTableProcessedTableManager get page {
-    final manager = $$PageTableTableManager($_db, $_db.page)
-        .filter((f) => f.id($_item.page));
+    final $_column = $_itemColumn<int>('page')!;
+
+    final manager = $$PageTableTableManager(
+      $_db,
+      $_db.page,
+    ).filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_pageTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
-        manager.$state.copyWith(prefetchedData: [item]));
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
   }
 }
 
@@ -2530,48 +2980,66 @@ class $$ButtonTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get buttonName => $composableBuilder(
-      column: $table.buttonName, builder: (column) => ColumnFilters(column));
+    column: $table.buttonName,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get isUsingButton => $composableBuilder(
-      column: $table.isUsingButton, builder: (column) => ColumnFilters(column));
+    column: $table.isUsingButton,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get row => $composableBuilder(
-      column: $table.row, builder: (column) => ColumnFilters(column));
+    column: $table.row,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<int> get column => $composableBuilder(
-      column: $table.column, builder: (column) => ColumnFilters(column));
+    column: $table.column,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnWithTypeConverterFilters<Command, Command, String> get command =>
       $composableBuilder(
-          column: $table.command,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
+        column: $table.command,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get queryString => $composableBuilder(
-      column: $table.queryString, builder: (column) => ColumnFilters(column));
+    column: $table.queryString,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get message => $composableBuilder(
-      column: $table.message, builder: (column) => ColumnFilters(column));
+    column: $table.message,
+    builder: (column) => ColumnFilters(column),
+  );
 
   $$PageTableFilterComposer get page {
     final $$PageTableFilterComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.page,
-        referencedTable: $db.page,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$PageTableFilterComposer(
-              $db: $db,
-              $table: $db.page,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
+      composer: this,
+      getCurrentColumn: (t) => t.page,
+      referencedTable: $db.page,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PageTableFilterComposer(
+            $db: $db,
+            $table: $db.page,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
     return composer;
   }
 }
@@ -2586,47 +3054,65 @@ class $$ButtonTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get buttonName => $composableBuilder(
-      column: $table.buttonName, builder: (column) => ColumnOrderings(column));
+    column: $table.buttonName,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get isUsingButton => $composableBuilder(
-      column: $table.isUsingButton,
-      builder: (column) => ColumnOrderings(column));
+    column: $table.isUsingButton,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get row => $composableBuilder(
-      column: $table.row, builder: (column) => ColumnOrderings(column));
+    column: $table.row,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get column => $composableBuilder(
-      column: $table.column, builder: (column) => ColumnOrderings(column));
+    column: $table.column,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get command => $composableBuilder(
-      column: $table.command, builder: (column) => ColumnOrderings(column));
+    column: $table.command,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get queryString => $composableBuilder(
-      column: $table.queryString, builder: (column) => ColumnOrderings(column));
+    column: $table.queryString,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get message => $composableBuilder(
-      column: $table.message, builder: (column) => ColumnOrderings(column));
+    column: $table.message,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   $$PageTableOrderingComposer get page {
     final $$PageTableOrderingComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.page,
-        referencedTable: $db.page,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$PageTableOrderingComposer(
-              $db: $db,
-              $table: $db.page,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
+      composer: this,
+      getCurrentColumn: (t) => t.page,
+      referencedTable: $db.page,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PageTableOrderingComposer(
+            $db: $db,
+            $table: $db.page,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
     return composer;
   }
 }
@@ -2644,10 +3130,14 @@ class $$ButtonTableAnnotationComposer
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get buttonName => $composableBuilder(
-      column: $table.buttonName, builder: (column) => column);
+    column: $table.buttonName,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get isUsingButton => $composableBuilder(
-      column: $table.isUsingButton, builder: (column) => column);
+    column: $table.isUsingButton,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<int> get row =>
       $composableBuilder(column: $table.row, builder: (column) => column);
@@ -2659,46 +3149,55 @@ class $$ButtonTableAnnotationComposer
       $composableBuilder(column: $table.command, builder: (column) => column);
 
   GeneratedColumn<String> get queryString => $composableBuilder(
-      column: $table.queryString, builder: (column) => column);
+    column: $table.queryString,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get message =>
       $composableBuilder(column: $table.message, builder: (column) => column);
 
   $$PageTableAnnotationComposer get page {
     final $$PageTableAnnotationComposer composer = $composerBuilder(
-        composer: this,
-        getCurrentColumn: (t) => t.page,
-        referencedTable: $db.page,
-        getReferencedColumn: (t) => t.id,
-        builder: (joinBuilder,
-                {$addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer}) =>
-            $$PageTableAnnotationComposer(
-              $db: $db,
-              $table: $db.page,
-              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-              joinBuilder: joinBuilder,
-              $removeJoinBuilderFromRootComposer:
-                  $removeJoinBuilderFromRootComposer,
-            ));
+      composer: this,
+      getCurrentColumn: (t) => t.page,
+      referencedTable: $db.page,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PageTableAnnotationComposer(
+            $db: $db,
+            $table: $db.page,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
     return composer;
   }
 }
 
-class $$ButtonTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $ButtonTable,
-    ButtonData,
-    $$ButtonTableFilterComposer,
-    $$ButtonTableOrderingComposer,
-    $$ButtonTableAnnotationComposer,
-    $$ButtonTableCreateCompanionBuilder,
-    $$ButtonTableUpdateCompanionBuilder,
-    (ButtonData, $$ButtonTableReferences),
-    ButtonData,
-    PrefetchHooks Function({bool page})> {
+class $$ButtonTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ButtonTable,
+          ButtonData,
+          $$ButtonTableFilterComposer,
+          $$ButtonTableOrderingComposer,
+          $$ButtonTableAnnotationComposer,
+          $$ButtonTableCreateCompanionBuilder,
+          $$ButtonTableUpdateCompanionBuilder,
+          (ButtonData, $$ButtonTableReferences),
+          ButtonData,
+          PrefetchHooks Function({bool page})
+        > {
   $$ButtonTableTableManager(_$AppDatabase db, $ButtonTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2707,60 +3206,63 @@ class $$ButtonTableTableManager extends RootTableManager<
               $$ButtonTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$ButtonTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<int?> id = const Value.absent(),
-            Value<String> buttonName = const Value.absent(),
-            Value<bool> isUsingButton = const Value.absent(),
-            Value<int> page = const Value.absent(),
-            Value<int> row = const Value.absent(),
-            Value<int> column = const Value.absent(),
-            Value<Command> command = const Value.absent(),
-            Value<String?> queryString = const Value.absent(),
-            Value<String?> message = const Value.absent(),
-          }) =>
-              ButtonCompanion(
-            id: id,
-            buttonName: buttonName,
-            isUsingButton: isUsingButton,
-            page: page,
-            row: row,
-            column: column,
-            command: command,
-            queryString: queryString,
-            message: message,
-          ),
-          createCompanionCallback: ({
-            Value<int?> id = const Value.absent(),
-            Value<String> buttonName = const Value.absent(),
-            Value<bool> isUsingButton = const Value.absent(),
-            Value<int> page = const Value.absent(),
-            Value<int> row = const Value.absent(),
-            Value<int> column = const Value.absent(),
-            Value<Command> command = const Value.absent(),
-            Value<String?> queryString = const Value.absent(),
-            Value<String?> message = const Value.absent(),
-          }) =>
-              ButtonCompanion.insert(
-            id: id,
-            buttonName: buttonName,
-            isUsingButton: isUsingButton,
-            page: page,
-            row: row,
-            column: column,
-            command: command,
-            queryString: queryString,
-            message: message,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<int?> id = const Value.absent(),
+                Value<String> buttonName = const Value.absent(),
+                Value<bool> isUsingButton = const Value.absent(),
+                Value<int> page = const Value.absent(),
+                Value<int> row = const Value.absent(),
+                Value<int> column = const Value.absent(),
+                Value<Command> command = const Value.absent(),
+                Value<String?> queryString = const Value.absent(),
+                Value<String?> message = const Value.absent(),
+              }) => ButtonCompanion(
+                id: id,
+                buttonName: buttonName,
+                isUsingButton: isUsingButton,
+                page: page,
+                row: row,
+                column: column,
+                command: command,
+                queryString: queryString,
+                message: message,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int?> id = const Value.absent(),
+                Value<String> buttonName = const Value.absent(),
+                Value<bool> isUsingButton = const Value.absent(),
+                Value<int> page = const Value.absent(),
+                Value<int> row = const Value.absent(),
+                Value<int> column = const Value.absent(),
+                Value<Command> command = const Value.absent(),
+                Value<String?> queryString = const Value.absent(),
+                Value<String?> message = const Value.absent(),
+              }) => ButtonCompanion.insert(
+                id: id,
+                buttonName: buttonName,
+                isUsingButton: isUsingButton,
+                page: page,
+                row: row,
+                column: column,
+                command: command,
+                queryString: queryString,
+                message: message,
+              ),
           withReferenceMapper: (p0) => p0
-              .map((e) =>
-                  (e.readTable(table), $$ButtonTableReferences(db, table, e)))
+              .map(
+                (e) =>
+                    (e.readTable(table), $$ButtonTableReferences(db, table, e)),
+              )
               .toList(),
           prefetchHooksCallback: ({page = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
-              addJoins: <
-                  T extends TableManagerState<
+              addJoins:
+                  <
+                    T extends TableManagerState<
                       dynamic,
                       dynamic,
                       dynamic,
@@ -2771,64 +3273,76 @@ class $$ButtonTableTableManager extends RootTableManager<
                       dynamic,
                       dynamic,
                       dynamic,
-                      dynamic>>(state) {
-                if (page) {
-                  state = state.withJoin(
-                    currentTable: table,
-                    currentColumn: table.page,
-                    referencedTable: $$ButtonTableReferences._pageTable(db),
-                    referencedColumn: $$ButtonTableReferences._pageTable(db).id,
-                  ) as T;
-                }
+                      dynamic
+                    >
+                  >(state) {
+                    if (page) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.page,
+                                referencedTable: $$ButtonTableReferences
+                                    ._pageTable(db),
+                                referencedColumn: $$ButtonTableReferences
+                                    ._pageTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
 
-                return state;
-              },
+                    return state;
+                  },
               getPrefetchedDataCallback: (items) async {
                 return [];
               },
             );
           },
-        ));
+        ),
+      );
 }
 
-typedef $$ButtonTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $ButtonTable,
-    ButtonData,
-    $$ButtonTableFilterComposer,
-    $$ButtonTableOrderingComposer,
-    $$ButtonTableAnnotationComposer,
-    $$ButtonTableCreateCompanionBuilder,
-    $$ButtonTableUpdateCompanionBuilder,
-    (ButtonData, $$ButtonTableReferences),
-    ButtonData,
-    PrefetchHooks Function({bool page})>;
-typedef $$MediaItemTableCreateCompanionBuilder = MediaItemCompanion Function({
-  required String key,
-  Value<String> title,
-  required MediaType type,
-  required String url,
-  Value<String?> fileName,
-  Value<MediaFrom> from,
-  Value<BoxFit?> fit,
-  required int orderNum,
-  Value<DateTime> lastUpdated,
-  Value<bool> isDead,
-  Value<int> rowid,
-});
-typedef $$MediaItemTableUpdateCompanionBuilder = MediaItemCompanion Function({
-  Value<String> key,
-  Value<String> title,
-  Value<MediaType> type,
-  Value<String> url,
-  Value<String?> fileName,
-  Value<MediaFrom> from,
-  Value<BoxFit?> fit,
-  Value<int> orderNum,
-  Value<DateTime> lastUpdated,
-  Value<bool> isDead,
-  Value<int> rowid,
-});
+typedef $$ButtonTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ButtonTable,
+      ButtonData,
+      $$ButtonTableFilterComposer,
+      $$ButtonTableOrderingComposer,
+      $$ButtonTableAnnotationComposer,
+      $$ButtonTableCreateCompanionBuilder,
+      $$ButtonTableUpdateCompanionBuilder,
+      (ButtonData, $$ButtonTableReferences),
+      ButtonData,
+      PrefetchHooks Function({bool page})
+    >;
+typedef $$MediaItemTableCreateCompanionBuilder =
+    MediaItemCompanion Function({
+      required String key,
+      Value<String> title,
+      required MediaType type,
+      required String url,
+      Value<String?> fileName,
+      Value<MediaFrom> from,
+      Value<BoxFit?> fit,
+      required int orderNum,
+      Value<DateTime> lastUpdated,
+      Value<bool> isDead,
+      Value<int> rowid,
+    });
+typedef $$MediaItemTableUpdateCompanionBuilder =
+    MediaItemCompanion Function({
+      Value<String> key,
+      Value<String> title,
+      Value<MediaType> type,
+      Value<String> url,
+      Value<String?> fileName,
+      Value<MediaFrom> from,
+      Value<BoxFit?> fit,
+      Value<int> orderNum,
+      Value<DateTime> lastUpdated,
+      Value<bool> isDead,
+      Value<int> rowid,
+    });
 
 class $$MediaItemTableFilterComposer
     extends Composer<_$AppDatabase, $MediaItemTable> {
@@ -2840,40 +3354,57 @@ class $$MediaItemTableFilterComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnFilters<String> get key => $composableBuilder(
-      column: $table.key, builder: (column) => ColumnFilters(column));
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnFilters(column));
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnWithTypeConverterFilters<MediaType, MediaType, String> get type =>
       $composableBuilder(
-          column: $table.type,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
+        column: $table.type,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get url => $composableBuilder(
-      column: $table.url, builder: (column) => ColumnFilters(column));
+    column: $table.url,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<String> get fileName => $composableBuilder(
-      column: $table.fileName, builder: (column) => ColumnFilters(column));
+    column: $table.fileName,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnWithTypeConverterFilters<MediaFrom, MediaFrom, String> get from =>
       $composableBuilder(
-          column: $table.from,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
+        column: $table.from,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnWithTypeConverterFilters<BoxFit?, BoxFit, String> get fit =>
       $composableBuilder(
-          column: $table.fit,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
+        column: $table.fit,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<int> get orderNum => $composableBuilder(
-      column: $table.orderNum, builder: (column) => ColumnFilters(column));
+    column: $table.orderNum,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
-      column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
+    column: $table.lastUpdated,
+    builder: (column) => ColumnFilters(column),
+  );
 
   ColumnFilters<bool> get isDead => $composableBuilder(
-      column: $table.isDead, builder: (column) => ColumnFilters(column));
+    column: $table.isDead,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$MediaItemTableOrderingComposer
@@ -2886,34 +3417,54 @@ class $$MediaItemTableOrderingComposer
     super.$removeJoinBuilderFromRootComposer,
   });
   ColumnOrderings<String> get key => $composableBuilder(
-      column: $table.key, builder: (column) => ColumnOrderings(column));
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnOrderings(column));
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get type => $composableBuilder(
-      column: $table.type, builder: (column) => ColumnOrderings(column));
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get url => $composableBuilder(
-      column: $table.url, builder: (column) => ColumnOrderings(column));
+    column: $table.url,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get fileName => $composableBuilder(
-      column: $table.fileName, builder: (column) => ColumnOrderings(column));
+    column: $table.fileName,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get from => $composableBuilder(
-      column: $table.from, builder: (column) => ColumnOrderings(column));
+    column: $table.from,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<String> get fit => $composableBuilder(
-      column: $table.fit, builder: (column) => ColumnOrderings(column));
+    column: $table.fit,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<int> get orderNum => $composableBuilder(
-      column: $table.orderNum, builder: (column) => ColumnOrderings(column));
+    column: $table.orderNum,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
-      column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
+    column: $table.lastUpdated,
+    builder: (column) => ColumnOrderings(column),
+  );
 
   ColumnOrderings<bool> get isDead => $composableBuilder(
-      column: $table.isDead, builder: (column) => ColumnOrderings(column));
+    column: $table.isDead,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$MediaItemTableAnnotationComposer
@@ -2950,29 +3501,35 @@ class $$MediaItemTableAnnotationComposer
       $composableBuilder(column: $table.orderNum, builder: (column) => column);
 
   GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
-      column: $table.lastUpdated, builder: (column) => column);
+    column: $table.lastUpdated,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<bool> get isDead =>
       $composableBuilder(column: $table.isDead, builder: (column) => column);
 }
 
-class $$MediaItemTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $MediaItemTable,
-    MediaItemData,
-    $$MediaItemTableFilterComposer,
-    $$MediaItemTableOrderingComposer,
-    $$MediaItemTableAnnotationComposer,
-    $$MediaItemTableCreateCompanionBuilder,
-    $$MediaItemTableUpdateCompanionBuilder,
-    (
-      MediaItemData,
-      BaseReferences<_$AppDatabase, $MediaItemTable, MediaItemData>
-    ),
-    MediaItemData,
-    PrefetchHooks Function()> {
+class $$MediaItemTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MediaItemTable,
+          MediaItemData,
+          $$MediaItemTableFilterComposer,
+          $$MediaItemTableOrderingComposer,
+          $$MediaItemTableAnnotationComposer,
+          $$MediaItemTableCreateCompanionBuilder,
+          $$MediaItemTableUpdateCompanionBuilder,
+          (
+            MediaItemData,
+            BaseReferences<_$AppDatabase, $MediaItemTable, MediaItemData>,
+          ),
+          MediaItemData,
+          PrefetchHooks Function()
+        > {
   $$MediaItemTableTableManager(_$AppDatabase db, $MediaItemTable table)
-      : super(TableManagerState(
+    : super(
+        TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
@@ -2981,80 +3538,83 @@ class $$MediaItemTableTableManager extends RootTableManager<
               $$MediaItemTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
               $$MediaItemTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> key = const Value.absent(),
-            Value<String> title = const Value.absent(),
-            Value<MediaType> type = const Value.absent(),
-            Value<String> url = const Value.absent(),
-            Value<String?> fileName = const Value.absent(),
-            Value<MediaFrom> from = const Value.absent(),
-            Value<BoxFit?> fit = const Value.absent(),
-            Value<int> orderNum = const Value.absent(),
-            Value<DateTime> lastUpdated = const Value.absent(),
-            Value<bool> isDead = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              MediaItemCompanion(
-            key: key,
-            title: title,
-            type: type,
-            url: url,
-            fileName: fileName,
-            from: from,
-            fit: fit,
-            orderNum: orderNum,
-            lastUpdated: lastUpdated,
-            isDead: isDead,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String key,
-            Value<String> title = const Value.absent(),
-            required MediaType type,
-            required String url,
-            Value<String?> fileName = const Value.absent(),
-            Value<MediaFrom> from = const Value.absent(),
-            Value<BoxFit?> fit = const Value.absent(),
-            required int orderNum,
-            Value<DateTime> lastUpdated = const Value.absent(),
-            Value<bool> isDead = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              MediaItemCompanion.insert(
-            key: key,
-            title: title,
-            type: type,
-            url: url,
-            fileName: fileName,
-            from: from,
-            fit: fit,
-            orderNum: orderNum,
-            lastUpdated: lastUpdated,
-            isDead: isDead,
-            rowid: rowid,
-          ),
+          updateCompanionCallback:
+              ({
+                Value<String> key = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<MediaType> type = const Value.absent(),
+                Value<String> url = const Value.absent(),
+                Value<String?> fileName = const Value.absent(),
+                Value<MediaFrom> from = const Value.absent(),
+                Value<BoxFit?> fit = const Value.absent(),
+                Value<int> orderNum = const Value.absent(),
+                Value<DateTime> lastUpdated = const Value.absent(),
+                Value<bool> isDead = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MediaItemCompanion(
+                key: key,
+                title: title,
+                type: type,
+                url: url,
+                fileName: fileName,
+                from: from,
+                fit: fit,
+                orderNum: orderNum,
+                lastUpdated: lastUpdated,
+                isDead: isDead,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String key,
+                Value<String> title = const Value.absent(),
+                required MediaType type,
+                required String url,
+                Value<String?> fileName = const Value.absent(),
+                Value<MediaFrom> from = const Value.absent(),
+                Value<BoxFit?> fit = const Value.absent(),
+                required int orderNum,
+                Value<DateTime> lastUpdated = const Value.absent(),
+                Value<bool> isDead = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MediaItemCompanion.insert(
+                key: key,
+                title: title,
+                type: type,
+                url: url,
+                fileName: fileName,
+                from: from,
+                fit: fit,
+                orderNum: orderNum,
+                lastUpdated: lastUpdated,
+                isDead: isDead,
+                rowid: rowid,
+              ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
               .toList(),
           prefetchHooksCallback: null,
-        ));
+        ),
+      );
 }
 
-typedef $$MediaItemTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $MediaItemTable,
-    MediaItemData,
-    $$MediaItemTableFilterComposer,
-    $$MediaItemTableOrderingComposer,
-    $$MediaItemTableAnnotationComposer,
-    $$MediaItemTableCreateCompanionBuilder,
-    $$MediaItemTableUpdateCompanionBuilder,
-    (
+typedef $$MediaItemTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MediaItemTable,
       MediaItemData,
-      BaseReferences<_$AppDatabase, $MediaItemTable, MediaItemData>
-    ),
-    MediaItemData,
-    PrefetchHooks Function()>;
+      $$MediaItemTableFilterComposer,
+      $$MediaItemTableOrderingComposer,
+      $$MediaItemTableAnnotationComposer,
+      $$MediaItemTableCreateCompanionBuilder,
+      $$MediaItemTableUpdateCompanionBuilder,
+      (
+        MediaItemData,
+        BaseReferences<_$AppDatabase, $MediaItemTable, MediaItemData>,
+      ),
+      MediaItemData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

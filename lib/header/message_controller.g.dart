@@ -6,21 +6,58 @@ part of 'message_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$messageControllerHash() => r'494837fc25d54af92396c022e003650dd10e1850';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [MessageController].
 @ProviderFor(MessageController)
-final messageControllerProvider =
-    AutoDisposeNotifierProvider<MessageController, List<Message>>.internal(
-  MessageController.new,
-  name: r'messageControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$messageControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+const messageControllerProvider = MessageControllerProvider._();
 
-typedef _$MessageController = AutoDisposeNotifier<List<Message>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class MessageControllerProvider
+    extends $NotifierProvider<MessageController, List<Message>> {
+  const MessageControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'messageControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$messageControllerHash();
+
+  @$internal
+  @override
+  MessageController create() => MessageController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<Message> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<Message>>(value),
+    );
+  }
+}
+
+String _$messageControllerHash() => r'd9714e4f4f26f4baa04f92d20074fca834bf1f91';
+
+abstract class _$MessageController extends $Notifier<List<Message>> {
+  List<Message> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<List<Message>, List<Message>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<List<Message>, List<Message>>,
+              List<Message>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

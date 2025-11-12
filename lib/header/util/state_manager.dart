@@ -1,4 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:mdk_kiosk/header/model/studio_state_model.dart';
 
 /// 초기 상태 정의
