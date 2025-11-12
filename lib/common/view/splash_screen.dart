@@ -118,7 +118,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Image.asset(
-                              'asset/img/ghu_logo.gif',
+                              'asset/img/tu_logo.png',
                               width: circleSize * 0.7,
                               height: circleSize * 0.7,
                               fit: BoxFit.contain,
