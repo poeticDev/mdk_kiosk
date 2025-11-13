@@ -4,7 +4,7 @@
 /// 변경할 필요가 있을 때만 주석 해제하여 작성함
 /// 1. 강의실 정보
 const String initialRoomId = 'tu_4_319';
-const String initialRoomName = '미래융합대학 4동 319호';
+const String initialRoomName = '4동 319호';
 const String initialImagePath = 'asset/img/tu_logo.png';
 const String initialWifiName ='mdk4-319';
 const String initialTitleText = "4동 319호";
