@@ -9,6 +9,7 @@ class LectureBox extends StatelessWidget {
   final double headerHeight;
   final String lectureName;
   final String instructorName;
+
   // final String weekday;
   final TimeOfDay startAt;
   final TimeOfDay endAt;
@@ -48,15 +49,19 @@ class LectureBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final boxStart =
+        height * (startAt.hour - 9 + startAt.minute / 60) + headerHeight + 1;
+    final boxHeight =
+        height *
+        ((endAt.hour + endAt.minute / 60) -
+            (startAt.hour + startAt.minute / 60));
+
     return Positioned(
-      top: height * (startAt.hour - 9 + startAt.minute / 60) +
-          headerHeight + 1,
+      top: boxStart,
       left: 1,
       child: Container(
         width: width,
-        height: height *
-            ((endAt.hour + endAt.minute / 60) -
-                (startAt.hour + startAt.minute / 60)) - 1,
+        height: boxHeight == 0 ? 0 : boxHeight - 1,
         color: LECTURE_BG_COLORS[colorIndex],
         child: Center(
           child: SingleChildScrollView(
@@ -67,8 +72,9 @@ class LectureBox extends StatelessWidget {
                 children: [
                   Text(
                     lectureName,
-                    style:
-                        LECTURE_TITLE_TEXT_STYLE.copyWith(fontSize: height * 0.22),
+                    style: LECTURE_TITLE_TEXT_STYLE.copyWith(
+                      fontSize: height * 0.22,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -76,7 +82,8 @@ class LectureBox extends StatelessWidget {
                   Text(
                     instructorName,
                     style: LECTURE_SUBTITLE_TEXT_STYLE.copyWith(
-                        fontSize: height * 0.2),
+                      fontSize: height * 0.2,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,

@@ -204,7 +204,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 // ),
                 // 4. 멀티미디어
                 MorphContainer(
-                  child: _MultiMedia(width: maxWidth, height: 400),
+                  child: _MultiMedia(width: maxWidth, height: 560),
                 ),
                 SizedBox(
                   height: betweenPadding * 0.7,
