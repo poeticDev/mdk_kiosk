@@ -12,10 +12,7 @@ List<String> weekdays = ['월', '화', '수', '목', '금', '토', '일'];
 
 enum WeekendOption { none, included }
 
-const weekendRowLengths = {
-  WeekendOption.none: 5,
-  WeekendOption.included: 7,
-};
+const weekendRowLengths = {WeekendOption.none: 5, WeekendOption.included: 7};
 
 class TimetableLayout extends ConsumerWidget {
   int columnLength;
@@ -31,7 +28,6 @@ class TimetableLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: LayoutBuilder(
@@ -89,13 +85,14 @@ class TimetableLayout extends ConsumerWidget {
                 //   ],
                 // ),
                 ...List.generate(
-                    rowLength,
-                        (index) => _buildDayColumn(
-                      weekdayIndex: index,
-                      headerHeight: headerHeight,
-                      boxHeight: boxHeight,
-                      timeLength: columnLength,
-                    )).expand((widgetList) => widgetList),
+                  rowLength,
+                  (index) => _buildDayColumn(
+                    weekdayIndex: index,
+                    headerHeight: headerHeight,
+                    boxHeight: boxHeight,
+                    timeLength: columnLength,
+                  ),
+                ).expand((widgetList) => widgetList),
               ],
             ),
           );
@@ -104,30 +101,23 @@ class TimetableLayout extends ConsumerWidget {
     );
   }
 
-  Widget _buildTimeColumn(
-      {required double headerHeight,
-        required double boxHeight,
-        required int timeLength}) {
+  Widget _buildTimeColumn({
+    required double headerHeight,
+    required double boxHeight,
+    required int timeLength,
+  }) {
     return Expanded(
       child: Column(
         children: [
-          SizedBox(
-            height: headerHeight,
-          ),
+          SizedBox(height: headerHeight),
           ...List.generate(timeLength * 2, (index) {
             if (index % 2 == 0) {
-              return const Divider(
-                color: DIVIDER_COLOR,
-                height: 1,
-              );
+              return const Divider(color: DIVIDER_COLOR, height: 1);
             }
 
-            final String string = (index ~/ 2 + 9) < 13 ? (index ~/ 2 + 9).toString() : (index ~/ 2 - 3).toString()
-
-
-
-
-            ;
+            final String string = (index ~/ 2 + 9) < 13
+                ? (index ~/ 2 + 9).toString()
+                : (index ~/ 2 - 3).toString();
 
             return SizedBox(
               height: boxHeight - 1,
@@ -146,69 +136,67 @@ class TimetableLayout extends ConsumerWidget {
     );
   }
 
-  List<Widget> _buildDayColumn(
-      {required int weekdayIndex,
-        required double headerHeight,
-        required double boxHeight,
-        required int timeLength}) {
+  List<Widget> _buildDayColumn({
+    required int weekdayIndex,
+    required double headerHeight,
+    required double boxHeight,
+    required int timeLength,
+  }) {
     return [
-      const VerticalDivider(
-        color: DIVIDER_COLOR,
-        width: 0,
-      ),
+      const VerticalDivider(color: DIVIDER_COLOR, width: 0),
       Expanded(
         flex: 3,
-        child: LayoutBuilder(builder: (context, constraints) {
-          final boxWidth = constraints.maxWidth - 2;
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final boxWidth = constraints.maxWidth - 2;
 
-          List lectureBoxes = [];
+            List lectureBoxes = [];
 
-          for (Lecture lecture in lectures) {
-            if (lecture.weekday.index == weekdayIndex) {
-              lectureBoxes = [
-                ...lectureBoxes,
-                LectureBox.fromModel(
-                  lecture: lecture,
-                  width: boxWidth,
-                  height: boxHeight,
-                  headerHeight: headerHeight,
-                ),
-              ];
+            for (Lecture lecture in lectures) {
+              if (lecture.weekday.index == weekdayIndex) {
+                lectureBoxes = [
+                  ...lectureBoxes,
+                  LectureBox.fromModel(
+                    lecture: lecture,
+                    width: boxWidth,
+                    height: boxHeight,
+                    headerHeight: headerHeight,
+                  ),
+                ];
+              }
             }
-          }
 
-          return Stack(
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    height: headerHeight,
-                    child: Text(
-                      weekdays[weekdayIndex],
-                      style: TIME_TITLE_TEXT_STYLE.copyWith(
-                        fontSize: headerHeight * 0.65,
+            return Stack(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      height: headerHeight,
+                      child: Text(
+                        weekdays[weekdayIndex],
+                        style: TIME_TITLE_TEXT_STYLE.copyWith(
+                          fontSize: headerHeight * 0.65,
+                        ),
                       ),
                     ),
-                  ),
-                  ...List.generate(timeLength * 2, (index) {
-                    if (index % 2 == 0) {
-                      return DottedLine(
-                        dashColor: DIVIDER_COLOR,
-                        dashGapLength: index == 0 ? 0 : 4,
-                        lineThickness: 1,
-                      );
-                    }
+                    ...List.generate(timeLength * 2, (index) {
+                      if (index % 2 == 0) {
+                        return DottedLine(
+                          dashColor: DIVIDER_COLOR,
+                          dashGapLength: index == 0 ? 0 : 4,
+                          lineThickness: 1,
+                        );
+                      }
 
-                    return SizedBox(
-                      height: boxHeight - 1,
-                    );
-                  }),
-                ],
-              ),
-              ...lectureBoxes
-            ],
-          );
-        }),
+                      return SizedBox(height: boxHeight - 1);
+                    }),
+                  ],
+                ),
+                ...lectureBoxes,
+              ],
+            );
+          },
+        ),
       ),
     ];
   }

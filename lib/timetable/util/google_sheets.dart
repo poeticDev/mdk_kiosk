@@ -7,7 +7,7 @@ import 'package:mdk_kiosk/common/util/data/updaters.dart';
 import 'package:mdk_kiosk/timetable/model/lecture.dart';
 
 class GoogleSheets {
-  static const _spreadSheetId = '1YDH2-1QRNRXxJVO1HW-F2YxXpUAUzQ447Gcl03-lhn4';
+  static const _spreadSheetId = '1cAop9cp0swk0-gMS2suCpQ3sI3R31pCP-jRI0AisYSc';
   final String sheetName;
 
   GoogleSheets({required this.sheetName});
@@ -15,7 +15,7 @@ class GoogleSheets {
   // 구글 서비스 계정 인증 정보 로드
   Future<Map<String, dynamic>> loadCredentials() async {
     final jsonString =
-    await rootBundle.loadString('asset/env/credentials.json');
+    await rootBundle.loadString('asset/env/credentials_tu_lld.json');
     return jsonDecode(jsonString);
   }
 
