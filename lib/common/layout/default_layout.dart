@@ -196,12 +196,12 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                   height: betweenPadding,
                 ),
                 // 3. 온에어
-                MorphContainer(
-                    child: StateIndicatorForMediaBox(
-                        fontSize: 90, width: maxWidth, height: 160)),
-                SizedBox(
-                  height: betweenPadding,
-                ),
+                // MorphContainer(
+                //     child: StateIndicatorForMediaBox(
+                //         fontSize: 90, width: maxWidth, height: 160)),
+                // SizedBox(
+                //   height: betweenPadding,
+                // ),
                 // 4. 멀티미디어
                 MorphContainer(
                   child: _MultiMedia(width: maxWidth, height: 400),

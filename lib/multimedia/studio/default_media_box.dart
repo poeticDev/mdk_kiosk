@@ -98,7 +98,7 @@ class _DefaultMediaBoxState extends ConsumerState<DefaultMediaBox> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(
-                '오늘의 촬영 스케쥴',
+                '오늘의 강의실 스케쥴',
                 style: TextStyle(
                   fontSize: 32.0,
                   fontWeight: FontWeight.w600,
