@@ -204,7 +204,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 // ),
                 // 4. 멀티미디어
                 MorphContainer(
-                  child: _MultiMedia(width: maxWidth, height: 560),
+                  child: _MultiMedia(width: maxWidth, height: 260),
                 ),
                 SizedBox(
                   height: betweenPadding * 0.7,
@@ -261,7 +261,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                         },
                         child: Container(
                           color: Colors.transparent,
-                          height: 72,
+                          height: 62,
                           width: 138,
                           child: Image.asset('asset/img/tu_logo.png'),
                         ),

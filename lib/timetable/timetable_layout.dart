@@ -10,9 +10,13 @@ import 'package:mdk_kiosk/timetable/model/lecture.dart';
 
 List<String> weekdays = ['월', '화', '수', '목', '금', '토', '일'];
 
-enum WeekendOption { none, included }
+enum WeekendOption { none, included, includingSaturday }
 
-const weekendRowLengths = {WeekendOption.none: 5, WeekendOption.included: 7};
+const weekendRowLengths = {
+  WeekendOption.none: 5,
+  WeekendOption.included: 7,
+  WeekendOption.includingSaturday: 6,
+};
 
 class TimetableLayout extends ConsumerWidget {
   int columnLength;
@@ -20,8 +24,8 @@ class TimetableLayout extends ConsumerWidget {
   final List<Lecture> lectures;
 
   TimetableLayout({
-    this.columnLength = 10,
-    this.weekendOption = WeekendOption.none,
+    this.columnLength = 14,
+    this.weekendOption = WeekendOption.includingSaturday,
     super.key,
     required this.lectures,
   });
