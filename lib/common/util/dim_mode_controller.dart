@@ -18,7 +18,9 @@ class DimModeController {
   Set<int> workingDays; // DateTime.monday ~ DateTime.friday
 
   DimModeController({TimeOfDay? enterTime, TimeOfDay? exitTime, Set<int>? days})
-    : workingDays =
+    : dimEnterTime = enterTime ?? const TimeOfDay(hour: 22, minute: 0),
+      dimExitTime = exitTime ?? const TimeOfDay(hour: 8, minute: 30),
+      workingDays =
           days ??
           {
             DateTime.monday,
@@ -61,7 +63,10 @@ class DimModeController {
   /// - “다음 근무일의 해제 시각(보통 아침)”에 exit를 예약
   ///   (금요일에 진입하면 자동으로 그 다음 주 월요일 아침으로 잡힘)
   Future<void> enterDim() async {
-    if (dimEnterTime == null || dimExitTime == null) return;
+    if (dimEnterTime == null || dimExitTime == null) {
+      print('enter or exit time is null');
+      return;
+    }
 
     if (_isDim) {
       _scheduleExitAt(dimExitTime!); // 이미 Dim이면 해제 예약만 보장
@@ -99,7 +104,10 @@ class DimModeController {
   /// - 밝기 복구
   /// - “다음 근무일의 진입 시각(보통 저녁)”에 enter를 예약
   Future<void> exitDim() async {
-    if (dimEnterTime == null || dimExitTime == null) return;
+    if (dimEnterTime == null || dimExitTime == null) {
+      print('enter or exit time is null');
+      return;
+    }
     if (!_isDim) {
       _scheduleEnterAt(dimEnterTime!); // 이미 해제면 진입 예약만 보장
       return;
@@ -136,7 +144,10 @@ class DimModeController {
   /// - 오늘이 근무일이고, 해제~진입 사이(업무시간)이면: 오늘 저녁에 진입 예약
   /// - 그 외(야간/주말/업무 시작 전 등): 다음 근무일 아침에 해제 예약
   void scheduleNextByCurrentTime({DateTime? now}) {
-    if (dimEnterTime == null || dimExitTime == null) return;
+    if (dimEnterTime == null || dimExitTime == null) {
+      print('enter or exit time is null');
+      return;
+    }
     final t = now ?? DateTime.now();
     final todayIsWorking = workingDays.contains(t.weekday);
 

@@ -258,7 +258,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
                 globalData.roomName,
                 style: TITLE_TEXT_STYLE.copyWith(fontSize: widget.fontSize),
               ),
-              SimpleMeters(),
+              // SimpleMeters(),
               // SizedBox(width: 220, child: StateIndicator(fontSize: widget.fontSize)),
               SimpleClock(fontSize: widget.fontSize)
             ],

@@ -73,16 +73,16 @@ class LectureBox extends StatelessWidget {
                   Text(
                     lectureName,
                     style: LECTURE_TITLE_TEXT_STYLE.copyWith(
-                      fontSize: height * 0.22,
+                      fontSize: height * 0.4,
                     ),
-                    maxLines: 2,
+                    maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                   ),
                   Text(
                     instructorName,
                     style: LECTURE_SUBTITLE_TEXT_STYLE.copyWith(
-                      fontSize: height * 0.2,
+                      fontSize: height * 0.38,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
