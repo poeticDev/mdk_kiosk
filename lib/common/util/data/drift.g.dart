@@ -102,6 +102,28 @@ class $BasicInfoTable extends BasicInfo
     requiredDuringInsert: false,
     defaultValue: const Constant('12344321!'),
   );
+  static const VerificationMeta _wakeTimeMeta = const VerificationMeta(
+    'wakeTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> wakeTime = GeneratedColumn<DateTime>(
+    'wake_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sleepTimeMeta = const VerificationMeta(
+    'sleepTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> sleepTime = GeneratedColumn<DateTime>(
+    'sleep_time',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _serverIpMeta = const VerificationMeta(
     'serverIp',
   );
@@ -184,6 +206,8 @@ class $BasicInfoTable extends BasicInfo
     wifiName,
     myOscPort,
     myPassword,
+    wakeTime,
+    sleepTime,
     serverIp,
     serverOscPort,
     serverMqttPort,
@@ -250,6 +274,18 @@ class $BasicInfoTable extends BasicInfo
       context.handle(
         _myPasswordMeta,
         myPassword.isAcceptableOrUnknown(data['my_password']!, _myPasswordMeta),
+      );
+    }
+    if (data.containsKey('wake_time')) {
+      context.handle(
+        _wakeTimeMeta,
+        wakeTime.isAcceptableOrUnknown(data['wake_time']!, _wakeTimeMeta),
+      );
+    }
+    if (data.containsKey('sleep_time')) {
+      context.handle(
+        _sleepTimeMeta,
+        sleepTime.isAcceptableOrUnknown(data['sleep_time']!, _sleepTimeMeta),
       );
     }
     if (data.containsKey('server_ip')) {
@@ -341,6 +377,14 @@ class $BasicInfoTable extends BasicInfo
         DriftSqlType.string,
         data['${effectivePrefix}my_password'],
       )!,
+      wakeTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}wake_time'],
+      ),
+      sleepTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}sleep_time'],
+      ),
       serverIp: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}server_ip'],
@@ -385,9 +429,11 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
   final String titleText;
   final String wifiName;
 
-  /// 2. 태블릿
+  /// 2. 디바이스
   final int myOscPort;
   final String myPassword;
+  final DateTime? wakeTime;
+  final DateTime? sleepTime;
 
   /// 3. 서버
   final String serverIp;
@@ -407,6 +453,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     required this.wifiName,
     required this.myOscPort,
     required this.myPassword,
+    this.wakeTime,
+    this.sleepTime,
     required this.serverIp,
     required this.serverOscPort,
     required this.serverMqttPort,
@@ -425,6 +473,12 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     map['wifi_name'] = Variable<String>(wifiName);
     map['my_osc_port'] = Variable<int>(myOscPort);
     map['my_password'] = Variable<String>(myPassword);
+    if (!nullToAbsent || wakeTime != null) {
+      map['wake_time'] = Variable<DateTime>(wakeTime);
+    }
+    if (!nullToAbsent || sleepTime != null) {
+      map['sleep_time'] = Variable<DateTime>(sleepTime);
+    }
     map['server_ip'] = Variable<String>(serverIp);
     map['server_osc_port'] = Variable<int>(serverOscPort);
     map['server_mqtt_port'] = Variable<int>(serverMqttPort);
@@ -444,6 +498,12 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       wifiName: Value(wifiName),
       myOscPort: Value(myOscPort),
       myPassword: Value(myPassword),
+      wakeTime: wakeTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(wakeTime),
+      sleepTime: sleepTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sleepTime),
       serverIp: Value(serverIp),
       serverOscPort: Value(serverOscPort),
       serverMqttPort: Value(serverMqttPort),
@@ -467,6 +527,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       wifiName: serializer.fromJson<String>(json['wifiName']),
       myOscPort: serializer.fromJson<int>(json['myOscPort']),
       myPassword: serializer.fromJson<String>(json['myPassword']),
+      wakeTime: serializer.fromJson<DateTime?>(json['wakeTime']),
+      sleepTime: serializer.fromJson<DateTime?>(json['sleepTime']),
       serverIp: serializer.fromJson<String>(json['serverIp']),
       serverOscPort: serializer.fromJson<int>(json['serverOscPort']),
       serverMqttPort: serializer.fromJson<int>(json['serverMqttPort']),
@@ -489,6 +551,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       'wifiName': serializer.toJson<String>(wifiName),
       'myOscPort': serializer.toJson<int>(myOscPort),
       'myPassword': serializer.toJson<String>(myPassword),
+      'wakeTime': serializer.toJson<DateTime?>(wakeTime),
+      'sleepTime': serializer.toJson<DateTime?>(sleepTime),
       'serverIp': serializer.toJson<String>(serverIp),
       'serverOscPort': serializer.toJson<int>(serverOscPort),
       'serverMqttPort': serializer.toJson<int>(serverMqttPort),
@@ -507,6 +571,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     String? wifiName,
     int? myOscPort,
     String? myPassword,
+    Value<DateTime?> wakeTime = const Value.absent(),
+    Value<DateTime?> sleepTime = const Value.absent(),
     String? serverIp,
     int? serverOscPort,
     int? serverMqttPort,
@@ -522,6 +588,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     wifiName: wifiName ?? this.wifiName,
     myOscPort: myOscPort ?? this.myOscPort,
     myPassword: myPassword ?? this.myPassword,
+    wakeTime: wakeTime.present ? wakeTime.value : this.wakeTime,
+    sleepTime: sleepTime.present ? sleepTime.value : this.sleepTime,
     serverIp: serverIp ?? this.serverIp,
     serverOscPort: serverOscPort ?? this.serverOscPort,
     serverMqttPort: serverMqttPort ?? this.serverMqttPort,
@@ -541,6 +609,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
       myPassword: data.myPassword.present
           ? data.myPassword.value
           : this.myPassword,
+      wakeTime: data.wakeTime.present ? data.wakeTime.value : this.wakeTime,
+      sleepTime: data.sleepTime.present ? data.sleepTime.value : this.sleepTime,
       serverIp: data.serverIp.present ? data.serverIp.value : this.serverIp,
       serverOscPort: data.serverOscPort.present
           ? data.serverOscPort.value
@@ -569,6 +639,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
           ..write('wifiName: $wifiName, ')
           ..write('myOscPort: $myOscPort, ')
           ..write('myPassword: $myPassword, ')
+          ..write('wakeTime: $wakeTime, ')
+          ..write('sleepTime: $sleepTime, ')
           ..write('serverIp: $serverIp, ')
           ..write('serverOscPort: $serverOscPort, ')
           ..write('serverMqttPort: $serverMqttPort, ')
@@ -589,6 +661,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
     wifiName,
     myOscPort,
     myPassword,
+    wakeTime,
+    sleepTime,
     serverIp,
     serverOscPort,
     serverMqttPort,
@@ -608,6 +682,8 @@ class BasicInfoData extends DataClass implements Insertable<BasicInfoData> {
           other.wifiName == this.wifiName &&
           other.myOscPort == this.myOscPort &&
           other.myPassword == this.myPassword &&
+          other.wakeTime == this.wakeTime &&
+          other.sleepTime == this.sleepTime &&
           other.serverIp == this.serverIp &&
           other.serverOscPort == this.serverOscPort &&
           other.serverMqttPort == this.serverMqttPort &&
@@ -625,6 +701,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
   final Value<String> wifiName;
   final Value<int> myOscPort;
   final Value<String> myPassword;
+  final Value<DateTime?> wakeTime;
+  final Value<DateTime?> sleepTime;
   final Value<String> serverIp;
   final Value<int> serverOscPort;
   final Value<int> serverMqttPort;
@@ -640,6 +718,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     this.wifiName = const Value.absent(),
     this.myOscPort = const Value.absent(),
     this.myPassword = const Value.absent(),
+    this.wakeTime = const Value.absent(),
+    this.sleepTime = const Value.absent(),
     this.serverIp = const Value.absent(),
     this.serverOscPort = const Value.absent(),
     this.serverMqttPort = const Value.absent(),
@@ -656,6 +736,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     this.wifiName = const Value.absent(),
     this.myOscPort = const Value.absent(),
     this.myPassword = const Value.absent(),
+    this.wakeTime = const Value.absent(),
+    this.sleepTime = const Value.absent(),
     this.serverIp = const Value.absent(),
     this.serverOscPort = const Value.absent(),
     this.serverMqttPort = const Value.absent(),
@@ -673,6 +755,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     Expression<String>? wifiName,
     Expression<int>? myOscPort,
     Expression<String>? myPassword,
+    Expression<DateTime>? wakeTime,
+    Expression<DateTime>? sleepTime,
     Expression<String>? serverIp,
     Expression<int>? serverOscPort,
     Expression<int>? serverMqttPort,
@@ -689,6 +773,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       if (wifiName != null) 'wifi_name': wifiName,
       if (myOscPort != null) 'my_osc_port': myOscPort,
       if (myPassword != null) 'my_password': myPassword,
+      if (wakeTime != null) 'wake_time': wakeTime,
+      if (sleepTime != null) 'sleep_time': sleepTime,
       if (serverIp != null) 'server_ip': serverIp,
       if (serverOscPort != null) 'server_osc_port': serverOscPort,
       if (serverMqttPort != null) 'server_mqtt_port': serverMqttPort,
@@ -708,6 +794,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     Value<String>? wifiName,
     Value<int>? myOscPort,
     Value<String>? myPassword,
+    Value<DateTime?>? wakeTime,
+    Value<DateTime?>? sleepTime,
     Value<String>? serverIp,
     Value<int>? serverOscPort,
     Value<int>? serverMqttPort,
@@ -724,6 +812,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
       wifiName: wifiName ?? this.wifiName,
       myOscPort: myOscPort ?? this.myOscPort,
       myPassword: myPassword ?? this.myPassword,
+      wakeTime: wakeTime ?? this.wakeTime,
+      sleepTime: sleepTime ?? this.sleepTime,
       serverIp: serverIp ?? this.serverIp,
       serverOscPort: serverOscPort ?? this.serverOscPort,
       serverMqttPort: serverMqttPort ?? this.serverMqttPort,
@@ -760,6 +850,12 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
     if (myPassword.present) {
       map['my_password'] = Variable<String>(myPassword.value);
     }
+    if (wakeTime.present) {
+      map['wake_time'] = Variable<DateTime>(wakeTime.value);
+    }
+    if (sleepTime.present) {
+      map['sleep_time'] = Variable<DateTime>(sleepTime.value);
+    }
     if (serverIp.present) {
       map['server_ip'] = Variable<String>(serverIp.value);
     }
@@ -792,6 +888,8 @@ class BasicInfoCompanion extends UpdateCompanion<BasicInfoData> {
           ..write('wifiName: $wifiName, ')
           ..write('myOscPort: $myOscPort, ')
           ..write('myPassword: $myPassword, ')
+          ..write('wakeTime: $wakeTime, ')
+          ..write('sleepTime: $sleepTime, ')
           ..write('serverIp: $serverIp, ')
           ..write('serverOscPort: $serverOscPort, ')
           ..write('serverMqttPort: $serverMqttPort, ')
@@ -2315,6 +2413,8 @@ typedef $$BasicInfoTableCreateCompanionBuilder =
       Value<String> wifiName,
       Value<int> myOscPort,
       Value<String> myPassword,
+      Value<DateTime?> wakeTime,
+      Value<DateTime?> sleepTime,
       Value<String> serverIp,
       Value<int> serverOscPort,
       Value<int> serverMqttPort,
@@ -2332,6 +2432,8 @@ typedef $$BasicInfoTableUpdateCompanionBuilder =
       Value<String> wifiName,
       Value<int> myOscPort,
       Value<String> myPassword,
+      Value<DateTime?> wakeTime,
+      Value<DateTime?> sleepTime,
       Value<String> serverIp,
       Value<int> serverOscPort,
       Value<int> serverMqttPort,
@@ -2386,6 +2488,16 @@ class $$BasicInfoTableFilterComposer
 
   ColumnFilters<String> get myPassword => $composableBuilder(
     column: $table.myPassword,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get wakeTime => $composableBuilder(
+    column: $table.wakeTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get sleepTime => $composableBuilder(
+    column: $table.sleepTime,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2469,6 +2581,16 @@ class $$BasicInfoTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get wakeTime => $composableBuilder(
+    column: $table.wakeTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get sleepTime => $composableBuilder(
+    column: $table.sleepTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get serverIp => $composableBuilder(
     column: $table.serverIp,
     builder: (column) => ColumnOrderings(column),
@@ -2534,6 +2656,12 @@ class $$BasicInfoTableAnnotationComposer
     column: $table.myPassword,
     builder: (column) => column,
   );
+
+  GeneratedColumn<DateTime> get wakeTime =>
+      $composableBuilder(column: $table.wakeTime, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get sleepTime =>
+      $composableBuilder(column: $table.sleepTime, builder: (column) => column);
 
   GeneratedColumn<String> get serverIp =>
       $composableBuilder(column: $table.serverIp, builder: (column) => column);
@@ -2601,6 +2729,8 @@ class $$BasicInfoTableTableManager
                 Value<String> wifiName = const Value.absent(),
                 Value<int> myOscPort = const Value.absent(),
                 Value<String> myPassword = const Value.absent(),
+                Value<DateTime?> wakeTime = const Value.absent(),
+                Value<DateTime?> sleepTime = const Value.absent(),
                 Value<String> serverIp = const Value.absent(),
                 Value<int> serverOscPort = const Value.absent(),
                 Value<int> serverMqttPort = const Value.absent(),
@@ -2616,6 +2746,8 @@ class $$BasicInfoTableTableManager
                 wifiName: wifiName,
                 myOscPort: myOscPort,
                 myPassword: myPassword,
+                wakeTime: wakeTime,
+                sleepTime: sleepTime,
                 serverIp: serverIp,
                 serverOscPort: serverOscPort,
                 serverMqttPort: serverMqttPort,
@@ -2633,6 +2765,8 @@ class $$BasicInfoTableTableManager
                 Value<String> wifiName = const Value.absent(),
                 Value<int> myOscPort = const Value.absent(),
                 Value<String> myPassword = const Value.absent(),
+                Value<DateTime?> wakeTime = const Value.absent(),
+                Value<DateTime?> sleepTime = const Value.absent(),
                 Value<String> serverIp = const Value.absent(),
                 Value<int> serverOscPort = const Value.absent(),
                 Value<int> serverMqttPort = const Value.absent(),
@@ -2648,6 +2782,8 @@ class $$BasicInfoTableTableManager
                 wifiName: wifiName,
                 myOscPort: myOscPort,
                 myPassword: myPassword,
+                wakeTime: wakeTime,
+                sleepTime: sleepTime,
                 serverIp: serverIp,
                 serverOscPort: serverOscPort,
                 serverMqttPort: serverMqttPort,

@@ -23,6 +23,8 @@ mdk_kiosk
 - serverMqttId: mdk
 - serverMqttPassword: 12344321
 
+### ** credential.json 발급
+
 # Release
 
 ## 2.0.0

@@ -20,6 +20,10 @@ class GlobalData {
   late int myOscPort;
   late String myPassword;
 
+  DateTime? wakeTime;
+
+  DateTime? sleepTime;
+
   /// 3. 서버
   late String serverIp;
   late int serverOscPort;
@@ -36,6 +40,8 @@ class GlobalData {
     titleText = basicInfoData.titleText;
     myOscPort = basicInfoData.myOscPort;
     myPassword = basicInfoData.myPassword;
+    wakeTime = basicInfoData.wakeTime;
+    sleepTime = basicInfoData.sleepTime;
     serverIp = basicInfoData.serverIp;
     serverOscPort = basicInfoData.serverOscPort;
     serverMqttPort = basicInfoData.serverMqttPort;

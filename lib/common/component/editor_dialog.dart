@@ -33,15 +33,11 @@ class EditorWrapper extends StatelessWidget {
     this.disableChildInteraction = true, // 기본값: 터치 차단
   });
 
-  factory EditorWrapper.basicInfo({
-    required Widget child,
-  }) {
+  factory EditorWrapper.basicInfo({required Widget child}) {
     return EditorWrapper(dialog: BasicInfoDialog(), child: child);
   }
 
-  factory EditorWrapper.button({
-    required Widget child,
-  }) {
+  factory EditorWrapper.button({required Widget child}) {
     return EditorWrapper(dialog: ButtonEditorDialog(), child: child);
   }
 
@@ -83,6 +79,9 @@ class _BasicInfoDialogState extends State<BasicInfoDialog> {
 
   /// 2. 태블릿
   int myOscPort = globalData.myOscPort;
+
+  DateTime? wakeTime = globalData.wakeTime;
+  DateTime? sleepTime = globalData.sleepTime;
 
   /// 3. 서버
   String serverIp = globalData.serverIp;
@@ -229,43 +228,40 @@ class _BasicInfoDialogState extends State<BasicInfoDialog> {
   @override
   Widget build(BuildContext context) {
     return CustomDialog(
-        title: '기본 정보 수정',
-        widthRatio: 0.85,
-        heightRatio: 0.55,
-        content: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: _BasicInfoEditor(key: ValueKey('OscEditor')),
-                ),
+      title: '기본 정보 수정',
+      widthRatio: 0.85,
+      heightRatio: 0.55,
+      content: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: _BasicInfoEditor(key: ValueKey('OscEditor')),
               ),
-              Container(
-                constraints: BoxConstraints(maxWidth: 300),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: onSaveButtonPressed,
-                      style: DIALOG_BTN_STYLE,
-                      child: Text(
-                        '저장',
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: onCancelButtonPressed,
-                      style: DIALOG_BTN_STYLE,
-                      child: Text(
-                        '취소',
-                      ),
-                    ),
-                  ],
-                ),
+            ),
+            Container(
+              constraints: BoxConstraints(maxWidth: 300),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: onSaveButtonPressed,
+                    style: DIALOG_BTN_STYLE,
+                    child: Text('저장'),
+                  ),
+                  ElevatedButton(
+                    onPressed: onCancelButtonPressed,
+                    style: DIALOG_BTN_STYLE,
+                    child: Text('취소'),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void onSaveButtonPressed() async {
@@ -299,7 +295,6 @@ class _BasicInfoDialogState extends State<BasicInfoDialog> {
       globalData.updateFromBasicInfoData(basicInfoData: newBasicInfoData!);
       toastMsg = '기본 정보 업데이트!';
       showCustomToast(toastMsg);
-
     }
 
     if (toastMsg == '') {
@@ -318,10 +313,7 @@ class _BasicInfoDialogState extends State<BasicInfoDialog> {
 class ButtonEditorDialog extends StatefulWidget {
   final String? buttonName;
 
-  const ButtonEditorDialog({
-    this.buttonName,
-    super.key,
-  });
+  const ButtonEditorDialog({this.buttonName, super.key});
 
   @override
   State<ButtonEditorDialog> createState() => _ButtonEditorDialogState();
@@ -366,14 +358,16 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
     buttonWithPage = bWpList.firstWhere(
       (e) => e.button.buttonName == widget.buttonName,
       orElse: () => ButtonWithPage(
-          button: ButtonData(
-              buttonName: widget.buttonName ?? '할당된 버튼이 없습니다. 버튼을 생성합니다.',
-              isUsingButton: true,
-              page: 1,
-              row: 0,
-              column: 0,
-              command: Command.press),
-          page: bWpList.first.page),
+        button: ButtonData(
+          buttonName: widget.buttonName ?? '할당된 버튼이 없습니다. 버튼을 생성합니다.',
+          isUsingButton: true,
+          page: 1,
+          row: 0,
+          column: 0,
+          command: Command.press,
+        ),
+        page: bWpList.first.page,
+      ),
     );
 
     buttonData = buttonWithPage.button;
@@ -433,16 +427,12 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
                   ElevatedButton(
                     onPressed: onSaveButtonPressed,
                     style: DIALOG_BTN_STYLE,
-                    child: Text(
-                      '저장',
-                    ),
+                    child: Text('저장'),
                   ),
                   ElevatedButton(
                     onPressed: onCancelButtonPressed,
                     style: DIALOG_BTN_STYLE,
-                    child: Text(
-                      '취소',
-                    ),
+                    child: Text('취소'),
                   ),
                 ],
               ),
@@ -472,11 +462,14 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('동작형식',
-                    style: TextStyle(
-                        color: TEXT_COLOR,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600)),
+                Text(
+                  '동작형식',
+                  style: TextStyle(
+                    color: TEXT_COLOR,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 SizedBox(height: 14.0),
                 AnimatedToggleSwitch<bool>.dual(
                   current: isUsingButton,
@@ -495,26 +488,37 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
                       return ToggleStyle(backgroundColor: TOGGLE_BUTTON_COLOR);
                     }
                     return ToggleStyle(
-                        backgroundGradient: LinearGradient(
-                      colors: [TOGGLE_QUERY_COLOR, TOGGLE_BUTTON_COLOR],
-                      stops: [
-                        global.position -
-                            (1 - 2 * max(0, global.position - 0.5)) * 0.7,
-                        global.position +
-                            max(0, 2 * (global.position - 0.5)) * 0.7,
-                      ],
-                    ));
+                      backgroundGradient: LinearGradient(
+                        colors: [TOGGLE_QUERY_COLOR, TOGGLE_BUTTON_COLOR],
+                        stops: [
+                          global.position -
+                              (1 - 2 * max(0, global.position - 0.5)) * 0.7,
+                          global.position +
+                              max(0, 2 * (global.position - 0.5)) * 0.7,
+                        ],
+                      ),
+                    );
                   },
                   onChanged: (b) => setState(() => isUsingButton = b),
                   textBuilder: (value) => value
                       ? const Center(
-                          child: Text('버튼',
-                              style: TextStyle(
-                                  fontSize: 15, color: WHITE_TEXT_COLOR)))
+                          child: Text(
+                            '버튼',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: WHITE_TEXT_COLOR,
+                            ),
+                          ),
+                        )
                       : const Center(
-                          child: Text('쿼리',
-                              style: TextStyle(
-                                  fontSize: 15, color: WHITE_TEXT_COLOR))),
+                          child: Text(
+                            '쿼리',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: WHITE_TEXT_COLOR,
+                            ),
+                          ),
+                        ),
                 ),
               ],
             ),
@@ -552,23 +556,22 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             DropdownButton(
-                value: page,
-                dropdownColor: INPUT_BG_COLOR,
-                items: pageList
-                    .map(
-                      (e) => DropdownMenuItem(
-                        value: e.id,
-                        child: Text(e.pageName),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  if (value == null) return;
+              value: page,
+              dropdownColor: INPUT_BG_COLOR,
+              items: pageList
+                  .map(
+                    (e) =>
+                        DropdownMenuItem(value: e.id, child: Text(e.pageName)),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value == null) return;
 
-                  setState(() {
-                    page = value;
-                  });
-                }),
+                setState(() {
+                  page = value;
+                });
+              },
+            ),
             renderButtonCommandToggle(),
           ],
         ),
@@ -586,8 +589,9 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
         SizedBox(height: 16.0),
         CustomTextFormField(
           title: '메세지',
-          hintText:
-              isButtonExist ? '일반적으로 입력하지 않습니다.' : '버튼 정보가 없습니다. 새로 생성합니다.',
+          hintText: isButtonExist
+              ? '일반적으로 입력하지 않습니다.'
+              : '버튼 정보가 없습니다. 새로 생성합니다.',
           initialValue: message,
           onChanged: (inputText) {
             message = inputText;
@@ -628,12 +632,15 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
       styleAnimationType: AnimationType.onHover,
       spacing: 2.0,
       customSeparatorBuilder: (context, local, global) {
-        final opacity =
-            ((global.position - local.position).abs() - 0.5).clamp(0.0, 1.0);
+        final opacity = ((global.position - local.position).abs() - 0.5).clamp(
+          0.0,
+          1.0,
+        );
         return VerticalDivider(
-            indent: 4.0,
-            endIndent: 4.0,
-            color: Colors.white38.withOpacity(opacity));
+          indent: 4.0,
+          endIndent: 4.0,
+          color: Colors.white38.withOpacity(opacity),
+        );
       },
       customIconBuilder: (context, local, global) {
         final text = labels[local.index];
@@ -643,7 +650,10 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
             style: TextStyle(
               fontSize: 15,
               color: Color.lerp(
-                  TEXT_COLOR, WHITE_TEXT_COLOR, local.animationValue),
+                TEXT_COLOR,
+                WHITE_TEXT_COLOR,
+                local.animationValue,
+              ),
             ),
           ),
         );
@@ -664,9 +674,7 @@ class _ButtonEditorDialogState extends State<ButtonEditorDialog> {
 
   Widget renderTitleToggle() {
     List<bool> values = [false, true];
-    List<String> texts = [
-      'OSC','Query'
-    ];
+    List<String> texts = ['OSC', 'Query'];
 
     // if (widget.buttonName == null) {
     //   values = [true];
