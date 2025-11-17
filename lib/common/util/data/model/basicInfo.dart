@@ -11,10 +11,15 @@ class BasicInfo extends Table {
   TextColumn get titleText => text().withDefault(const Constant('Wall Hub'))();
   TextColumn get wifiName => text().withDefault(const Constant('와이파이 이름'))();
 
-  /// 2. 태블릿
+  /// 2. 디바이스
   // TextColumn get myIp => text().withDefault(const Constant('192.168.11.111'))();
   IntColumn get myOscPort => integer().withDefault(const Constant(3000))();
   TextColumn get myPassword => text().withDefault(const Constant('12344321!'))();
+
+  DateTimeColumn get wakeTime => dateTime().nullable()();
+  DateTimeColumn get sleepTime => dateTime().nullable()();
+
+
 
   /// 3. 서버
   TextColumn get serverIp => text().withDefault(const Constant('192.168.11.120'))();

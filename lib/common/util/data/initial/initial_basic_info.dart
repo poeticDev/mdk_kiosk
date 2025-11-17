@@ -13,6 +13,9 @@ const String initialTitleText = "4동 319호";
 // const int initialMyOscPort = 3000;
 // const String initialMyPassword = '12344321!';
 
+DateTime wakeTime = DateTime(2025,1, 1, 9, 0);
+DateTime sleepTime = DateTime(2025,1, 1, 18, 0);
+
 /// 3. 서버 정보
 const String initialServerIp =  '192.168.11.120';
 // const int initialServerOscPort = 12321;

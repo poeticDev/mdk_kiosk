@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'; // TimeOfDay, Overlay 등을 위해
+import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
 import 'package:mdk_kiosk/common/component/black_overlay.dart';
@@ -12,29 +13,38 @@ import 'package:mdk_kiosk/common/component/black_overlay.dart';
 /// - 설정된 시각과 근무 요일에 맞춘 자동 진입/해제 스케줄링(주말 건너뜀)
 class DimModeController {
   /// 사용자가 바꿀 수 있는 스케줄 설정(기본값: 18:00 진입, 09:00 해제, 월~금 근무)
-  TimeOfDay dimEnterTime; // 예: 18:00
-  TimeOfDay dimExitTime;  // 예: 09:00
-  Set<int> workingDays;   // DateTime.monday ~ DateTime.friday
+  TimeOfDay? dimEnterTime; // 예: 18:00
+  TimeOfDay? dimExitTime; // 예: 09:00
+  Set<int> workingDays; // DateTime.monday ~ DateTime.friday
 
-  DimModeController({
-    TimeOfDay? enterTime,
-    TimeOfDay? exitTime,
-    Set<int>? days,
-  })  : dimEnterTime = enterTime ?? const TimeOfDay(hour: 18, minute: 0),
-        dimExitTime  = exitTime  ?? const TimeOfDay(hour: 9,  minute: 0),
-        workingDays  = days ?? {
-          DateTime.monday,
-          DateTime.tuesday,
-          DateTime.wednesday,
-          DateTime.thursday,
-          DateTime.friday,
-        };
+  DimModeController({TimeOfDay? enterTime, TimeOfDay? exitTime, Set<int>? days})
+    : workingDays =
+          days ??
+          {
+            DateTime.monday,
+            DateTime.tuesday,
+            DateTime.wednesday,
+            DateTime.thursday,
+            DateTime.friday,
+          };
+
+  factory DimModeController.fromGlobalData() {
+    TimeOfDay? wakeTime;
+    TimeOfDay? sleepTime;
+
+    if (globalData.wakeTime != null)
+      wakeTime = TimeOfDay.fromDateTime(globalData.wakeTime!);
+    if (globalData.sleepTime != null)
+      sleepTime = TimeOfDay.fromDateTime(globalData.sleepTime!);
+
+    return DimModeController(enterTime: sleepTime, exitTime: wakeTime);
+  }
 
   OverlayState? _overlayState;
   OverlayEntry? _overlayEntry;
 
   Timer? _enterTimer; // 다음 "진입" 예약
-  Timer? _exitTimer;  // 다음 "해제" 예약
+  Timer? _exitTimer; // 다음 "해제" 예약
 
   bool _isDim = false;
 
@@ -51,8 +61,10 @@ class DimModeController {
   /// - “다음 근무일의 해제 시각(보통 아침)”에 exit를 예약
   ///   (금요일에 진입하면 자동으로 그 다음 주 월요일 아침으로 잡힘)
   Future<void> enterDim() async {
+    if (dimEnterTime == null || dimExitTime == null) return;
+
     if (_isDim) {
-      _scheduleExitAt(dimExitTime); // 이미 Dim이면 해제 예약만 보장
+      _scheduleExitAt(dimExitTime!); // 이미 Dim이면 해제 예약만 보장
       return;
     }
 
@@ -71,7 +83,8 @@ class DimModeController {
       _isDim = true;
 
       // 4) 다음 근무일 아침 해제 예약 (주말 자동 건너뜀)
-      _scheduleExitAt(dimExitTime);
+
+      _scheduleExitAt(dimExitTime!);
 
       // 5) 반대편 타이머 정리
       _enterTimer?.cancel();
@@ -86,8 +99,9 @@ class DimModeController {
   /// - 밝기 복구
   /// - “다음 근무일의 진입 시각(보통 저녁)”에 enter를 예약
   Future<void> exitDim() async {
+    if (dimEnterTime == null || dimExitTime == null) return;
     if (!_isDim) {
-      _scheduleEnterAt(dimEnterTime); // 이미 해제면 진입 예약만 보장
+      _scheduleEnterAt(dimEnterTime!); // 이미 해제면 진입 예약만 보장
       return;
     }
 
@@ -104,7 +118,7 @@ class DimModeController {
       _isDim = false;
 
       // 4) 다음 근무일 저녁 진입 예약 (주말 자동 건너뜀)
-      _scheduleEnterAt(dimEnterTime);
+      _scheduleEnterAt(dimEnterTime!);
 
       // 5) 반대편 타이머 정리
       _exitTimer?.cancel();
@@ -122,16 +136,17 @@ class DimModeController {
   /// - 오늘이 근무일이고, 해제~진입 사이(업무시간)이면: 오늘 저녁에 진입 예약
   /// - 그 외(야간/주말/업무 시작 전 등): 다음 근무일 아침에 해제 예약
   void scheduleNextByCurrentTime({DateTime? now}) {
+    if (dimEnterTime == null || dimExitTime == null) return;
     final t = now ?? DateTime.now();
     final todayIsWorking = workingDays.contains(t.weekday);
 
-    final todayExit  = _combine(t, dimExitTime);
-    final todayEnter = _combine(t, dimEnterTime);
+    final todayExit = _combine(t, dimExitTime!);
+    final todayEnter = _combine(t, dimEnterTime!);
 
     if (todayIsWorking && t.isAfter(todayExit) && t.isBefore(todayEnter)) {
-      _scheduleEnterAt(dimEnterTime); // 업무시간: 오늘 저녁에 진입
+      _scheduleEnterAt(dimEnterTime!); // 업무시간: 오늘 저녁에 진입
     } else {
-      _scheduleExitAt(dimExitTime);   // 그 외: 다음 근무일 아침에 해제
+      _scheduleExitAt(dimExitTime!); // 그 외: 다음 근무일 아침에 해제
     }
   }
 
@@ -168,11 +183,11 @@ class DimModeController {
   /// - mustBeAfterNow: true면 “현재 시각 이후”인 후보만 유효
   ///   (예: 오늘이 근무일이라도 이미 진입 시각이 지났다면 내일/다음 근무일로 넘어감)
   DateTime _nextOccurrenceOnWorkingDay(
-      TimeOfDay time, {
-        required DateTime from,
-        required bool includeToday,
-        required bool mustBeAfterNow,
-      }) {
+    TimeOfDay time, {
+    required DateTime from,
+    required bool includeToday,
+    required bool mustBeAfterNow,
+  }) {
     DateTime cursor = includeToday ? from : from.add(const Duration(days: 1));
 
     // 최대 8일만 탐색(안전장치). 정상이라면 1~3일 내에 반드시 반환됨.
@@ -186,8 +201,11 @@ class DimModeController {
         }
       }
       // 자정 기준으로 +1일
-      cursor = DateTime(cursor.year, cursor.month, cursor.day)
-          .add(const Duration(days: 1));
+      cursor = DateTime(
+        cursor.year,
+        cursor.month,
+        cursor.day,
+      ).add(const Duration(days: 1));
     }
 
     // 폴백: 그냥 다음날 같은 시각
@@ -227,8 +245,9 @@ class DimModeController {
   /// - Activity/Window가 살아있는 상태에서 호출해야 적용된다.
   Future<void> setApplicationBrightness(double brightness) async {
     try {
-      await ScreenBrightness.instance
-          .setApplicationScreenBrightness(brightness);
+      await ScreenBrightness.instance.setApplicationScreenBrightness(
+        brightness,
+      );
     } catch (e) {
       debugPrint(e.toString());
       throw 'Failed to set application brightness';
