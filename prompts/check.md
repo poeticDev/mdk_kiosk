@@ -23,11 +23,14 @@
 1) **Frame jank 측정**: `adb shell dumpsys gfxinfo com.<app>` → Janky frames %, 90th/95th percentile 파악.
    - 샘플1: 총 25프레임 jank 100%, 90/95%tile=89/109ms, GPU 95%tile=4950ms, Slow UI thread=8, High input latency=16 → 초반 프레임 메인 스레드/입력 지연 심각.
    - 샘플2(framestats): 총 5프레임 jank 80%, 90/95%tile=1200ms, GPU 95%tile=7ms → GPU는 정상, UI 스레드 1.2s 정체로 판단. 샘플 길이 부족하므로 300프레임 이상 재측정 필요.
+   - 샘플3(framestats 재측정 후 30~60초 조작): 여전히 총 5프레임, jank 100%, 90/95%tile=1300ms, Slow UI thread=5 → 여전히 메인 스레드 장기 정체. 프레임 수가 늘지 않는 것은 UI가 거의 그려지지 않을 정도로 장시간 스톨되었음을 의미.
    - 측정 팁: `adb shell dumpsys gfxinfo com.<app> reset` 후 앱을 전면 표시한 채 30~60초 조작 → `gfxinfo` 또는 `gfxinfo ... framestats` 재실행. `Total frames rendered`가 0이면 전면 표시 여부를 다시 확인.
+   - 프레임 수 미증가 시 추가 확인: `adb shell dumpsys SurfaceFlinger --latency-clear` 후 문제 화면에서 스크롤 등 연속 애니메이션 10초 이상 실행 → `adb shell dumpsys SurfaceFlinger --latency`로 전체 프레임 시간 확인(앱 레이어 vsync 수준에서 계측).
 2) **GPU/Skia 추적**: `flutter run --profile --flavor kiosk --trace-skia --trace-systrace` → DevTools Timeline으로 레이아웃/빌드/래스터 타임 확인.
    - 다음 단계: run 로그에 표시된 `VM Service` 또는 `Observatory` URL을 복사 → 브라우저에서 DevTools 열기 → Timeline 탭에서 Record 시작 후 문제 화면 20~30초 조작 → Stop → `Export`로 JSON 저장(공유용).
    - DevTools가 안 열리면 별도 터미널에서 `flutter attach --profile --flavor kiosk --trace-skia --trace-systrace` 실행 후 동일 절차 진행.
    - 현재 수집한 CPU Sampler 상위 스택: `_BigIntImpl.*` → `RSAAlgorithm._modPow` → `googleapis_auth` → `GSheetsAuth.auth` → `GoogleSheets.reInitialize` → `AppInitializer.reinitAfterEditorMode`. 서비스 계정 JWT 서명(BigInt) 작업이 UI 스레드에서 실행되어 프레임 정체를 유발.
+   - 코드 대응: `lib/timetable/util/google_sheets.dart`에서 GSheets 인증을 1회만 수행해 캐시하도록 변경, 동일 파일에서 `_ensureAuthInitialized`로 중복 JWT 서명 방지. (추가로 isolate 분리는 후속 과제)
 3) **CPU 스케줄링 확인**: `adb shell top -Hp <pid>` 와 `adb shell schedtune cgroup`(가능 시)로 빌드/래스터 스레드 사용률 확인.
 4) **Perfetto/atrace**: `perfetto -o trace.perfetto-trace -b 4096 -t 15s sched gfx view wm` 후 UI jank 구간 분석.
 5) **메모리/GC**: DevTools Memory 탭, `adb shell dumpsys meminfo com.<app>` → 누수/과도한 GC 여부 확인.
@@ -41,7 +44,7 @@
 - MQTT/네트워크 루프: 재연결 타이머/스트림이 메인 isolate에서 돌고 있는지 확인, 백오프 누락 여부.
 - 레이아웃/폰트 확대: 텍스트 scale → 전체 리빌드/레이아웃 비용 상승. `const` 위젯/분리 렌더 적용 필요.
 - 기본 스레드 우선순위: `ThreadPriority` 커스텀 사용 시 Android 12 정책과 충돌 여부.
-- Google Sheets 인증: `GSheetsAuth.auth`/`GoogleSheets.reInitialize`에서 RSA(BigInt) 서명이 UI 스레드에서 수행됨 → init/reinit을 백그라운드 isolate로 옮기고, service account 클라이언트를 싱글톤/캐시로 재사용, 토큰 갱신은 사전 스케줄링.
+- Google Sheets 인증: `GSheetsAuth.auth`/`GoogleSheets.reInitialize`에서 RSA(BigInt) 서명이 UI 스레드에서 수행됨 → (1단계) service account 클라이언트 싱글톤·캐시화 완료(`lib/timetable/util/google_sheets.dart`), (2단계) 가능하면 isolate/compute로 JWT 서명 분리, (3단계) 토큰 갱신을 사전 스케줄링해 UI 진입 시 재서명 방지.
 
 ## 비교 실험 플랜
 - A/B 설치: (A) Android11 정상 빌드, (B) 동일 커밋을 Android12 기기 설치. 동일 시 OS 원인, 차이 시 코드/빌드 원인.
@@ -65,4 +68,4 @@
   2) 앱이 화면에 전면 표시된 상태에서 문제 화면을 30~60초 동안 실제 사용자 시나리오로 동작(백그라운드/홈화면 상태 금지).
   3) `adb shell dumpsys gfxinfo com.<app>` 재실행 → `Total frames`가 증가했는지 확인하고 퍼센타일/Histogram을 확인.
   4) 여전히 0프레임이면 `adb shell dumpsys gfxinfo com.<app> framestats`로 수집(안드로이드 12에서 일부 기기에서 기본 통계가 0으로 나올 수 있음).
-- Google Sheets 인증 최적화(가장 빠른 완화책): 서비스 계정 JWT 서명/토큰 발급을 `Isolate`/`compute`로 분리하고, 싱글톤 클라이언트를 캐시해 화면 진입 시 재서명·재인증이 발생하지 않도록 수정.
+- Google Sheets 인증 최적화(가장 빠른 완화책): ✅ 1단계 적용 — 인증 클라이언트 싱글톤·캐시화 완료. 추가로 isolate 분리는 선택적 후속 작업.

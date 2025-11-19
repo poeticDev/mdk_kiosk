@@ -43,7 +43,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
   String contactName = '';
   String contactNumber = '';
 
-  final dim = DimModeController();
+  // final dim = DimModeController();
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
     _startDailyCleanupCheck();
 
     // 딤모드 컨트롤러 바인딩
-    dim.bind(context);
+    // dim.bind(context);
   }
 
   // void _initRestartTimer() {
