@@ -40,7 +40,7 @@ android {
         }
         playstore {
             dimension "version"
-            targetSdkVersion 34 // 플레이스토어용은 최신 정책 준수
+            targetSdkVersion 36 // 플레이스토어용은 최신 정책 준수
         }
     }
 

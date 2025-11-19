@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -77,8 +78,8 @@ class AppInitializer {
 
     /// 3. Network
     /// 3.1 OSC
-    yield 'OSC 매니저 초기화 중...';
-    openOscManager();
+    // yield 'OSC 매니저 초기화 중...';
+    // openOscManager();
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
@@ -109,8 +110,8 @@ class AppInitializer {
 
     /// 3. Network
     /// 3.1 OSC
-    yield 'OSC 매니저 초기화 중...';
-    openOscManager();
+    // yield 'OSC 매니저 초기화 중...';
+    // openOscManager();
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
