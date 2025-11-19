@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,6 +31,8 @@ class GoogleSheets {
   List<Lecture> get lectureCache => _lectureCache;
 
   // 구글 시트 초기화 및 강의 캐시 초기화
+
+
   Future<void> initialize() async {
     _credentials = await loadCredentials();
 
