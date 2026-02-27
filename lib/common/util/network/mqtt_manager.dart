@@ -204,7 +204,7 @@ class MqttManager {
       _client.securityContext = SecurityContext.defaultContext;
     }
     _client.port = port;
-    _client.keepAlivePeriod = 20;
+    _client.keepAlivePeriod = 30;
     _client.connectTimeoutPeriod = 2000;
     _client.logging(on: false);
 

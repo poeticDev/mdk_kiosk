@@ -57,9 +57,9 @@ class _TimetableState extends ConsumerState<Timetable> {
     final lectures = gSheet.lectureCache;
 
     // ✅ 처음 로드 안 된 경우
-    if (lectures.isEmpty) {
-      return Center(child: CircularProgressIndicator());
-    }
+    // if (lectures.isEmpty) {
+    //   return Center(child: CircularProgressIndicator());
+    // }
 
     // ✅ 정상 렌더링
     return TimetableLayout(

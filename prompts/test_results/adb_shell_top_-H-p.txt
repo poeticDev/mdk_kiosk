@@ -1,0 +1,81 @@
+hreads: 51 total,   8 running,  43 sleeping,   0 stopped,   0 zombie
+  Mem:  3928448K total,  3677248K used,   251200K free,     4768K buffers
+ Swap:  1964220K total,      768K used,  1963452K free,  1854472K cached
+600%cpu 187%user   0%nice  47%sys 357%idle   0%iow   7%irq   3%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD
+ 6202 u0_a107      15  -5  19G 721M 145M R 33.3  18.7   3:27.53 Thread<04>
+ 6199 u0_a107      15  -5  19G 721M 145M R 30.0  18.7   3:27.70 Thread<01>
+ 6201 u0_a107      15  -5  19G 721M 145M R 30.0  18.7   3:26.73 Thread<03>
+Threads: 51 total,   6 running,  45 sleeping,   0 stopped,   0 zombie
+  Mem:  3928448K total,  3678192K used,   250256K free,     4768K buffers
+ Swap:  1964220K total,      768K used,  1963452K free,  1854472K cached
+600%cpu 177%user   0%nice  23%sys 392%idle   0%iow   5%irq   3%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD
+ 6201 u0_a107      15  -5  19G 721M 145M R 27.3  18.7   3:26.82 Thread<03>
+ 6200 u0_a107      15  -5  19G 721M 145M R 27.0  18.7   3:27.47 Thread<02>
+ 6202 u0_a107      15  -5  19G 721M 145M R 26.3  18.7   3:27.63 Thread<04>
+Threads: 51 total,   6 running,  45 sleeping,   0 stopped,   0 zombie
+  Mem:  3928448K total,  3678696K used,   249752K free,     4768K buffers
+ Swap:  1964220K total,      768K used,  1963452K free,  1854472K cached
+600%cpu 169%user   0%nice  25%sys 397%idle   0%iow   5%irq   3%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD
+ 6200 u0_a107      15  -5  19G 721M 145M R 26.6  18.8   3:28.28 Thread<02>
+ 6199 u0_a107      15  -5  19G 721M 145M R 26.0  18.8   3:28.57 Thread<01>
+ 6203 u0_a107      15  -5  19G 721M 145M R 26.0  18.8   3:28.76 Thread<05>
+Threads: 51 total,   6 running,  45 sleeping,   0 stopped,   0 zombie
+  Mem:  3928448K total,  3678948K used,   249500K free,     4768K buffers
+ Swap:  1964220K total,      768K used,  1963452K free,  1854472K cached
+600%cpu 173%user   0%nice  23%sys 397%idle   0%iow   5%irq   3%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD
+ 6203 u0_a107      15  -5  19G 722M 145M R 29.0  18.8   3:29.54 Thread<05>
+ 6200 u0_a107      15  -5  19G 722M 145M R 28.3  18.8   3:29.08 Thread<02>
+ 6202 u0_a107      15  -5  19G 722M 145M R 27.3  18.8   3:29.19 Thread<04>
+Threads: 51 total,   1 running,  50 sleeping,   0 stopped,   0 zombie
+  Mem:  3928448K total,  3678200K used,   250248K free,     4768K buffers
+ Swap:  1964220K total,      768K used,  1963452K free,  1854472K cached
+600%cpu 175%user   1%nice  24%sys 391%idle   0%iow   5%irq   4%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD
+ 6201 u0_a107      15  -5  19G 722M 145M R 28.6  18.8   3:29.18 Thread<03>
+ 6199 u0_a107      15  -5  19G 722M 145M S 27.3  18.8   3:30.15 Thread<01>
+ 6202 u0_a107      15  -5  19G 722M 145M S 26.6  18.8   3:30.01 Thread<04>
+Threads: 51 total,   7 running,  44 sleeping,   0 stopped,   0 zombie
+  Mem:  3928448K total,  3672948K used,   255500K free,     4768K buffers
+ Swap:  1964220K total,      768K used,  1963452K free,  1854476K cached
+600%cpu 175%user   0%nice  31%sys 382%idle   0%iow   6%irq   6%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD
+ 6200 u0_a107      15  -5  19G 722M 145M R 31.0  18.8   3:30.73 Thread<02>
+ 6199 u0_a107      15  -5  19G 722M 145M R 25.0  18.8   3:30.97 Thread<01>
+ 6202 u0_a107      15  -5  19G 722M 145M R 24.0  18.8   3:30.81 Thread<04>
+Threads: 52 total,   6 running,  46 sleeping,   0 stopped,   0 zombie
+  Mem:  3928448K total,  3658348K used,   270100K free,     4768K buffers
+ Swap:  1964220K total,      768K used,  1963452K free,  1854476K cached
+600%cpu 173%user   3%nice  24%sys 392%idle   0%iow   5%irq   3%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD
+ 6199 u0_a107      15  -5  19G 717M 145M R 29.6  18.6   3:31.72 Thread<01>
+ 6203 u0_a107      15  -5  19G 717M 145M R 26.6  18.6   3:31.87 Thread<05>
+ 6198 u0_a107      15  -5  19G 717M 145M R 26.6  18.6   3:31.09 Thread<00>
+Threads: 51 total,   7 running,  44 sleeping,   0 stopped,   0 zombie
+  Mem:  3928448K total,  3663308K used,   265140K free,     4768K buffers
+ Swap:  1964220K total,      768K used,  1963452K free,  1854476K cached
+600%cpu 178%user   0%nice  33%sys 377%idle   0%iow   6%irq   7%sirq   0%host
+  TID USER         PR  NI VIRT  RES  SHR S[%CPU] %MEM     TIME+ THREAD
+ 6203 u0_a107      15  -5  19G 715M 145M R 27.3  18.6   3:32.67 Thread<05>
+ 6199 u0_a107      15  -5  19G 715M 145M R 26.6  18.6   3:32.61 Thread<01>
+ 6200 u0_a107      15  -5  19G 715M 145M R 26.3  18.6   3:32.45 Thread<02>
+ 6198 u0_a107      15  -5  19G 715M 145M R 26.0  18.6   3:31.89 Thread<00>
+ 6202 u0_a107      15  -5  19G 715M 145M R 25.3  18.6   3:32.31 Thread<04>
+ 6201 u0_a107      15  -5  19G 715M 145M R 25.3  18.6   3:31.49 Thread<03>
+ 6141 u0_a107      10 -10  19G 715M 145M R 10.3  18.6   0:54.19 com.mdk.kiosk
+ 6197 u0_a107      10 -10  19G 715M 145M S  8.6  18.6   0:25.73 DartWorker
+ 6204 u0_a107      15  -5  19G 715M 145M S  7.3  18.6   1:10.83 1.raster
+ 6189 u0_a107      10 -10  19G 715M 145M S  4.0  18.6   0:14.49 Dart Profiler T
+ 6184 u0_a107      15  -5  19G 715M 145M S  1.3  18.6   0:11.84 1.raster
+ 6375 u0_a107      10 -10  19G 715M 145M S  0.0  18.6   0:00.01 DartWorker
+ 6228 u0_a107      20   0  19G 715M 145M S  0.0  18.6   0:00.01 Binder:6141_5
+ 6225 u0_a107      18  -2  19G 715M 145M S  0.0  18.6   0:00.00 hwuiTask0
+ 6226 u0_a107      18  -2  19G 715M 145M S  0.0  18.6   0:00.00 hwuiTask1
+ 6222 u0_a107      10 -10  19G 715M 145M S  0.0  18.6   0:00.00 dart:io Process
+ 6217 u0_a107      10 -10  19G 715M 145M S  0.0  18.6   0:00.00 mali-hist-dump
+ 6209 u0_a107      10 -10  19G 715M 145M S  0.0  18.6   0:00.00 mali-mem-purge
+ 6210 u0_a107      10 -10  19G 715M 145M S  0.0  18.6   0:00.00 mali-utility-wo
+^C211 u0_a107      10 -10  19G 715M 145M S  0.0  18.6   0:00.00 mali-utility-wo

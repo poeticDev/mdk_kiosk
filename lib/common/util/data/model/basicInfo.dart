@@ -22,7 +22,7 @@ class BasicInfo extends Table {
 
 
   /// 3. 서버
-  TextColumn get serverIp => text().withDefault(const Constant('192.168.11.120'))();
+  TextColumn get serverIp => text().withDefault(const Constant('192.168.11.12'))();
   IntColumn get serverOscPort => integer().withDefault(const Constant(12321))();
   IntColumn get serverMqttPort => integer().withDefault(const Constant(1883))();
   TextColumn get serverMqttId => text().withDefault(const Constant('mdk'))();

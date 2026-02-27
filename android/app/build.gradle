@@ -36,7 +36,7 @@ android {
     productFlavors {
         kiosk {
             dimension "version"
-            targetSdkVersion 31 // 키오스크용은 31
+            targetSdkVersion 32 // 키오스크용은 32
         }
         playstore {
             dimension "version"

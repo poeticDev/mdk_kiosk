@@ -20,6 +20,8 @@ import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
 import 'package:mdk_kiosk/multimedia/studio/state_indicator_for_mediabox.dart';
 import 'package:mdk_kiosk/multimedia/util/download_manager.dart';
 
+import '../util/data/initial/initial_basic_info.dart';
+
 class DefaultLayout extends StatefulWidget {
   final Color? backgroundColor;
   final Widget? cover;
@@ -98,10 +100,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
-          constraints: BoxConstraints(
-            maxWidth: maxWidth,
-            maxHeight: maxHeight,
-          ),
+          constraints: BoxConstraints(maxWidth: maxWidth, maxHeight: maxHeight),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -132,9 +131,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 //     style: BODY_TEXT_STYLE,
                 //   ),
                 // ),
-                SizedBox(
-                  height: betweenPadding,
-                ),
+                SizedBox(height: betweenPadding),
                 // Dim 모드 테스트 버튼
                 // SizedBox(
                 //   child: Row(
@@ -186,15 +183,9 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 // ),
                 // 2. 시간표
                 if (widget.midChild != null)
-                  Expanded(
-                    child: MorphContainer(
-                      child: widget.midChild!,
-                    ),
-                  ),
+                  Expanded(child: MorphContainer(child: widget.midChild!)),
                 // CustomDivider(),
-                SizedBox(
-                  height: betweenPadding,
-                ),
+                SizedBox(height: betweenPadding),
                 // 3. 온에어
                 // MorphContainer(
                 //     child: StateIndicatorForMediaBox(
@@ -206,9 +197,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 MorphContainer(
                   child: _MultiMedia(width: maxWidth, height: 260),
                 ),
-                SizedBox(
-                  height: betweenPadding * 0.7,
-                ),
+                SizedBox(height: betweenPadding * 0.7),
                 // 5. 푸터 : 연락처 & 로고
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -218,11 +207,11 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                       GestureDetector(
                         onLongPress: () async {
                           await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return ButtonEditorDialog(
-                                    buttonName: 'contact');
-                              });
+                            context: context,
+                            builder: (context) {
+                              return ButtonEditorDialog(buttonName: 'contact');
+                            },
+                          );
 
                           context.go('/reinit');
                         },
@@ -246,29 +235,39 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                                 text: '관리자 모드가 실행 중입니다!',
                                 actionButton: TextButton(
                                   onPressed: () {
-                                    ScaffoldMessenger.of(context)
-                                        .hideCurrentSnackBar();
+                                    ScaffoldMessenger.of(
+                                      context,
+                                    ).hideCurrentSnackBar();
                                     appEditorManager.turnEditorModeOff();
 
                                     context.go('/reinit');
                                   },
-                                  child: Text('종료',
-                                      style: TextStyle(color: Colors.white)),
+                                  child: Text(
+                                    '종료',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             );
                           }
                         },
                         child: Container(
-                          color: Colors.transparent,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: AssetImage(initialImagePath),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                           height: 62,
-                          width: 138,
-                          child: Image.asset('asset/img/tu_logo.png'),
+                          width: 62,
+                          // child: Image.asset(initialImagePath,fit: BoxFit.scaleDown),
                         ),
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -278,10 +277,6 @@ class _DefaultLayoutState extends State<DefaultLayout> {
   }
 
   Widget _MultiMedia({required double height, double? width}) {
-    return SizedBox(
-      height: height,
-      width: width,
-      child: MultimediaLayout(),
-    );
+    return SizedBox(height: height, width: width, child: MultimediaLayout());
   }
 }

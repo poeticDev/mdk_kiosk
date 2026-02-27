@@ -3,21 +3,21 @@
 /// 자주 사용하여 디폴트로 만들어둔 값으로
 /// 변경할 필요가 있을 때만 주석 해제하여 작성함
 /// 1. 강의실 정보
-const String initialRoomId = 'tu_4_319';
-const String initialRoomName = '4동 319호';
-const String initialImagePath = 'asset/img/tu_logo.png';
-const String initialWifiName ='mdk4-319';
-const String initialTitleText = "4동 319호";
+const String initialRoomId = 'pnu_sce_705';
+const String initialRoomName = '미래시민교육원 705호';
+const String initialImagePath = 'asset/img/pnu_logo.png';
+const String initialWifiName ='SYS_SCE_705';
+const String initialTitleText = initialRoomName;
 
 /// 2. 기기 정보
 // const int initialMyOscPort = 3000;
 // const String initialMyPassword = '12344321!';
 
-DateTime wakeTime = DateTime(2025,1, 1, 9, 0);
-DateTime sleepTime = DateTime(2025,1, 1, 21, 0);
+DateTime wakeTime = DateTime(2025,1, 1, 8, 0);
+DateTime sleepTime = DateTime(2025,1, 1, 23, 0);
 
 /// 3. 서버 정보
-const String initialServerIp =  '192.168.11.120';
+const String initialServerIp =  '192.168.11.12';
 // const int initialServerOscPort = 12321;
 const int initialServerMqttPort = 1883;
 // const int initialServerMqttId = 'mdk';
