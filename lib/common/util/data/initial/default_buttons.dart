@@ -698,7 +698,7 @@ const List<ButtonCompanion> DEFAULT_BUTTONS = [
     buttonName: Value('contact'),
       page: Value(pageAUDIO),
       // isUsingButton: Value(false),
-      queryString: Value('미래시민교육원'),
+      queryString: Value(''),
       message: Value(''),
       row: Value(0),
       column: Value(0),

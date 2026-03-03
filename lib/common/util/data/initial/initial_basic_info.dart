@@ -3,10 +3,10 @@
 /// 자주 사용하여 디폴트로 만들어둔 값으로
 /// 변경할 필요가 있을 때만 주석 해제하여 작성함
 /// 1. 강의실 정보
-const String initialRoomId = 'pnu_sce_705';
-const String initialRoomName = '미래시민교육원 705호';
-const String initialImagePath = 'asset/img/pnu_logo.png';
-const String initialWifiName ='SYS_SCE_705';
+const String initialRoomId = 'tu_01_602';
+const String initialRoomName = '본관 602호';
+const String initialImagePath = 'asset/img/tu_logo.png';
+const String initialWifiName ='SYS_01_602';
 const String initialTitleText = initialRoomName;
 
 /// 2. 기기 정보

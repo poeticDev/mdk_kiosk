@@ -8,7 +8,7 @@ import 'package:mdk_kiosk/timetable/model/lecture.dart';
 
 class GoogleSheets {
   static const String _spreadSheetId =
-      '1ggBDhRz90UPzU2tifvO4JlSJREk4vC-bvdjorB-8-Bo';
+      '1W7jlPHzFAL8v_Y1fP4sfsuLw-dqY61A67VOOSfq5MW4';
   static const String _credentialAssetPath =
       'asset/env/credentials_tu_lld.json';
 

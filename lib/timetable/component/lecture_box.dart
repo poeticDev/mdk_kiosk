@@ -66,14 +66,14 @@ class LectureBox extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     lectureName,
                     style: LECTURE_TITLE_TEXT_STYLE.copyWith(
-                      fontSize: height * 0.4,
+                      fontSize: height * 0.33,
                     ),
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
@@ -82,7 +82,7 @@ class LectureBox extends StatelessWidget {
                   Text(
                     instructorName,
                     style: LECTURE_SUBTITLE_TEXT_STYLE.copyWith(
-                      fontSize: height * 0.38,
+                      fontSize: height * 0.30,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
