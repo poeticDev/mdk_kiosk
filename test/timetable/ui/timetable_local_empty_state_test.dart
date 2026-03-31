@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/timetable/component/timetable.dart';
@@ -29,7 +30,11 @@ void main() {
       GetIt.I.registerSingleton<TimetableRepository>(mockRepository);
 
       // When: Timetable 위젯 렌더링
-      await tester.pumpWidget(MaterialApp(home: Scaffold(body: Timetable())));
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(home: Scaffold(body: Timetable())),
+        ),
+      );
       await tester.pumpAndSettle();
 
       // Then: 에러 없이 렌더링됨
@@ -43,7 +48,11 @@ void main() {
       GetIt.I.registerSingleton<TimetableRepository>(mockRepository);
 
       // When: 위젯 렌더링
-      await tester.pumpWidget(MaterialApp(home: Scaffold(body: Timetable())));
+      await tester.pumpWidget(
+        ProviderScope(
+          child: MaterialApp(home: Scaffold(body: Timetable())),
+        ),
+      );
       await tester.pumpAndSettle();
 
       // Then: TimetableLayout에 빈 리스트 전달
