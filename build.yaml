@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        options:
+          databases:
+            tablet_database: lib/common/util/data/drift.dart

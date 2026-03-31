@@ -134,7 +134,7 @@ class $BasicInfoTable extends BasicInfo
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('192.168.11.120'),
+    defaultValue: const Constant('192.168.11.12'),
   );
   static const VerificationMeta _serverOscPortMeta = const VerificationMeta(
     'serverOscPort',
@@ -2374,6 +2374,572 @@ class MediaItemCompanion extends UpdateCompanion<MediaItemData> {
   }
 }
 
+class $TimetablesTable extends Timetables
+    with TableInfo<$TimetablesTable, Timetable> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TimetablesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _roomIdMeta = const VerificationMeta('roomId');
+  @override
+  late final GeneratedColumn<String> roomId = GeneratedColumn<String>(
+    'room_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lectureNameMeta = const VerificationMeta(
+    'lectureName',
+  );
+  @override
+  late final GeneratedColumn<String> lectureName = GeneratedColumn<String>(
+    'lecture_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _instructorNameMeta = const VerificationMeta(
+    'instructorName',
+  );
+  @override
+  late final GeneratedColumn<String> instructorName = GeneratedColumn<String>(
+    'instructor_name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _weekdayIndexMeta = const VerificationMeta(
+    'weekdayIndex',
+  );
+  @override
+  late final GeneratedColumn<int> weekdayIndex = GeneratedColumn<int>(
+    'weekday_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startMinutesMeta = const VerificationMeta(
+    'startMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> startMinutes = GeneratedColumn<int>(
+    'start_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endMinutesMeta = const VerificationMeta(
+    'endMinutes',
+  );
+  @override
+  late final GeneratedColumn<int> endMinutes = GeneratedColumn<int>(
+    'end_minutes',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _colorIndexMeta = const VerificationMeta(
+    'colorIndex',
+  );
+  @override
+  late final GeneratedColumn<int> colorIndex = GeneratedColumn<int>(
+    'color_index',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+    clientDefault: () => DateTime.now(),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    roomId,
+    lectureName,
+    instructorName,
+    weekdayIndex,
+    startMinutes,
+    endMinutes,
+    colorIndex,
+    createdAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'timetables';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Timetable> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('room_id')) {
+      context.handle(
+        _roomIdMeta,
+        roomId.isAcceptableOrUnknown(data['room_id']!, _roomIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_roomIdMeta);
+    }
+    if (data.containsKey('lecture_name')) {
+      context.handle(
+        _lectureNameMeta,
+        lectureName.isAcceptableOrUnknown(
+          data['lecture_name']!,
+          _lectureNameMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_lectureNameMeta);
+    }
+    if (data.containsKey('instructor_name')) {
+      context.handle(
+        _instructorNameMeta,
+        instructorName.isAcceptableOrUnknown(
+          data['instructor_name']!,
+          _instructorNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('weekday_index')) {
+      context.handle(
+        _weekdayIndexMeta,
+        weekdayIndex.isAcceptableOrUnknown(
+          data['weekday_index']!,
+          _weekdayIndexMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_weekdayIndexMeta);
+    }
+    if (data.containsKey('start_minutes')) {
+      context.handle(
+        _startMinutesMeta,
+        startMinutes.isAcceptableOrUnknown(
+          data['start_minutes']!,
+          _startMinutesMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_startMinutesMeta);
+    }
+    if (data.containsKey('end_minutes')) {
+      context.handle(
+        _endMinutesMeta,
+        endMinutes.isAcceptableOrUnknown(data['end_minutes']!, _endMinutesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endMinutesMeta);
+    }
+    if (data.containsKey('color_index')) {
+      context.handle(
+        _colorIndexMeta,
+        colorIndex.isAcceptableOrUnknown(data['color_index']!, _colorIndexMeta),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Timetable map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Timetable(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      roomId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}room_id'],
+      )!,
+      lectureName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}lecture_name'],
+      )!,
+      instructorName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}instructor_name'],
+      )!,
+      weekdayIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekday_index'],
+      )!,
+      startMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}start_minutes'],
+      )!,
+      endMinutes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}end_minutes'],
+      )!,
+      colorIndex: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}color_index'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $TimetablesTable createAlias(String alias) {
+    return $TimetablesTable(attachedDatabase, alias);
+  }
+}
+
+class Timetable extends DataClass implements Insertable<Timetable> {
+  final int id;
+  final String roomId;
+  final String lectureName;
+  final String instructorName;
+  final int weekdayIndex;
+  final int startMinutes;
+  final int endMinutes;
+  final int colorIndex;
+  final DateTime createdAt;
+  const Timetable({
+    required this.id,
+    required this.roomId,
+    required this.lectureName,
+    required this.instructorName,
+    required this.weekdayIndex,
+    required this.startMinutes,
+    required this.endMinutes,
+    required this.colorIndex,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['room_id'] = Variable<String>(roomId);
+    map['lecture_name'] = Variable<String>(lectureName);
+    map['instructor_name'] = Variable<String>(instructorName);
+    map['weekday_index'] = Variable<int>(weekdayIndex);
+    map['start_minutes'] = Variable<int>(startMinutes);
+    map['end_minutes'] = Variable<int>(endMinutes);
+    map['color_index'] = Variable<int>(colorIndex);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  TimetablesCompanion toCompanion(bool nullToAbsent) {
+    return TimetablesCompanion(
+      id: Value(id),
+      roomId: Value(roomId),
+      lectureName: Value(lectureName),
+      instructorName: Value(instructorName),
+      weekdayIndex: Value(weekdayIndex),
+      startMinutes: Value(startMinutes),
+      endMinutes: Value(endMinutes),
+      colorIndex: Value(colorIndex),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Timetable.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Timetable(
+      id: serializer.fromJson<int>(json['id']),
+      roomId: serializer.fromJson<String>(json['roomId']),
+      lectureName: serializer.fromJson<String>(json['lectureName']),
+      instructorName: serializer.fromJson<String>(json['instructorName']),
+      weekdayIndex: serializer.fromJson<int>(json['weekdayIndex']),
+      startMinutes: serializer.fromJson<int>(json['startMinutes']),
+      endMinutes: serializer.fromJson<int>(json['endMinutes']),
+      colorIndex: serializer.fromJson<int>(json['colorIndex']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'roomId': serializer.toJson<String>(roomId),
+      'lectureName': serializer.toJson<String>(lectureName),
+      'instructorName': serializer.toJson<String>(instructorName),
+      'weekdayIndex': serializer.toJson<int>(weekdayIndex),
+      'startMinutes': serializer.toJson<int>(startMinutes),
+      'endMinutes': serializer.toJson<int>(endMinutes),
+      'colorIndex': serializer.toJson<int>(colorIndex),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Timetable copyWith({
+    int? id,
+    String? roomId,
+    String? lectureName,
+    String? instructorName,
+    int? weekdayIndex,
+    int? startMinutes,
+    int? endMinutes,
+    int? colorIndex,
+    DateTime? createdAt,
+  }) => Timetable(
+    id: id ?? this.id,
+    roomId: roomId ?? this.roomId,
+    lectureName: lectureName ?? this.lectureName,
+    instructorName: instructorName ?? this.instructorName,
+    weekdayIndex: weekdayIndex ?? this.weekdayIndex,
+    startMinutes: startMinutes ?? this.startMinutes,
+    endMinutes: endMinutes ?? this.endMinutes,
+    colorIndex: colorIndex ?? this.colorIndex,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  Timetable copyWithCompanion(TimetablesCompanion data) {
+    return Timetable(
+      id: data.id.present ? data.id.value : this.id,
+      roomId: data.roomId.present ? data.roomId.value : this.roomId,
+      lectureName: data.lectureName.present
+          ? data.lectureName.value
+          : this.lectureName,
+      instructorName: data.instructorName.present
+          ? data.instructorName.value
+          : this.instructorName,
+      weekdayIndex: data.weekdayIndex.present
+          ? data.weekdayIndex.value
+          : this.weekdayIndex,
+      startMinutes: data.startMinutes.present
+          ? data.startMinutes.value
+          : this.startMinutes,
+      endMinutes: data.endMinutes.present
+          ? data.endMinutes.value
+          : this.endMinutes,
+      colorIndex: data.colorIndex.present
+          ? data.colorIndex.value
+          : this.colorIndex,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Timetable(')
+          ..write('id: $id, ')
+          ..write('roomId: $roomId, ')
+          ..write('lectureName: $lectureName, ')
+          ..write('instructorName: $instructorName, ')
+          ..write('weekdayIndex: $weekdayIndex, ')
+          ..write('startMinutes: $startMinutes, ')
+          ..write('endMinutes: $endMinutes, ')
+          ..write('colorIndex: $colorIndex, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    roomId,
+    lectureName,
+    instructorName,
+    weekdayIndex,
+    startMinutes,
+    endMinutes,
+    colorIndex,
+    createdAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Timetable &&
+          other.id == this.id &&
+          other.roomId == this.roomId &&
+          other.lectureName == this.lectureName &&
+          other.instructorName == this.instructorName &&
+          other.weekdayIndex == this.weekdayIndex &&
+          other.startMinutes == this.startMinutes &&
+          other.endMinutes == this.endMinutes &&
+          other.colorIndex == this.colorIndex &&
+          other.createdAt == this.createdAt);
+}
+
+class TimetablesCompanion extends UpdateCompanion<Timetable> {
+  final Value<int> id;
+  final Value<String> roomId;
+  final Value<String> lectureName;
+  final Value<String> instructorName;
+  final Value<int> weekdayIndex;
+  final Value<int> startMinutes;
+  final Value<int> endMinutes;
+  final Value<int> colorIndex;
+  final Value<DateTime> createdAt;
+  const TimetablesCompanion({
+    this.id = const Value.absent(),
+    this.roomId = const Value.absent(),
+    this.lectureName = const Value.absent(),
+    this.instructorName = const Value.absent(),
+    this.weekdayIndex = const Value.absent(),
+    this.startMinutes = const Value.absent(),
+    this.endMinutes = const Value.absent(),
+    this.colorIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  TimetablesCompanion.insert({
+    this.id = const Value.absent(),
+    required String roomId,
+    required String lectureName,
+    this.instructorName = const Value.absent(),
+    required int weekdayIndex,
+    required int startMinutes,
+    required int endMinutes,
+    this.colorIndex = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  }) : roomId = Value(roomId),
+       lectureName = Value(lectureName),
+       weekdayIndex = Value(weekdayIndex),
+       startMinutes = Value(startMinutes),
+       endMinutes = Value(endMinutes);
+  static Insertable<Timetable> custom({
+    Expression<int>? id,
+    Expression<String>? roomId,
+    Expression<String>? lectureName,
+    Expression<String>? instructorName,
+    Expression<int>? weekdayIndex,
+    Expression<int>? startMinutes,
+    Expression<int>? endMinutes,
+    Expression<int>? colorIndex,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (roomId != null) 'room_id': roomId,
+      if (lectureName != null) 'lecture_name': lectureName,
+      if (instructorName != null) 'instructor_name': instructorName,
+      if (weekdayIndex != null) 'weekday_index': weekdayIndex,
+      if (startMinutes != null) 'start_minutes': startMinutes,
+      if (endMinutes != null) 'end_minutes': endMinutes,
+      if (colorIndex != null) 'color_index': colorIndex,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  TimetablesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? roomId,
+    Value<String>? lectureName,
+    Value<String>? instructorName,
+    Value<int>? weekdayIndex,
+    Value<int>? startMinutes,
+    Value<int>? endMinutes,
+    Value<int>? colorIndex,
+    Value<DateTime>? createdAt,
+  }) {
+    return TimetablesCompanion(
+      id: id ?? this.id,
+      roomId: roomId ?? this.roomId,
+      lectureName: lectureName ?? this.lectureName,
+      instructorName: instructorName ?? this.instructorName,
+      weekdayIndex: weekdayIndex ?? this.weekdayIndex,
+      startMinutes: startMinutes ?? this.startMinutes,
+      endMinutes: endMinutes ?? this.endMinutes,
+      colorIndex: colorIndex ?? this.colorIndex,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (roomId.present) {
+      map['room_id'] = Variable<String>(roomId.value);
+    }
+    if (lectureName.present) {
+      map['lecture_name'] = Variable<String>(lectureName.value);
+    }
+    if (instructorName.present) {
+      map['instructor_name'] = Variable<String>(instructorName.value);
+    }
+    if (weekdayIndex.present) {
+      map['weekday_index'] = Variable<int>(weekdayIndex.value);
+    }
+    if (startMinutes.present) {
+      map['start_minutes'] = Variable<int>(startMinutes.value);
+    }
+    if (endMinutes.present) {
+      map['end_minutes'] = Variable<int>(endMinutes.value);
+    }
+    if (colorIndex.present) {
+      map['color_index'] = Variable<int>(colorIndex.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimetablesCompanion(')
+          ..write('id: $id, ')
+          ..write('roomId: $roomId, ')
+          ..write('lectureName: $lectureName, ')
+          ..write('instructorName: $instructorName, ')
+          ..write('weekdayIndex: $weekdayIndex, ')
+          ..write('startMinutes: $startMinutes, ')
+          ..write('endMinutes: $endMinutes, ')
+          ..write('colorIndex: $colorIndex, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2381,6 +2947,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PageTable page = $PageTable(this);
   late final $ButtonTable button = $ButtonTable(this);
   late final $MediaItemTable mediaItem = $MediaItemTable(this);
+  late final $TimetablesTable timetables = $TimetablesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2390,6 +2957,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     page,
     button,
     mediaItem,
+    timetables,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -3751,6 +4319,285 @@ typedef $$MediaItemTableProcessedTableManager =
       MediaItemData,
       PrefetchHooks Function()
     >;
+typedef $$TimetablesTableCreateCompanionBuilder =
+    TimetablesCompanion Function({
+      Value<int> id,
+      required String roomId,
+      required String lectureName,
+      Value<String> instructorName,
+      required int weekdayIndex,
+      required int startMinutes,
+      required int endMinutes,
+      Value<int> colorIndex,
+      Value<DateTime> createdAt,
+    });
+typedef $$TimetablesTableUpdateCompanionBuilder =
+    TimetablesCompanion Function({
+      Value<int> id,
+      Value<String> roomId,
+      Value<String> lectureName,
+      Value<String> instructorName,
+      Value<int> weekdayIndex,
+      Value<int> startMinutes,
+      Value<int> endMinutes,
+      Value<int> colorIndex,
+      Value<DateTime> createdAt,
+    });
+
+class $$TimetablesTableFilterComposer
+    extends Composer<_$AppDatabase, $TimetablesTable> {
+  $$TimetablesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get roomId => $composableBuilder(
+    column: $table.roomId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lectureName => $composableBuilder(
+    column: $table.lectureName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get instructorName => $composableBuilder(
+    column: $table.instructorName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get weekdayIndex => $composableBuilder(
+    column: $table.weekdayIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get startMinutes => $composableBuilder(
+    column: $table.startMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get endMinutes => $composableBuilder(
+    column: $table.endMinutes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get colorIndex => $composableBuilder(
+    column: $table.colorIndex,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$TimetablesTableOrderingComposer
+    extends Composer<_$AppDatabase, $TimetablesTable> {
+  $$TimetablesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get roomId => $composableBuilder(
+    column: $table.roomId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lectureName => $composableBuilder(
+    column: $table.lectureName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get instructorName => $composableBuilder(
+    column: $table.instructorName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get weekdayIndex => $composableBuilder(
+    column: $table.weekdayIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get startMinutes => $composableBuilder(
+    column: $table.startMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get endMinutes => $composableBuilder(
+    column: $table.endMinutes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get colorIndex => $composableBuilder(
+    column: $table.colorIndex,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$TimetablesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TimetablesTable> {
+  $$TimetablesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get roomId =>
+      $composableBuilder(column: $table.roomId, builder: (column) => column);
+
+  GeneratedColumn<String> get lectureName => $composableBuilder(
+    column: $table.lectureName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get instructorName => $composableBuilder(
+    column: $table.instructorName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get weekdayIndex => $composableBuilder(
+    column: $table.weekdayIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get startMinutes => $composableBuilder(
+    column: $table.startMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get endMinutes => $composableBuilder(
+    column: $table.endMinutes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get colorIndex => $composableBuilder(
+    column: $table.colorIndex,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$TimetablesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TimetablesTable,
+          Timetable,
+          $$TimetablesTableFilterComposer,
+          $$TimetablesTableOrderingComposer,
+          $$TimetablesTableAnnotationComposer,
+          $$TimetablesTableCreateCompanionBuilder,
+          $$TimetablesTableUpdateCompanionBuilder,
+          (
+            Timetable,
+            BaseReferences<_$AppDatabase, $TimetablesTable, Timetable>,
+          ),
+          Timetable,
+          PrefetchHooks Function()
+        > {
+  $$TimetablesTableTableManager(_$AppDatabase db, $TimetablesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TimetablesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TimetablesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TimetablesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> roomId = const Value.absent(),
+                Value<String> lectureName = const Value.absent(),
+                Value<String> instructorName = const Value.absent(),
+                Value<int> weekdayIndex = const Value.absent(),
+                Value<int> startMinutes = const Value.absent(),
+                Value<int> endMinutes = const Value.absent(),
+                Value<int> colorIndex = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => TimetablesCompanion(
+                id: id,
+                roomId: roomId,
+                lectureName: lectureName,
+                instructorName: instructorName,
+                weekdayIndex: weekdayIndex,
+                startMinutes: startMinutes,
+                endMinutes: endMinutes,
+                colorIndex: colorIndex,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String roomId,
+                required String lectureName,
+                Value<String> instructorName = const Value.absent(),
+                required int weekdayIndex,
+                required int startMinutes,
+                required int endMinutes,
+                Value<int> colorIndex = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => TimetablesCompanion.insert(
+                id: id,
+                roomId: roomId,
+                lectureName: lectureName,
+                instructorName: instructorName,
+                weekdayIndex: weekdayIndex,
+                startMinutes: startMinutes,
+                endMinutes: endMinutes,
+                colorIndex: colorIndex,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$TimetablesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TimetablesTable,
+      Timetable,
+      $$TimetablesTableFilterComposer,
+      $$TimetablesTableOrderingComposer,
+      $$TimetablesTableAnnotationComposer,
+      $$TimetablesTableCreateCompanionBuilder,
+      $$TimetablesTableUpdateCompanionBuilder,
+      (Timetable, BaseReferences<_$AppDatabase, $TimetablesTable, Timetable>),
+      Timetable,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -3762,4 +4609,6 @@ class $AppDatabaseManager {
       $$ButtonTableTableManager(_db, _db.button);
   $$MediaItemTableTableManager get mediaItem =>
       $$MediaItemTableTableManager(_db, _db.mediaItem);
+  $$TimetablesTableTableManager get timetables =>
+      $$TimetablesTableTableManager(_db, _db.timetables);
 }

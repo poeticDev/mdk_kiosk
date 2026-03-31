@@ -8,12 +8,13 @@ import 'package:mdk_kiosk/common/util/data/model/button.dart';
 import 'package:mdk_kiosk/common/util/data/model/button_with_page.dart';
 import 'package:mdk_kiosk/common/util/data/model/page.dart';
 import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
+import 'package:mdk_kiosk/common/util/data/model/timetable.dart';
 
 part 'drift.g.dart';
 
-@DriftDatabase(tables: [BasicInfo, Page, Button, MediaItem])
+@DriftDatabase(tables: [BasicInfo, Page, Button, MediaItem, Timetables])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   static AppDatabase? _instance;
 
@@ -31,7 +32,18 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from == 1 && to == 2) {
+          await m.createTable(timetables);
+        }
+      },
+    );
+  }
 
   static QueryExecutor _openConnection() {
     // driftDatabase from package:drift_flutter stores the database in
@@ -43,7 +55,7 @@ class AppDatabase extends _$AppDatabase {
   Future<BasicInfoData?> getLatestBasicInfo() async {
     final query = select(basicInfo)
       ..orderBy([
-            (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc)
+        (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
       ])
       ..limit(1); // limit을 직접 사용
 
@@ -73,23 +85,23 @@ class AppDatabase extends _$AppDatabase {
   Future<List<ButtonData>> getButtons() => select(button).get();
 
   Future<ButtonData?> getButtonById(int buttonId) async {
-    final result = await (select(button)
-      ..where((tbl) => tbl.id.equals(buttonId)))
-        .getSingleOrNull();
+    final result = await (select(
+      button,
+    )..where((tbl) => tbl.id.equals(buttonId))).getSingleOrNull();
     return result;
   }
 
   Future<ButtonData?> getButtonByName(String buttonName) async {
-    final result = await (select(button)
-          ..where((tbl) => tbl.buttonName.equals(buttonName)))
-        .getSingleOrNull();
+    final result = await (select(
+      button,
+    )..where((tbl) => tbl.buttonName.equals(buttonName))).getSingleOrNull();
     return result;
   }
 
   Future<bool> doesButtonExist(int buttonId) async {
-    final result = await (select(button)
-      ..where((tbl) => tbl.id.equals(buttonId)))
-        .getSingleOrNull();
+    final result = await (select(
+      button,
+    )..where((tbl) => tbl.id.equals(buttonId))).getSingleOrNull();
     return result != null; // ✅ 존재하면 true, 없으면 false 반환
   }
 
@@ -103,13 +115,11 @@ class AppDatabase extends _$AppDatabase {
 
   /// 2+3.Button with Page
   Future<List<ButtonWithPage>> getButtonWithPage() {
-    final query = (select(button)
-      ..orderBy([
-            (t) => OrderingTerm(expression: t.page, mode: OrderingMode.asc)
-      ]))
-        .join([
-      innerJoin(page, page.id.equalsExp(button.page)),
-    ]);
+    final query =
+        (select(button)..orderBy([
+              (t) => OrderingTerm(expression: t.page, mode: OrderingMode.asc),
+            ]))
+            .join([innerJoin(page, page.id.equalsExp(button.page))]);
 
     return query.map((row) {
       final buttonInfo = row.readTable(button);
@@ -140,9 +150,9 @@ class AppDatabase extends _$AppDatabase {
       deleteMediaItem(data.key.value);
     }
 
-    final existingItem = await (select(mediaItem)
-      ..where((t) => t.url.equals(data.url.value)))
-        .getSingleOrNull();
+    final existingItem = await (select(
+      mediaItem,
+    )..where((t) => t.url.equals(data.url.value))).getSingleOrNull();
 
     if (existingItem == null) {
       // 해당 url이 없으면 새로 삽입
@@ -162,7 +172,7 @@ class AppDatabase extends _$AppDatabase {
     final newUrls = newItems.map((e) => e.url.value).toSet();
 
     // 삭제할 URL 목록 (기존에는 있는데, 새 데이터엔 없는 것들)
-    final urlsToDelete = currentUrls.difference(newUrls) ?? {};
+    final urlsToDelete = currentUrls.difference(newUrls);
 
     // 삭제 작업
     await (delete(mediaItem)..where((tbl) => tbl.url.isIn(urlsToDelete))).go();
@@ -171,5 +181,34 @@ class AppDatabase extends _$AppDatabase {
     for (final item in newItems) {
       await upsertMediaItemByUrl(item);
     }
+  }
+
+  /// 5. Timetables
+  Future<List<Timetable>> getTimetablesForRoom(String roomId) {
+    return (select(timetables)
+          ..where((t) => t.roomId.equals(roomId))
+          ..orderBy([
+            (t) => OrderingTerm(
+              expression: t.weekdayIndex,
+              mode: OrderingMode.asc,
+            ),
+            (t) => OrderingTerm(
+              expression: t.startMinutes,
+              mode: OrderingMode.asc,
+            ),
+            (t) => OrderingTerm(expression: t.id, mode: OrderingMode.asc),
+          ]))
+        .get();
+  }
+
+  Future<int> createTimetable(TimetablesCompanion data) =>
+      into(timetables).insert(data);
+
+  Future<int> updateTimetable(int id, TimetablesCompanion data) {
+    return (update(timetables)..where((t) => t.id.equals(id))).write(data);
+  }
+
+  Future<int> deleteTimetable(int id) {
+    return (delete(timetables)..where((t) => t.id.equals(id))).go();
   }
 }
