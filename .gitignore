@@ -47,3 +47,7 @@ asset/env
 
 # FVM Version Cache
 .fvm/
+
+# Generated profiling artifacts (DevTools, ADB dumps)
+# These are reproducible performance captures and should not be committed
+prompts/test_results/
