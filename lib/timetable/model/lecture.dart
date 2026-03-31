@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../data/mappers/gsheets_mapper.dart';
-
 /// 요일 enum (월 ~ 일)
 enum Weekday { monday, tuesday, wednesday, thursday, friday, saturday, sunday }
 
@@ -91,22 +89,5 @@ class Lecture {
       endAt.minute,
       colorIndex,
     );
-  }
-}
-
-/// Google Sheets 매핑을 위한 Lecture 확장
-extension LectureGsheetsExtension on Lecture {
-  /// Google Sheets 행 데이터 → Lecture 객체 변환
-  ///
-  /// [GsheetsMapper.fromGsheets]를 사용하여 변환합니다.
-  static Lecture fromGsheets(Map<String, String> row) {
-    return GsheetsMapper.fromGsheets(row);
-  }
-
-  /// Lecture 객체 → Google Sheets 행 데이터 변환
-  ///
-  /// [GsheetsMapper.toGsheets]를 사용하여 변환합니다.
-  Map<String, String> toGsheets() {
-    return GsheetsMapper.toGsheets(this);
   }
 }
