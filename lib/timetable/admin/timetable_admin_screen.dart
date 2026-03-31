@@ -31,6 +31,7 @@ class _TimetableAdminScreenState extends ConsumerState<TimetableAdminScreen> {
   @override
   void initState() {
     super.initState();
+    print('🟢 TimetableAdminScreen: initState called!');
     _loadLectures();
   }
 
@@ -187,7 +188,16 @@ class _TimetableAdminScreenState extends ConsumerState<TimetableAdminScreen> {
   }
 
   @override
+  void dispose() {
+    print('🔴 TimetableAdminScreen: dispose called!');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print(
+      '🟡 TimetableAdminScreen: build called! lectures count: ${_lectures.length}',
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('시간표 관리'),
