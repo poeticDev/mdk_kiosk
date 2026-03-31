@@ -19,6 +19,7 @@ import 'package:mdk_kiosk/header/header_layout.dart';
 import 'package:mdk_kiosk/multimedia/multimedia_layout.dart';
 import 'package:mdk_kiosk/multimedia/studio/state_indicator_for_mediabox.dart';
 import 'package:mdk_kiosk/multimedia/util/download_manager.dart';
+import 'package:mdk_kiosk/timetable/config/timetable_source_config.dart';
 
 import '../util/data/initial/initial_basic_info.dart';
 
@@ -183,7 +184,44 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                 // ),
                 // 2. 시간표
                 if (widget.midChild != null)
-                  Expanded(child: MorphContainer(child: widget.midChild!)),
+                  Expanded(
+                    child: MorphContainer(
+                      child: Stack(
+                        children: [
+                          widget.midChild!,
+                          // 관리자 모드 + localDb 소스일 때만 표시되는 숨겨진 관리 버튼
+                          if (activeTimetableSource ==
+                                  TimetableSourceType.localDb &&
+                              appEditorManager.isEditorModeOn)
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: GestureDetector(
+                                onTap: () {
+                                  context.go('/admin/timetable');
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withAlpha(200),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.grey.withAlpha(100),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.settings,
+                                    size: 20,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
                 // CustomDivider(),
                 SizedBox(height: betweenPadding),
                 // 3. 온에어
