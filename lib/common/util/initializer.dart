@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -15,8 +14,9 @@ import 'package:mdk_kiosk/common/util/data/initial/initial_media_item.dart';
 import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_connection_status.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
-import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
-import 'package:mdk_kiosk/multimedia/util/download_manager.dart';
+import 'package:mdk_kiosk/timetable/config/timetable_source_config.dart';
+import 'package:mdk_kiosk/timetable/data/drift_timetable_repository.dart';
+import 'package:mdk_kiosk/timetable/data/timetable_repository.dart';
 import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
 
 class AppInitializer {
@@ -90,9 +90,7 @@ class AppInitializer {
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
-    final gSheet = GoogleSheets(sheetName: globalData.roomId);
-    await gSheet.initialize();
-    GetIt.I.registerSingleton<GoogleSheets>(gSheet);
+    await _initializeTimetableRepository();
 
     _isInitialized = true;
 
@@ -122,9 +120,7 @@ class AppInitializer {
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
-    final gSheet = GoogleSheets(sheetName: globalData.roomId);
-    await gSheet.reInitialize();
-    GetIt.I.registerSingleton<GoogleSheets>(gSheet);
+    await _initializeTimetableRepository();
 
     _isInitialized = true;
 
@@ -309,5 +305,35 @@ class AppInitializer {
     mqttManager.listen((topic, message) {
       onMqttReceived(ref, topic, message);
     });
+  }
+
+  /// 4. 시간표 저장소 초기화
+  /// activeTimetableSource 설정에 따라 적절한 저장소를 등록합니다.
+  static Future<void> _initializeTimetableRepository() async {
+    final db = GetIt.I<AppDatabase>();
+    final roomId = globalData.roomId;
+
+    switch (activeTimetableSource) {
+      case TimetableSourceType.googleSheets:
+        final gSheet = GoogleSheets(sheetName: roomId);
+        await gSheet.initialize();
+        GetIt.I.registerSingleton<TimetableRepository>(gSheet);
+        print('✅ GoogleSheets 시간표 저장소 등록 완료 (roomId: $roomId)');
+        break;
+
+      case TimetableSourceType.localDb:
+        final repository = DriftTimetableRepository(db: db, roomId: roomId);
+        await repository.initialize();
+        GetIt.I.registerSingleton<TimetableRepository>(repository);
+        GetIt.I.registerSingleton<EditableTimetableRepository>(repository);
+        print('✅ DriftTimetableRepository 저장소 등록 완료 (roomId: $roomId)');
+        break;
+
+      case TimetableSourceType.localServer:
+        throw UnsupportedError(
+          'localServer timetable source is not yet implemented. '
+          'Please use googleSheets or localDb instead.',
+        );
+    }
   }
 }
