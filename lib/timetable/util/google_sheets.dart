@@ -1,14 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gsheets/gsheets.dart';
-import 'package:mdk_kiosk/common/util/data/updaters.dart';
+import 'package:mdk_kiosk/timetable/data/mappers/gsheets_mapper.dart';
+import 'package:mdk_kiosk/timetable/data/timetable_repository.dart';
 import 'package:mdk_kiosk/timetable/model/lecture.dart';
 
-class GoogleSheets {
+/// Google Sheets를 통한 시간표 데이터 저장소 구현
+///
+/// 구글 스프레드시트에서 시간표 데이터를 읽어와 캐싱하고,
+/// 주기적으로 변경사항을 감지하여 동기화합니다.
+class GoogleSheets implements TimetableRepository {
   static const String _spreadSheetId =
-      '18EXhlZ3MJ6_hAroeZW-UjspURgnKPjwS-0xD6byccSA';
+      '1l71ItWpm7zQ5EYC1ib7wBn5uDJhLagO0GRysxBVsmjs';
   static const String _credentialAssetPath =
       'asset/env/credentials_tu_lld.json';
 
@@ -24,46 +28,56 @@ class GoogleSheets {
   // 강의 정보 캐시
   List<Lecture> _lectureCache = [];
 
+  // 이전 캐시 (변경 감지용)
+  List<Lecture> _previousCache = [];
+
   // 강의 정보 캐시 getter
   List<Lecture> get lectureCache => _lectureCache;
 
-  // 구글 시트 초기화 및 강의 캐시 초기화
+  @override
+  bool get supportsBackgroundRefresh => true;
+
+  @override
   Future<void> initialize() async {
     await _ensureAuthInitialized();
     _worksheet = await _getWorksheet(
       await _sheet!.spreadsheet(_spreadSheetId),
       title: sheetName,
     );
-    await updateLectureCache();
+    await _updateLectureCache();
+    _previousCache = List.unmodifiable(_lectureCache);
   }
 
-  // 구글 시트 재초기화 및 강의 캐시 초기화
+  /// 구글 시트 재초기화 및 강의 캐시 초기화
   Future<void> reInitialize() async {
     await _ensureAuthInitialized();
     _worksheet = await _getWorksheet(
       await _sheet!.spreadsheet(_spreadSheetId),
       title: sheetName,
     );
-    await updateLectureCache();
+    await _updateLectureCache();
+    _previousCache = List.unmodifiable(_lectureCache);
   }
 
-  // 현재 시트에서 강의 캐시 업데이트
-  Future<void> updateLectureCache() async {
+  /// 현재 시트에서 강의 캐시 업데이트
+  Future<void> _updateLectureCache() async {
     final rows = await _worksheet!.values.map.allRows(fromRow: 3);
     if (rows == null) {
       _lectureCache = [];
     } else {
-      _lectureCache = rows.map((json) => Lecture.fromGsheets(json)).toList();
+      _lectureCache = rows
+          .map((json) => GsheetsMapper.fromGsheets(json))
+          .toList();
     }
     print('✅ LectureCache 업데이트 완료 (${_lectureCache.length}개)');
   }
 
-  // 강의 변경사항 감지 및 캐시 업데이트, UI 트리거
-  Future<void> compareNFetchLectureCache(WidgetRef ref) async {
+  @override
+  Future<bool> refresh() async {
     final rows = await _worksheet!.values.map.allRows(fromRow: 3);
     final List<Lecture> tempLectureCache = rows == null
         ? []
-        : rows.map((json) => Lecture.fromGsheets(json)).toList();
+        : rows.map((json) => GsheetsMapper.fromGsheets(json)).toList();
 
     final bool isDifferent = !_areLectureListsEqual(
       _lectureCache,
@@ -72,14 +86,16 @@ class GoogleSheets {
 
     if (isDifferent) {
       print('🟢 변경사항 감지됨 → lectureCache 갱신');
+      _previousCache = List.unmodifiable(_lectureCache);
       _lectureCache = tempLectureCache;
-      ref.read(timetableUpdater.notifier).state = DateTime.now();
+      return true;
     } else {
       print('⚪ 변경사항 없음 → 유지');
+      return false;
     }
   }
 
-  // 강의 리스트 비교 (순서 포함)
+  /// 강의 리스트 비교 (순서 포함)
   bool _areLectureListsEqual(List<Lecture> list1, List<Lecture> list2) {
     if (list1.length != list2.length) return false;
     for (int i = 0; i < list1.length; i++) {
@@ -88,7 +104,7 @@ class GoogleSheets {
     return true;
   }
 
-  // 개별 강의 비교
+  /// 개별 강의 비교
   bool _areLecturesEqual(Lecture l1, Lecture l2) {
     return l1.id == l2.id &&
         l1.lectureName == l2.lectureName &&
@@ -101,7 +117,7 @@ class GoogleSheets {
         l1.colorIndex == l2.colorIndex;
   }
 
-  // 구글 시트에서 시트 생성 또는 가져오기
+  /// 구글 시트에서 시트 생성 또는 가져오기
   static Future<Worksheet> _getWorksheet(
     Spreadsheet spreadsheet, {
     required String title,
@@ -123,7 +139,7 @@ class GoogleSheets {
     }
   }
 
-  // 강의 데이터 한 줄 추가
+  /// 강의 데이터 한 줄 추가
   static Future<void> append() async {
     await _worksheet!.values.appendRow(fromColumn: 1, [
       'test1',
@@ -132,7 +148,7 @@ class GoogleSheets {
     ]);
   }
 
-  // 특정 행 데이터 가져오기
+  /// 특정 행 데이터 가져오기
   Future<List<String>> getRow(int row) async {
     late final List<String> values;
     if (_worksheet != null) {
@@ -143,27 +159,32 @@ class GoogleSheets {
     return values;
   }
 
-  // 강의 데이터 삽입
+  /// 강의 데이터 삽입
   Future<void> insertLecture(Lecture lecture) async {
     await _worksheet!.values.map.insertRowByKey(
       lecture.id,
-      lecture.toGsheets(),
+      GsheetsMapper.toGsheets(lecture),
     );
   }
 
-  // 특정 행의 강의 데이터 가져오기
+  /// 특정 행의 강의 데이터 가져오기
   Future<Lecture> fetchLecture(int row) async {
     final Map<String, String> map = await _worksheet!.values.map.row(row);
-    return Lecture.fromGsheets(map);
+    return GsheetsMapper.fromGsheets(map);
   }
 
-  // 강의 전체 리스트 갱신 후 반환
+  /// 강의 전체 리스트 갱신 후 반환
   Future<List<Lecture>> fetchAllLectures() async {
-    await updateLectureCache();
+    await _updateLectureCache();
     return _lectureCache;
   }
 
-  // 오늘 요일에 해당하는 강의 리스트 반환 (시간순 정렬)
+  @override
+  List<Lecture> getLectures() {
+    return List.unmodifiable(_lectureCache);
+  }
+
+  @override
   List<Lecture> getLecturesForToday() {
     final DateTime today = DateTime.now();
     final int weekdayIndex = today.weekday; // 1 (월) ~ 7 (일)
