@@ -6,8 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/util/data/updaters.dart';
 import 'package:mdk_kiosk/multimedia/studio/lecture_box_for_media_box.dart';
+import 'package:mdk_kiosk/timetable/data/timetable_repository.dart';
 import 'package:mdk_kiosk/timetable/model/lecture.dart';
-import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
 
 /// DefaultMediaBox
 /// 📌 오늘의 촬영 스케쥴 표시용 위젯 (MediaBox 화면)
@@ -20,7 +20,7 @@ class DefaultMediaBox extends ConsumerStatefulWidget {
 }
 
 class _DefaultMediaBoxState extends ConsumerState<DefaultMediaBox> {
-  final GoogleSheets gSheet = GetIt.I<GoogleSheets>();
+  final TimetableRepository repository = GetIt.I<TimetableRepository>();
 
   /// 📌 refresh 타이머 (00:00 / 12:00 마다 자동 refresh 예약용)
   Timer? _refreshTimer;
@@ -76,58 +76,58 @@ class _DefaultMediaBoxState extends ConsumerState<DefaultMediaBox> {
     final timetableWatcher = ref.watch(timetableUpdater);
 
     /// 📌 오늘 요일 기준 강의 리스트 가져오기
-    final List<Lecture> lectureList = gSheet.getLecturesForToday();
+    final List<Lecture> lectureList = repository.getLecturesForToday();
 
-    return LayoutBuilder(builder: (context, constraints) {
-      final double mWidth = constraints.maxWidth;
-      final double mHeight = constraints.maxHeight;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double mWidth = constraints.maxWidth;
+        final double mHeight = constraints.maxHeight;
 
-      final double lectureBoxWidth = mWidth * 0.9;
-      final double lectureBoxHeight = 80;
+        final double lectureBoxWidth = mWidth * 0.9;
+        final double lectureBoxHeight = 80;
 
-      return Container(
-        width: mWidth,
-        height: mHeight,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32.0),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            /// 📌 헤더 텍스트
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                '오늘의 강의실 스케쥴',
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.w600,
-                  color: TEXT_COLOR,
+        return Container(
+          width: mWidth,
+          height: mHeight,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(32.0)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              /// 📌 헤더 텍스트
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  '오늘의 강의실 스케쥴',
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    fontWeight: FontWeight.w600,
+                    color: TEXT_COLOR,
+                  ),
                 ),
               ),
-            ),
 
-            /// 📌 강의 리스트 표시 (스크롤 가능)
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  spacing: 16.0,
-                  children: lectureList
-                      .map(
-                        (lecture) => LectureBoxForMediaBox(
-                      lecture: lecture,
-                      width: lectureBoxWidth,
-                      height: lectureBoxHeight,
-                    ),
-                  )
-                      .toList(),
+              /// 📌 강의 리스트 표시 (스크롤 가능)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    spacing: 16.0,
+                    children: lectureList
+                        .map(
+                          (lecture) => LectureBoxForMediaBox(
+                            lecture: lecture,
+                            width: lectureBoxWidth,
+                            height: lectureBoxHeight,
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    });
+            ],
+          ),
+        );
+      },
+    );
   }
 }
