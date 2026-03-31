@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/util/data/updaters.dart';
 import 'package:mdk_kiosk/timetable/timetable_layout.dart';
-import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
+import 'package:mdk_kiosk/timetable/data/timetable_repository.dart';
 
 class Timetable extends ConsumerStatefulWidget {
   const Timetable({super.key});
@@ -15,7 +15,7 @@ class Timetable extends ConsumerStatefulWidget {
 }
 
 class _TimetableState extends ConsumerState<Timetable> {
-  final GoogleSheets gSheet = GetIt.I<GoogleSheets>();
+  final TimetableRepository repository = GetIt.I<TimetableRepository>();
   Timer? _timetableTimer;
 
   @override
@@ -31,12 +31,23 @@ class _TimetableState extends ConsumerState<Timetable> {
   }
 
   void _startTimetableAutoUpdater() {
+    // 백그라운드 새로고침을 지원하지 않는 경우 타이머를 시작하지 않음
+    if (!repository.supportsBackgroundRefresh) {
+      print(
+        'ℹ️ Timetable: Background refresh not supported, skipping auto updater',
+      );
+      return;
+    }
+
     const duration = Duration(minutes: 10); // 원하는 주기
 
     _timetableTimer?.cancel();
 
     _timetableTimer = Timer.periodic(duration, (_) async {
-      await gSheet.compareNFetchLectureCache(ref);
+      final bool changed = await repository.refresh();
+      if (changed) {
+        ref.read(timetableUpdater.notifier).state = DateTime.now();
+      }
     });
 
     print('✅ Timetable Auto Updater started (every ${duration.inMinutes} min)');
@@ -53,13 +64,8 @@ class _TimetableState extends ConsumerState<Timetable> {
     // ✅ timetableUpdater가 업데이트 되면 rebuild 발생
     final timetableWatcher = ref.watch(timetableUpdater);
 
-    // ✅ lectureCache 바로 사용
-    final lectures = gSheet.lectureCache;
-
-    // ✅ 처음 로드 안 된 경우
-    // if (lectures.isEmpty) {
-    //   return Center(child: CircularProgressIndicator());
-    // }
+    // ✅ repository에서 강의 목록 가져오기
+    final lectures = repository.getLectures();
 
     // ✅ 정상 렌더링
     return TimetableLayout(
@@ -68,87 +74,3 @@ class _TimetableState extends ConsumerState<Timetable> {
     );
   }
 }
-
-
-
-
-// import 'dart:async';
-//
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:get_it/get_it.dart';
-// import 'package:mdk_kiosk/common/util/data/global_data.dart';
-// import 'package:mdk_kiosk/common/util/data/updaters.dart';
-// import 'package:mdk_kiosk/timetable/model/lecture.dart';
-// import 'package:mdk_kiosk/timetable/timetable_layout.dart';
-// import 'package:mdk_kiosk/timetable/util/google_sheets_dep.dart';
-//
-// class Timetable extends ConsumerStatefulWidget {
-//   const Timetable({super.key});
-//
-//   @override
-//   ConsumerState<Timetable> createState() => _TimetableState();
-// }
-//
-// class _TimetableState extends ConsumerState<Timetable> {
-//   // Future<List<Lecture>> lectures;
-//   final GoogleSheets gSheet = GetIt.I<GoogleSheets>();
-//   Timer? _timetableTimer;
-//
-//   @override
-//   void initState() {
-//     _startTimetableAutoUpdater();
-//     super.initState();
-//   }
-//
-//   @override
-//   void dispose() {
-//     _stopTimetableAutoUpdater();
-//     super.dispose();
-//   }
-//
-//   void _startTimetableAutoUpdater() {
-//     const duration = Duration(minutes: 10); // 원하는 주기
-//
-//     // 기존 타이머 정지
-//     _timetableTimer?.cancel();
-//
-//     // 새 타이머 시작
-//     _timetableTimer = Timer.periodic(duration, (_) async {
-//       await gSheet.compareNFetchWorksheet(ref);
-//     });
-//   }
-//
-//   void _stopTimetableAutoUpdater() {
-//     _timetableTimer?.cancel();
-//     _timetableTimer = null;
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final timetableWatcher = ref.watch(timetableUpdater);
-//     Future<List<Lecture>> lectures = gSheet.fetchAllLectures();
-//
-//     return FutureBuilder(
-//         future: lectures,
-//         builder: (context, snapshot) {
-//           // 에러체크
-//           if (snapshot.hasError) {
-//             return Center(
-//                 child: Text(
-//                     '에러가 발생했습니다. 관리자에게 문의하세요.\nError: ${snapshot.error.toString()}'));
-//           }
-//
-//           // 데이터 로딩 중
-//           if (snapshot.data == null ||
-//               snapshot.connectionState != ConnectionState.done) {
-//             return Center(child: CircularProgressIndicator());
-//           }
-//
-//           return TimetableLayout(
-//             key: Key(timetableWatcher.toString()),
-//             lectures: snapshot.data!,
-//           );
-//         });
-//   }
-// }
