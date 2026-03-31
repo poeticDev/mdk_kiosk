@@ -5,8 +5,16 @@ import 'package:mdk_kiosk/timetable/model/lecture.dart';
 ///
 /// 메모리 기반으로 동작하며 CRUD 작업을 지원합니다.
 class MockEditableTimetableRepository implements EditableTimetableRepository {
-  final List<Lecture> _lectures = [];
+  final List<Lecture> _lectures;
   int _nextId = 1;
+
+  MockEditableTimetableRepository({List<Lecture>? lectures})
+    : _lectures = lectures ?? [] {
+    // Pre-populated lectures need ID assignment
+    if (lectures != null && lectures.isNotEmpty) {
+      _nextId = lectures.map((l) => l.id).reduce((a, b) => a > b ? a : b) + 1;
+    }
+  }
 
   @override
   List<Lecture> getLectures() => List.unmodifiable(_lectures);
