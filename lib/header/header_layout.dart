@@ -74,6 +74,8 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
 
   // 오토슬라이드 시작
   void _startAutoSlide() {
+    // Listener must be added BEFORE forward() to capture the first status change.
+    _fadeController.addStatusListener(_onStatusChanged);
     _fadeController.forward();
 
     _timer = Timer.periodic(Duration(seconds: 12), (timer) {
@@ -203,7 +205,6 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
       isFading = false;
     } else {
       _startAutoSlide();
-      _fadeController.addStatusListener(_onStatusChanged);
     }
   }
 
