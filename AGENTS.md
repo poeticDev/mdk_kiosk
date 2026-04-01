@@ -22,6 +22,12 @@
 - 위젯 테스트는 Given-When-Then 주석을 붙이고 `pumpWidget` 전후로 기대 상태를 명확히 검증한다.
 - MQTT나 스케줄 연동은 모킹해 결정적 실행을 보장하며, `integration_test/`에서는 주요 사용자 시나리오를 자동화한다.
 
+## rk3399 성능 테스트 및 보고
+- rk3399 기기에서 성능 문제를 재현할 때는 Impeller ON/OFF를 비교해 원인을 분리한다.
+- `flutter run --flavor kiosk -d <device-id>`로 기본 실행(Impeller ON) 후, `flutter run --flavor kiosk -d <device-id> --no-enable-impeller`로 Impeller OFF 실행을 비교한다.
+- Android 성능 이슈 보고 시 반드시 다음 필드를 포함한다: 기기명, Android SDK 버전, WebView 버전, flavor, Impeller ON/OFF 상태.
+- Flutter major/minor 업그레이드 후에는 rk3399에서 `EnableImpeller` 메타데이터 방식이 여전히 유효한지 재검증한다. 업그레이드 직후 ON/OFF 비교 테스트를 수행해 manifest 제어가 정상 동작하는지 확인한다.
+
 ## 커밋 및 PR 가이드
 - 조직 전체에 설정된 글로벌 커밋/PR 컨벤션을 준수한다.
 

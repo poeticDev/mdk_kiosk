@@ -96,3 +96,41 @@ mdk_kiosk
 - **플랫폼**: android-30
 - **빌드 도구**: build-tools 30.0.0
 - **Java 버전**: OpenJDK Runtime Environment (build 21.0.3+-12282718-b509.11)
+
+# rk3399 기기 Impeller 비활성화
+
+## 문제 요약
+
+rk3399 SoC 기기에서 Flutter Impeller 렌더러 활성화 시 UI 버벅임(jank)이 발생한다. `--no-enable-impeller` 플래그로 Impeller를 비활성화하면 증상이 사라진다.
+
+## 적용 범위
+
+- **kiosk flavor**: Impeller 비활성화 적용
+- **playstore flavor**: 변경 없음 (Impeller 활성 상태 유지)
+
+## 개발 실행
+
+rk3399 기기에서 개발용 실행 시 Impeller를 비활성화해야 한다:
+
+```bash
+flutter run --flavor kiosk -d <rk3399-device-id> --no-enable-impeller
+```
+
+## 릴리스 빌드
+
+kiosk flavor 릴리스 빌드는 Android manifest 메타데이터로 Impeller를 비활성화한다. CLI 플래그 없이 빌드한다:
+
+```bash
+flutter build apk --flavor kiosk --release
+```
+
+## 롤백
+
+향후 Flutter 업그레이드나 rk3399 GPU 드라이버 개선으로 Impeller를 다시 활성화하려면:
+
+1. `android/app/src/kiosk/AndroidManifest.xml` 파일 삭제
+2. 또는 해당 파일에서 `<meta-data android:name="io.flutter.embedding.android.EnableImpeller" android:value="false" />` 제거
+
+## Flutter 업그레이드 시 주의사항
+
+Flutter major/minor 업그레이드 후 rk3399 기기에서 Impeller ON/OFF 동작을 다시 검증해야 한다. Impeller 구현이 변경되면 manifest 메타데이터 방식이 유효하지 않을 수 있다.
