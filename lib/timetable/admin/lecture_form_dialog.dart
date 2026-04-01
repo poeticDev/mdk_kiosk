@@ -141,27 +141,15 @@ class _LectureFormDialogState extends State<LectureFormDialog> {
                   hintText: '강의명을 입력하세요',
                   initialValue: _lectureNameController.text,
                   onChanged: (value) => _lectureNameController.text = value,
-                  errorText: null,
-                ),
-                const SizedBox(height: 16),
-
-                // 강의명 필수 검증을 위한 숨겨진 TextFormField
-                TextFormField(
-                  initialValue: _lectureNameController.text,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
                       return '강의명은 필수 입력 항목입니다.';
                     }
                     return null;
                   },
-                  style: const TextStyle(fontSize: 0), // 숨김
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.zero,
-                    border: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
+                  errorText: null,
                 ),
+                const SizedBox(height: 16),
 
                 // 교수명 (선택)
                 CustomTextFormField(

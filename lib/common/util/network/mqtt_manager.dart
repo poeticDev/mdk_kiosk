@@ -5,7 +5,8 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
 import 'package:mdk_kiosk/common/util/data/updaters.dart';
-import 'package:mdk_kiosk/common/util/network/mqtt_connection_status.dart' hide MqttConnectionState;
+import 'package:mdk_kiosk/common/util/network/mqtt_connection_status.dart'
+    hide MqttConnectionState;
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/header/model/studio_state_model.dart';
 import 'package:mdk_kiosk/header/util/state_manager.dart';
@@ -63,9 +64,6 @@ void onMqttReceived(WidgetRef ref, String topic, String message) {
 void mqttDataHandler(WidgetRef ref, String dataJson) {
   final dynamic parsedData = jsonDecode(dataJson);
 
-  print('✅parsedData: $parsedData');
-  print('✅parsedData type: ${parsedData.runtimeType}');
-
   // if (parsedData is Map<String, dynamic>) {
   //   final DateTime? timeRecord = _parseTimeRecord(parsedData['timeRecord']);
   //
@@ -90,7 +88,6 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
 
     for (dynamic e in parsedData) {
       final dataMap = Map<String, dynamic>.from(e);
-      print('dataMap: $dataMap');
       if (dataMap['key'].contains('message'))
         messageMapList.add(dataMap);
       else if (dataMap['key'].contains('mediaItem'))
@@ -100,14 +97,12 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
     }
 
     if (messageMapList.isNotEmpty) {
-      print('✅ 메세지 아이템 수신');
       ref
           .read(messageControllerProvider.notifier)
           .messageDataHandler(messageDataList: messageMapList);
     }
 
     if (mediaMapList.isNotEmpty) {
-      print('✅ 미디어 아이템 수신');
       MediaController().mediaDataHandler(
         mediaDataList: mediaMapList,
         ref: ref,

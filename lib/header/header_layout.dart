@@ -20,11 +20,7 @@ class HeaderLayout extends ConsumerStatefulWidget {
   final double padding;
   late final double fontSize;
 
-  HeaderLayout({
-    super.key,
-    this.height = 80.0,
-    this.padding = 32.0,
-  }) {
+  HeaderLayout({super.key, this.height = 80.0, this.padding = 32.0}) {
     fontSize = height * 0.36;
   }
 
@@ -196,34 +192,38 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
     }
   }
 
+  void _updateAutoSlideIfNeeded(int newChildrenCount) {
+    if (childrenCount == newChildrenCount) return;
+    childrenCount = newChildrenCount;
+
+    _stopAutoSlide();
+    if (childrenCount! <= 1) {
+      _fadeController.removeStatusListener(_onStatusChanged);
+      // 1개 이하면 슬라이드 불필요
+      isFading = false;
+    } else {
+      _startAutoSlide();
+      _fadeController.addStatusListener(_onStatusChanged);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final messageWatcher = ref.watch(messageControllerProvider);
 
     final children = _childList(messageWatcher);
 
-    // 헤더 수에 따라 오토슬라이드 설정
+    // 헤더 수에 따라 오토슬라이드 설정 (build에서 setState를 직접 호출하지 않도록 지연)
     if (childrenCount == null || childrenCount != children.length) {
-      childrenCount = children.length;
-
-      _stopAutoSlide();
-      if (childrenCount! <= 1) {
-        setState(() {
-          _fadeController.removeStatusListener(_onStatusChanged);
-          // 1개 이하면 슬라이드 불필요
-          isFading = false;
-        });
-      } else {
-        _startAutoSlide();
-        _fadeController.addStatusListener(_onStatusChanged);
-      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _updateAutoSlideIfNeeded(children.length);
+        }
+      });
     }
 
     if (childrenCount == 1) {
-      return SizedBox(
-        height: widget.height,
-        child: children[0],
-      );
+      return SizedBox(height: widget.height, child: children[0]);
     }
 
     return GestureDetector(
@@ -260,7 +260,7 @@ class _HeaderLayoutState extends ConsumerState<HeaderLayout>
               ),
               // SimpleMeters(),
               // SizedBox(width: 220, child: StateIndicator(fontSize: widget.fontSize)),
-              SimpleClock(fontSize: widget.fontSize)
+              SimpleClock(fontSize: widget.fontSize),
             ],
           ),
         ),

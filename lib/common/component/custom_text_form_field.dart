@@ -11,6 +11,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool obscureText;
   final bool autofocus;
   final ValueChanged<String> onChanged;
+  final String? Function(String?)? validator;
 
   const CustomTextFormField({
     super.key,
@@ -23,6 +24,7 @@ class CustomTextFormField extends StatefulWidget {
     this.obscureText = false,
     this.autofocus = false,
     required this.onChanged,
+    this.validator,
   });
 
   @override
@@ -58,11 +60,14 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.title != null)
-          Text(widget.title!,
-              style: TextStyle(
-                  color: TEXT_COLOR,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w600)),
+          Text(
+            widget.title!,
+            style: TextStyle(
+              color: TEXT_COLOR,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         if (widget.title != null) SizedBox(height: 6.0),
         TextFormField(
           controller: _controller,
@@ -72,21 +77,16 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           obscureText: widget.obscureText,
           autofocus: widget.autofocus,
           onChanged: widget.onChanged,
+          validator: widget.validator,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(16),
             hintText: widget.hintText,
             errorText: widget.errorText,
-            hintStyle: TextStyle(
-              color: BODY_TEXT_COLOR,
-              fontSize: 14.0,
-            ),
+            hintStyle: TextStyle(color: BODY_TEXT_COLOR, fontSize: 14.0),
             fillColor: INPUT_BG_COLOR,
             filled: true,
             border: OutlineInputBorder(
-              borderSide: BorderSide(
-                color: INPUT_BORDER_COLOR,
-                width: 1.0,
-              ),
+              borderSide: BorderSide(color: INPUT_BORDER_COLOR, width: 1.0),
             ),
           ),
         ),
@@ -94,4 +94,3 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     );
   }
 }
-

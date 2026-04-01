@@ -25,15 +25,13 @@ class MessageContainer extends StatefulWidget {
   @override
   State<MessageContainer> createState() => _MessageContainerState();
 
-  static ColorFilter? _getColorFilter(
-      Color? color,
-      BlendMode colorBlendMode,
-      ) =>
+  static ColorFilter? _getColorFilter(Color? color, BlendMode colorBlendMode) =>
       color == null ? null : ColorFilter.mode(color, colorBlendMode);
 }
 
 class _MessageContainerState extends State<MessageContainer> {
   late final ScrollController _scrollController;
+  bool _isScrolling = false;
 
   @override
   void initState() {
@@ -42,6 +40,38 @@ class _MessageContainerState extends State<MessageContainer> {
   }
 
   // 스크롤이 가능해지면(메세지가 길어지면) 자동 스크롤
+  void _startScrollingIfNeeded() {
+    if (widget.isFading || _isScrolling) return;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      _scrollController.jumpTo(0);
+      if (_scrollController.hasClients) {
+        final maxScroll = _scrollController.position.maxScrollExtent;
+        if (maxScroll > 0) {
+          _isScrolling = true;
+          await Future.delayed(Duration(seconds: 3));
+          if (!mounted) return;
+          await _scrollController.animateTo(
+            maxScroll,
+            duration: Duration(seconds: 5),
+            curve: Curves.linear,
+          );
+          _isScrolling = false;
+        }
+      }
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant MessageContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 메시지 내용이 변경되면 스크롤 다시 시작
+    if (oldWidget.messageData.content != widget.messageData.content) {
+      _isScrolling = false;
+      _startScrollingIfNeeded();
+    }
+  }
 
   @override
   void dispose() {
@@ -51,25 +81,6 @@ class _MessageContainerState extends State<MessageContainer> {
 
   @override
   Widget build(BuildContext context) {
-    void _startScrollingIfNeeded() {
-      if (widget.isFading) return;
-
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        _scrollController.jumpTo(0);
-        if (_scrollController.hasClients) {
-          final maxScroll = _scrollController.position.maxScrollExtent;
-          if (maxScroll > 0) {
-            await Future.delayed(Duration(seconds: 3));
-            await _scrollController.animateTo(
-              maxScroll,
-              duration: Duration(seconds: 5),
-              curve: Curves.linear,
-            );
-          }
-        }
-      });
-    }
-
     _startScrollingIfNeeded();
 
     final color = widget.messageData.color;
@@ -99,8 +110,9 @@ class _MessageContainerState extends State<MessageContainer> {
                             child: Text(
                               widget.messageData.content,
                               style: TITLE_TEXT_STYLE.copyWith(
-                                  fontSize: widget.fontSize,
-                                  color: WHITE_TEXT_COLOR),
+                                fontSize: widget.fontSize,
+                                color: WHITE_TEXT_COLOR,
+                              ),
                             ),
                           ),
                         ),
@@ -123,7 +135,9 @@ class _MessageContainerState extends State<MessageContainer> {
                 height: widget.height,
                 width: widget.height,
                 colorFilter: MessageContainer._getColorFilter(
-                    hslDark.toColor(), BlendMode.srcIn),
+                  hslDark.toColor(),
+                  BlendMode.srcIn,
+                ),
               ),
               Positioned(
                 top: 16,

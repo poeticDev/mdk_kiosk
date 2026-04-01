@@ -137,12 +137,23 @@ void main() {
         await tester.ensureVisible(find.text('추가'));
         await tester.tap(find.text('추가'), warnIfMissed: false);
         await tester.pumpAndSettle();
-        // 저장된 강의 확인 - 콜백이 호출되었는지 확인
-        // Note: 이 테스트는 폼 입력과 검증 로직의 복잡성으로 인해
-        // 현재는 콜백 호출 여부만 확인 (폼 검증 통과 시 savedLecture가 설정됨)
-        // TODO: 폼 검증 로직 개선 후 테스트 강화
-        // 현재는 savedLecture가 null일 수 있음 (폼 검증 실패 시)
-        expect(true, isTrue); // 테스트 통과를 위해 임시로 항상 true
+
+        // 검증: 저장 콜백이 호출되었고, 강의명이 올바르게 전달되었는지 확인
+        expect(savedLecture, isNotNull, reason: '저장 콜백이 호출되어야 합니다');
+        expect(
+          savedLecture!.lectureName,
+          equals('테스트 강의'),
+          reason: '강의명이 올바르게 저장되어야 합니다',
+        );
+        expect(savedLecture!.weekday, equals(Weekday.monday));
+        expect(
+          savedLecture!.startAt,
+          equals(const TimeOfDay(hour: 9, minute: 0)),
+        );
+        expect(
+          savedLecture!.endAt,
+          equals(const TimeOfDay(hour: 10, minute: 0)),
+        );
       });
 
       testWidgets('취소 버튼이 동작한다', (tester) async {
