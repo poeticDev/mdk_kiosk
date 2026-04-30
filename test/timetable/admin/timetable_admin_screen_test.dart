@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
 import 'package:mdk_kiosk/timetable/admin/timetable_admin_screen.dart';
 import 'package:mdk_kiosk/timetable/data/drift_timetable_repository.dart';
@@ -263,6 +264,84 @@ void main() {
 
       // 로딩 후 빈 상태 확인
       expect(find.text('등록된 강의가 없습니다'), findsOneWidget);
+    });
+
+    testWidgets('뒤로 가기 버튼이 AppBar에 존재한다', (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(child: MaterialApp(home: TimetableAdminScreen())),
+      );
+
+      await tester.pumpAndSettle();
+
+      // 뒤로 가기 버튼 확인
+      expect(find.byIcon(Icons.arrow_back), findsOneWidget);
+    });
+
+    testWidgets('뒤로 가기 버튼 클릭 시 네비게이션 스택이 있으면 pop된다', (tester) async {
+      final router = GoRouter(
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (context, state) =>
+                const Scaffold(body: Center(child: Text('Home'))),
+          ),
+          GoRoute(
+            path: '/admin',
+            builder: (context, state) => const TimetableAdminScreen(),
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(child: MaterialApp.router(routerConfig: router)),
+      );
+
+      await tester.pumpAndSettle();
+
+      // admin 화면으로 이동 (스택에 쌓기)
+      router.go('/admin');
+      await tester.pumpAndSettle();
+
+      // 뒤로 가기 버튼 클릭
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+
+      // 홈 화면으로 돌아왔는지 확인
+      expect(find.text('Home'), findsOneWidget);
+    });
+
+    testWidgets('뒤로 가기 버튼 클릭 시 네비게이션 스택이 없으면 /home으로 이동한다', (tester) async {
+      String? navigatedPath;
+      final router = GoRouter(
+        routes: [
+          GoRoute(
+            path: '/home',
+            builder: (context, state) {
+              navigatedPath = state.matchedLocation;
+              return const Scaffold(body: Center(child: Text('Home')));
+            },
+          ),
+          GoRoute(
+            path: '/admin/timetable',
+            builder: (context, state) => const TimetableAdminScreen(),
+          ),
+        ],
+        initialLocation: '/admin/timetable',
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(child: MaterialApp.router(routerConfig: router)),
+      );
+
+      await tester.pumpAndSettle();
+
+      // 직접 진입 상태에서 뒤로 가기 버튼 클릭
+      await tester.tap(find.byIcon(Icons.arrow_back));
+      await tester.pumpAndSettle();
+
+      // /home으로 이동했는지 확인
+      expect(navigatedPath, equals('/home'));
+      expect(find.text('Home'), findsOneWidget);
     });
   });
 }

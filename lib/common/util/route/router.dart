@@ -26,12 +26,13 @@ final router = GoRouter(
           path: 'test',
           builder: (context, state) => DefaultLayout(midChild: TestScreen()),
         ),
-        GoRoute(
-          path: 'admin/timetable',
-          builder: (context, state) =>
-              DefaultLayout(midChild: TimetableAdminScreen()),
-        ),
       ],
+    ),
+    // 관리자 화면은 SplashScreen의 자식이 아닌 최상위 라우트로 분리
+    // SplashScreen의 자동 네비게이션 영향을 받지 않도록 함
+    GoRoute(
+      path: '/admin/timetable',
+      builder: (context, state) => const TimetableAdminScreen(),
     ),
   ],
 );

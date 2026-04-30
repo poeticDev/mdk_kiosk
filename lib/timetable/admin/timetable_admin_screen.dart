@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/common/util/data/updaters.dart';
@@ -31,7 +32,6 @@ class _TimetableAdminScreenState extends ConsumerState<TimetableAdminScreen> {
   @override
   void initState() {
     super.initState();
-    print('🟢 TimetableAdminScreen: initState called!');
     _loadLectures();
   }
 
@@ -189,15 +189,11 @@ class _TimetableAdminScreenState extends ConsumerState<TimetableAdminScreen> {
 
   @override
   void dispose() {
-    print('🔴 TimetableAdminScreen: dispose called!');
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(
-      '🟡 TimetableAdminScreen: build called! lectures count: ${_lectures.length}',
-    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('시간표 관리'),
@@ -207,6 +203,17 @@ class _TimetableAdminScreenState extends ConsumerState<TimetableAdminScreen> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
+          icon: const Icon(Icons.arrow_back, color: TEXT_COLOR),
+          tooltip: '뒤로 가기',
+        ),
         actions: [
           IconButton(
             onPressed: _loadLectures,

@@ -198,10 +198,7 @@ class _DefaultLayoutState extends State<DefaultLayout> {
                               right: 8,
                               child: GestureDetector(
                                 onTap: () {
-                                  print(
-                                    '🔘 Settings button tapped! Navigating to /admin/timetable',
-                                  );
-                                  context.go('/admin/timetable');
+                                  context.push('/admin/timetable');
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
