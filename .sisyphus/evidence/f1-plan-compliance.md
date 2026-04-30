@@ -398,3 +398,39 @@ All Tasks 1-9 have been implemented according to plan specifications:
 All Must Have items are satisfied. All Must NOT Have guardrails are respected. The minor test failures are due to test setup issues (missing ProviderScope wrapper) and do not indicate implementation problems.
 
 The implementation is ready for production use.
+
+
+---
+
+# 2026-03-31 — Timetable Admin Standalone Route Plan Compliance Audit
+
+## Verdict
+**NOT plan-compliant**
+
+## Scope reviewed
+- Plan: `.sisyphus/plans/timetable-admin-standalone-route.md`
+- Diff baseline: `git diff HEAD~4`
+- Files: `lib/common/util/route/router.dart`, `lib/common/layout/default_layout.dart`, `lib/timetable/admin/timetable_admin_screen.dart`
+- Tests: `test/common/util/route/router_timetable_admin_test.dart`, `test/common/layout/default_layout_timetable_admin_entry_test.dart`, `test/timetable/admin/timetable_admin_screen_test.dart`, `test/timetable/admin/timetable_admin_local_db_flow_test.dart`, `test/timetable/admin/timetable_admin_validation_test.dart`
+
+## What passed
+- Task 2 implementation is present: `/admin/timetable` now builds `const TimetableAdminScreen()` and settings entry uses `context.push('/admin/timetable')`.
+- Task 3 implementation is present: admin AppBar has back handling with `Navigator.canPop(context)` then `context.pop()` else `context.go('/home')`.
+- Guardrails appear respected in code: `/home` and `/test` still use `DefaultLayout`, no `ShellRoute` exists in `lib/**`, editor-mode wiring in `default_layout.dart` is unchanged, and CRUD code in `timetable_admin_screen.dart` is unchanged aside from back-navigation wiring.
+- Current `flutter test` passes (`167` tests).
+
+## Blocking findings
+1. **Task 1 is not fully satisfied by the current regression tests.**
+   - `test/common/util/route/router_timetable_admin_test.dart` still contains placeholder expectations and comments such as `RED TESTS` / `PENDING`, and only checks route existence or non-null builders instead of proving standalone rendering or fallback behavior.
+   - `test/common/layout/default_layout_timetable_admin_entry_test.dart` does not verify the settings button uses `push()` or navigates to `/admin/timetable`; it only checks editor-mode booleans.
+   - `test/timetable/admin/timetable_admin_screen_test.dart` names one case as a pop test, but it drives navigation with `router.go('/admin')`, which does not establish the pushed back-stack required by the plan.
+2. **Task 4 is not satisfied because full regression did not pass cleanly.**
+   - `flutter test` passed, but `flutter analyze --fatal-infos` currently reports 74 issues and therefore does not meet the plan's verification requirement.
+3. **Historical evidence files are stale/misleading.**
+   - Existing evidence logs still include debug-print output and overstate verification quality, so they should not be used as proof that Task 1 and Task 4 were completed as written.
+
+## Bounded remediation list
+1. Replace the placeholder router tests with widget-level assertions that `/admin/timetable` renders `TimetableAdminScreen` directly, while `/home` and `/test` still render through `DefaultLayout`.
+2. Add a `DefaultLayout` widget/navigation test that taps the hidden settings entry and proves stack-based navigation to `/admin/timetable` via push semantics.
+3. Fix the admin back-navigation test to enter admin via push semantics, then assert real pop-to-home behavior; keep the direct-entry `/home` fallback test.
+4. Make `flutter analyze --fatal-infos` pass, then rerun and refresh evidence for the focused suite plus full `flutter test` and analyze.

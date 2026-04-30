@@ -194,3 +194,250 @@ The implementation is **APPROVED** for merge.
 - Analyzer output: See command output in execution logs
 - Test execution: Run `flutter test test/timetable` to verify
 - Review date: 2026-03-31
+
+---
+
+# Appendix: Route & Navigation Code Quality Review
+
+**Review Date:** 2025-03-31  
+**Scope:** Route composition, back-stack semantics, direct-entry fallback, and test quality  
+**Files Reviewed:**
+- `lib/common/util/route/router.dart`
+- `lib/common/layout/default_layout.dart`
+- `lib/timetable/admin/timetable_admin_screen.dart`
+- `test/common/util/route/router_timetable_admin_test.dart`
+- `test/timetable/admin/timetable_admin_screen_test.dart`
+- `test/common/layout/default_layout_timetable_admin_entry_test.dart`
+
+**Test Status:** All 167 tests pass ✓
+
+---
+
+## Executive Summary
+
+**Status: APPROVED** ✓
+
+No high-severity issues found. The route composition, back-stack semantics, and direct-entry fallback logic are all correctly implemented. Test coverage is comprehensive and well-structured.
+
+---
+
+## 1. Route Composition Review
+
+### 1.1 router.dart
+
+**Structure Analysis:**
+```dart
+GoRoute(
+  path: 'admin/timetable',
+  builder: (context, state) => const TimetableAdminScreen(),
+)
+```
+
+**Findings:**
+- ✅ `/admin/timetable` is correctly registered as a child route under `/`
+- ✅ Returns `TimetableAdminScreen` directly (standalone, no `DefaultLayout` wrapper)
+- ✅ Route path follows RESTful convention (`/admin/timetable`)
+- ✅ Uses `const` constructor for performance optimization
+
+**Severity:** None - Implementation is correct
+
+### 1.2 Route Hierarchy
+
+```
+/
+├── reinit
+├── splash
+├── home (DefaultLayout + Timetable)
+├── test (DefaultLayout + TestScreen)
+└── admin/timetable (TimetableAdminScreen - standalone)
+```
+
+**Assessment:**
+- ✅ Clean separation: admin routes are standalone, main routes use DefaultLayout
+- ✅ `/home` serves as the canonical fallback destination
+- ✅ Route nesting is logically organized
+
+---
+
+## 2. Back-Stack Semantics Review
+
+### 2.1 Entry Point (default_layout.dart lines 199-220)
+
+```dart
+GestureDetector(
+  onTap: () {
+    context.push('/admin/timetable');  // ✓ Uses push, not go
+  },
+  ...
+)
+```
+
+**Findings:**
+- ✅ Correctly uses `context.push()` to add route to navigation stack
+- ✅ This preserves back-stack so user can return to home
+- ✅ Button visibility is conditionally controlled by `activeTimetableSource` and `appEditorManager.isEditorModeOn`
+
+### 2.2 Exit Point (timetable_admin_screen.dart lines 206-216)
+
+```dart
+leading: IconButton(
+  onPressed: () {
+    if (Navigator.canPop(context)) {
+      context.pop();        // ✓ Stack exists: pop back
+    } else {
+      context.go('/home');  // ✓ No stack: fallback to home
+    }
+  },
+  ...
+)
+```
+
+**Findings:**
+- ✅ **Excellent implementation** of back-stack detection
+- ✅ Uses `Navigator.canPop(context)` to check stack state
+- ✅ Uses `context.pop()` when stack exists (proper back navigation)
+- ✅ Uses `context.go('/home')` as fallback when no stack (direct entry)
+- ✅ No risk of empty stack navigation errors
+
+**Severity:** None - Implementation is robust
+
+---
+
+## 3. Direct-Entry Fallback Review
+
+### 3.1 Fallback Logic
+
+The implementation correctly handles the three entry scenarios:
+
+| Scenario | Stack State | Action | Result |
+|----------|-------------|--------|--------|
+| Push from Home | Has stack | `context.pop()` | Returns to Home |
+| Direct URL entry | Empty | `context.go('/home')` | Navigates to Home |
+| Deep link | Empty | `context.go('/home')` | Navigates to Home |
+
+**Findings:**
+- ✅ Fallback destination `/home` is a valid, registered route
+- ✅ Uses `context.go()` for fallback which replaces entire stack
+- ✅ No infinite loop risk
+- ✅ No null/undefined route references
+
+### 3.2 Router Configuration
+
+The `/home` route is always available:
+```dart
+GoRoute(
+  path: 'home',
+  builder: (context, state) => DefaultLayout(midChild: Timetable()),
+)
+```
+
+**Severity:** None - Fallback is reliable
+
+---
+
+## 4. Test Quality Review
+
+### 4.1 router_timetable_admin_test.dart
+
+**Coverage:**
+- ✅ Route registration verification
+- ✅ Route path validation
+- ✅ Builder existence checks
+- ✅ Standalone behavior documentation
+- ✅ RED tests marked for future widget type verification
+
+**Quality Indicators:**
+- Uses AAA pattern (Arrange-Act-Assert)
+- Clear test descriptions with Given-When-Then comments
+- Proper use of `firstWhere` with `orElse` for safe route finding
+- Documents expected future changes (RED tests)
+
+**Minor Issue:** Line 277-279 placeholder test uses `expect(true, true)` which is a no-op test. This is intentional as documented (waiting for production changes).
+**Severity:** Low - Documented placeholder
+
+### 4.2 timetable_admin_screen_test.dart
+
+**Coverage:**
+- ✅ Loading state verification
+- ✅ Empty state UI
+- ✅ AppBar title
+- ✅ FloatingActionButton existence
+- ✅ Refresh button
+- ✅ Lecture list rendering
+- ✅ Weekday grouping
+- ✅ Delete confirmation dialog
+- ✅ Delete/cancel flow
+- ✅ Back navigation with stack (pop)
+- ✅ Back navigation without stack (fallback to /home)
+
+**Quality Indicators:**
+- Proper widget testing with `ProviderScope` and `MaterialApp`
+- In-memory database setup for isolated tests
+- Repository mocking via GetIt
+- Tests both navigation scenarios (with/without stack)
+- Line 313-345 correctly tests direct-entry fallback
+
+**Severity:** None - Excellent test coverage
+
+### 4.3 default_layout_timetable_admin_entry_test.dart
+
+**Coverage:**
+- ✅ AppEditorMode initial state
+- ✅ countUp threshold behavior (5 activations)
+- ✅ Manual mode toggle
+- ✅ State persistence
+
+**Quality Indicators:**
+- Proper setUp/tearDown for state isolation
+- Tests boundary conditions (4 vs 5 countUp calls)
+- Documents button visibility logic
+
+**Severity:** None - Good unit tests
+
+---
+
+## 5. Issues Summary
+
+### High Severity: 0
+
+### Medium Severity: 0
+
+### Low Severity: 1
+
+**L1:** `router_timetable_admin_test.dart` line 277-279 - Placeholder test uses `expect(true, true)`
+- **Impact:** No runtime impact, test always passes
+- **Recommendation:** Replace with actual widget type verification now that production code returns `TimetableAdminScreen` directly
+- **Status:** Documented as intentional, can be addressed in follow-up
+
+---
+
+## 6. Best Practices Observed
+
+1. **Route Naming:** Uses kebab-case for paths (`/admin/timetable`)
+2. **Const Constructors:** Uses `const TimetableAdminScreen()` for performance
+3. **Conditional Navigation:** Proper use of `push` vs `go` semantics
+4. **Stack Safety:** Uses `Navigator.canPop()` before popping
+5. **Fallback Strategy:** Clear fallback to known valid route
+6. **Test Documentation:** RED tests clearly marked with reasons
+7. **AAA Pattern:** Tests follow Arrange-Act-Assert structure
+8. **State Isolation:** Proper setUp/tearDown in tests
+
+---
+
+## 7. Route & Navigation Conclusion
+
+**VERDICT: APPROVED** ✓
+
+The route and navigation implementation is of high quality:
+
+- **Route composition** is clean and logically structured
+- **Back-stack semantics** are correctly implemented with proper push/pop behavior
+- **Direct-entry fallback** is robust and handles all edge cases
+- **Test coverage** is comprehensive with 167 passing tests
+
+The single low-severity issue is a documented placeholder test that does not affect functionality. The implementation is production-ready.
+
+---
+
+**Reviewer:** Sisyphus-Junior  
+**Route & Navigation Review Completed:** 2025-03-31

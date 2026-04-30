@@ -1,0 +1,4 @@
+build.yaml
+coverage/lcov.info
+prompts/dart_devtools_2025-11-19_11_00_26.216.json
+Note: These are tracked but NOT in cleanup scope

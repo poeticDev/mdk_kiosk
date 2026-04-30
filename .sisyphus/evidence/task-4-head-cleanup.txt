@@ -1,0 +1,20 @@
+=== Tracked Files Removed ===
+
+=== Git Status ===
+ M .gitignore
+ M coverage/lcov.info
+D  prompts/test_results/adb_shell_top_-H-p.txt
+D  prompts/test_results/dart_devtools_2025-11-26_13_55_10.398.json
+D  prompts/test_results/dart_devtools_2025-11-26_13_59_18.367.json
+D  prompts/test_results/dumpsys_gfxinfo.txt
+?? .sisyphus/boulder.json
+?? .sisyphus/evidence/task-1-baseline.txt
+?? .sisyphus/evidence/task-1-scope-guard.txt
+?? .sisyphus/evidence/task-2-docs-drift.diff
+?? .sisyphus/evidence/task-2-docs.txt
+?? .sisyphus/evidence/task-3-ignore.txt
+?? .sisyphus/evidence/task-4-head-cleanup.txt
+?? .sisyphus/plans/prompts-test-results.md
+
+=== Out-of-scope Guard ===
+coverage/lcov.info modified:  1 file changed, 3064 insertions(+), 1155 deletions(-)

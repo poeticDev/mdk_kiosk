@@ -1,0 +1,19 @@
+{
+  "active_plan": null,
+  "started_at": "2026-04-01T08:43:07.894Z",
+  "closed_at": "2026-04-01T09:37:00.000Z",
+  "status": "closed",
+  "closeout_method": "environment-blocked-partial",
+  "closeout_reason": "Java Runtime 부재 및 adb 연결 디바이스 부재로 인해 merged manifest/build 검증과 디바이스 QA 미수행",
+  "completed_tasks": ["T1", "T3", "T4", "T6"],
+  "blocked_tasks": ["T2", "T5", "F2", "F3"],
+  "commit_hash": "2702e20",
+  "session_ids": [
+    "ses_2c2b70b86ffeON5VdhInQWhOO9",
+    "ses_2b7c600eaffeUB3Q5fCVCl3b16",
+    "ses_2b7a2114cffekfbge8zO7f2T3k"
+  ],
+  "plan_name": "rk3399-impeller-disable-rollout",
+  "agent": "atlas",
+  "task_sessions": {}
+}

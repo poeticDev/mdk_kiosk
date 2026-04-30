@@ -1,0 +1,7 @@
+=== Future Files Ignored ===
+.gitignore:53:prompts/test_results/	prompts/test_results/dart_devtools_2099-01-01_00_00_00.000.json
+.gitignore:53:prompts/test_results/	prompts/test_results/future_capture.txt
+
+=== Root Files NOT Ignored (Guard) ===
+Root devtools JSON: Not ignored - PASS
+Markdown docs: Not ignored - PASS
