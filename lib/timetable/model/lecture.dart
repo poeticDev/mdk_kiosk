@@ -60,7 +60,10 @@ class Lecture {
     TimeOfDay startAt;
     try {
       startAt = getTimeFromGsheets(json['startAt'] ?? '');
-      if (startAt.hour < 0 || startAt.hour > 23 || startAt.minute < 0 || startAt.minute > 59) {
+      if (startAt.hour < 0 ||
+          startAt.hour > 23 ||
+          startAt.minute < 0 ||
+          startAt.minute > 59) {
         throw Exception();
       }
     } catch (_) {
@@ -73,7 +76,10 @@ class Lecture {
     TimeOfDay endAt;
     try {
       endAt = getTimeFromGsheets(json['endAt'] ?? '');
-      if (endAt.hour < 0 || endAt.hour > 23 || endAt.minute < 0 || endAt.minute > 59) {
+      if (endAt.hour < 0 ||
+          endAt.hour > 23 ||
+          endAt.minute < 0 ||
+          endAt.minute > 59) {
         throw Exception();
       }
     } catch (_) {
@@ -100,7 +106,9 @@ class Lecture {
 
     // 디버그 로그 출력
     if (hasError) {
-      print('⚠️ Lecture 파싱 오류 발생 (id: $id, name: "$lectureName") → 오류 필드: $errorFields');
+      print(
+        '⚠️ Lecture 파싱 오류 발생 (id: $id, name: "$lectureName") → 오류 필드: $errorFields',
+      );
     }
 
     return Lecture(
@@ -129,13 +137,36 @@ class Lecture {
 
   /// String → TimeOfDay 변환 (스프레드시트 시간 문자열 파싱)
   static TimeOfDay getTimeFromGsheets(String string) {
-    final splitedString = string.split(':');
-    final timeOfDay = TimeOfDay(
-      hour: int.tryParse(splitedString[0]) ?? 0,
-      minute: int.tryParse(splitedString.length > 1 ? splitedString[1] : '0') ?? 0,
-    );
+    final String trimmedString = string.trim();
 
-    return timeOfDay;
+    if (trimmedString.contains(':')) {
+      final List<String> splitedString = trimmedString.split(':');
+      return TimeOfDay(
+        hour: int.tryParse(splitedString[0]) ?? 0,
+        minute:
+            int.tryParse(splitedString.length > 1 ? splitedString[1] : '0') ??
+            0,
+      );
+    }
+
+    final double? serialTime = double.tryParse(trimmedString);
+    if (serialTime == null) {
+      throw FormatException('지원하지 않는 시간 형식입니다: $string');
+    }
+    if (serialTime < 0) {
+      throw FormatException('음수 시간 시리얼은 지원하지 않습니다: $string');
+    }
+
+    final double normalizedTime = serialTime >= 1
+        ? serialTime - serialTime.floorToDouble()
+        : serialTime;
+    final int totalMinutes = (normalizedTime * 24 * 60).round();
+    final int normalizedMinutes = totalMinutes % (24 * 60);
+
+    return TimeOfDay(
+      hour: normalizedMinutes ~/ 60,
+      minute: normalizedMinutes % 60,
+    );
   }
 
   /// TimeOfDay → String 변환 (스프레드시트 저장용)
