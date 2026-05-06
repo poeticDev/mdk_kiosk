@@ -8,40 +8,49 @@ class LectureBoxForMediaBox extends StatelessWidget {
   final double width;
   final double height;
 
-  const LectureBoxForMediaBox(
-      {super.key,
-      required this.lecture,
-      required this.width,
-      required this.height});
+  const LectureBoxForMediaBox({
+    super.key,
+    required this.lecture,
+    required this.width,
+    required this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(minHeight: height),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
       width: width,
-      height: height,
+      // height: height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32.0),
+        borderRadius: BorderRadius.circular(24.0),
         color: LECTURE_BG_COLORS[lecture.colorIndex],
       ),
       child: Wrap(
         alignment: WrapAlignment.start,
         runAlignment: WrapAlignment.center,
-        spacing: 20.0,
-        runSpacing: 16.0,
+        runSpacing: 4.0,
         children: [
-          SizedBox(width: 8.0),
           Text(
             '${lecture.startAt.hour.toString().padLeft(2, '0')}:${lecture.startAt.minute.toString().padLeft(2, '0')} ~ ${lecture.endAt.hour}:${lecture.endAt.minute.toString().padLeft(2, '0')}',
-            style: TITLE_TEXT_STYLE,
+            style: TITLE_TEXT_STYLE.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-          Text(
-            lecture.instructorName,
-            style: TITLE_TEXT_STYLE,
+          Padding(
+            padding: const EdgeInsets.only(left: 20.0),
+            child: Text(
+              '${lecture.instructorName}    ${lecture.lectureName}',
+              style: TITLE_TEXT_STYLE.copyWith(fontWeight: FontWeight.w500),
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-          Text(
-            lecture.lectureName,
-            style: TITLE_TEXT_STYLE,
-          )
+          // Text(
+          //   lecture.lectureName,
+          //   style: TITLE_TEXT_STYLE,
+          // )
         ],
       ),
     );
