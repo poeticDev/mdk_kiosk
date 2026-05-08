@@ -11,6 +11,11 @@ import 'package:uuid/uuid.dart';
 
 const KIOSK_NAME = 'wall_hub';
 
+/// Injectable dispatch observer for testing (minimal seam)
+/// Called when a notifier method is dispatched: (notifierName, dataList)
+typedef DispatchObserver = void Function(String notifierName, List<Map<String, dynamic>> dataList);
+DispatchObserver? dispatchObserver;
+
 const List<String> SUBSCRIBING_TOPICS = [
   'node-mdk/+/$KIOSK_NAME',
   'node-mdk/states',
@@ -67,10 +72,17 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
     final List<Map<String, dynamic>> mediaMapList = [];
 
     for (dynamic e in parsedData) {
+      if (e is! Map) {
+        continue;
+      }
+
       final dataMap = Map<String, dynamic>.from(e);
-      if (dataMap['key'].contains('messageItem'))
+      final key = dataMap['key']?.toString() ?? '';
+      if (key.contains('messageItem')) {
         messageMapList.add(dataMap);
-      else if (dataMap['key'].contains('mediaItem')) mediaMapList.add(dataMap);
+      } else if (key.contains('mediaItem')) {
+        mediaMapList.add(dataMap);
+      }
     }
 
     if(messageMapList.isNotEmpty) {
@@ -78,14 +90,15 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
       ref.read(messageControllerProvider.notifier).messageDataHandler(
         messageDataList: messageMapList,
       );
+      dispatchObserver?.call('messageController', messageMapList);
     }
 
     if(mediaMapList.isNotEmpty) {
       print('✅ 미디어 아이템 수신');
-      MediaController().mediaDataHandler(
+      ref.read(mediaControllerProvider.notifier).mediaDataHandler(
         mediaDataList: mediaMapList,
-        // timeRecord: timeRecord,
       );
+      dispatchObserver?.call('mediaController', mediaMapList);
     }
 
   }

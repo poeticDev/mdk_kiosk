@@ -15,6 +15,9 @@ part 'drift.g.dart';
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
+  /// Constructor for testing - accepts a custom QueryExecutor
+  AppDatabase.forTesting(QueryExecutor executor) : super(executor);
+
   static AppDatabase? _instance;
 
   static AppDatabase get instance {
@@ -120,7 +123,15 @@ class AppDatabase extends _$AppDatabase {
   }
 
   /// 4. MediaItem
-  Future<List<MediaItemData>> getMediaItemDataList() => select(mediaItem).get();
+  /// Returns media items ordered by orderNum ascending, then key ascending for deterministic reads
+  Future<List<MediaItemData>> getMediaItemDataList() {
+    return (select(mediaItem)
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.orderNum, mode: OrderingMode.asc),
+            (t) => OrderingTerm(expression: t.key, mode: OrderingMode.asc),
+          ]))
+        .get();
+  }
 
   // MediaItem 생성
   Future<int> createMediaItems(MediaItemCompanion data) =>
@@ -149,23 +160,30 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 
+  /// Performs full-snapshot sync of media items in a single transaction.
+  /// - Empty snapshot clears all media items
+  /// - Delete/upsert operations are atomic
   Future<void> syncMediaItems(List<MediaItemCompanion> newItems) async {
-    // 현재 DB에 저장된 모든 URL 가져오기
-    final currentItems = await getMediaItemDataList();
-    final currentUrls = currentItems.map((e) => e.url).toSet();
+    await transaction(() async {
+      // 현재 DB에 저장된 모든 URL 가져오기
+      final currentItems = await getMediaItemDataList();
+      final currentUrls = currentItems.map((e) => e.url).toSet();
 
-    // 새로 받은 데이터의 URL 추출
-    final newUrls = newItems.map((e) => e.url.value).toSet();
+      // 새로 받은 데이터의 URL 추출
+      final newUrls = newItems.map((e) => e.url.value).toSet();
 
-    // 삭제할 URL 목록 (기존에는 있는데, 새 데이터엔 없는 것들)
-    final urlsToDelete = currentUrls.difference(newUrls);
+      // 삭제할 URL 목록 (기존에는 있는데, 새 데이터엔 없는 것들)
+      final urlsToDelete = currentUrls.difference(newUrls);
 
-    // 삭제 작업
-    await (delete(mediaItem)..where((tbl) => tbl.url.isIn(urlsToDelete))).go();
+      // 삭제 작업 (빈 스냅샷인 경우 모든 URL이 삭제 대상)
+      if (urlsToDelete.isNotEmpty) {
+        await (delete(mediaItem)..where((tbl) => tbl.url.isIn(urlsToDelete))).go();
+      }
 
-    // 새 데이터는 upsert로 삽입/수정
-    for (final item in newItems) {
-      await upsertMediaItemByUrl(item);
-    }
+      // 새 데이터는 upsert로 삽입/수정
+      for (final item in newItems) {
+        await upsertMediaItemByUrl(item);
+      }
+    });
   }
 }
