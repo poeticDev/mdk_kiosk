@@ -691,7 +691,7 @@ class $PageTable extends Page with TableInfo<$PageTable, PageData> {
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, true,
+      'id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
@@ -746,7 +746,7 @@ class $PageTable extends Page with TableInfo<$PageTable, PageData> {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return PageData(
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
       pageName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}page_name'])!,
       pageNum: attachedDatabase.typeMapping
@@ -762,20 +762,19 @@ class $PageTable extends Page with TableInfo<$PageTable, PageData> {
 
 class PageData extends DataClass implements Insertable<PageData> {
   /// 1) 식별 아이디
-  final int? id;
+  final int id;
 
   /// 2) 페이지 명
   final String pageName;
 
   /// 3) 페이지 번호
   final int pageNum;
-  const PageData({this.id, required this.pageName, required this.pageNum});
+  const PageData(
+      {required this.id, required this.pageName, required this.pageNum});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<int>(id);
-    }
+    map['id'] = Variable<int>(id);
     map['page_name'] = Variable<String>(pageName);
     map['page_num'] = Variable<int>(pageNum);
     return map;
@@ -783,7 +782,7 @@ class PageData extends DataClass implements Insertable<PageData> {
 
   PageCompanion toCompanion(bool nullToAbsent) {
     return PageCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       pageName: Value(pageName),
       pageNum: Value(pageNum),
     );
@@ -793,7 +792,7 @@ class PageData extends DataClass implements Insertable<PageData> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PageData(
-      id: serializer.fromJson<int?>(json['id']),
+      id: serializer.fromJson<int>(json['id']),
       pageName: serializer.fromJson<String>(json['pageName']),
       pageNum: serializer.fromJson<int>(json['pageNum']),
     );
@@ -802,18 +801,14 @@ class PageData extends DataClass implements Insertable<PageData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int?>(id),
+      'id': serializer.toJson<int>(id),
       'pageName': serializer.toJson<String>(pageName),
       'pageNum': serializer.toJson<int>(pageNum),
     };
   }
 
-  PageData copyWith(
-          {Value<int?> id = const Value.absent(),
-          String? pageName,
-          int? pageNum}) =>
-      PageData(
-        id: id.present ? id.value : this.id,
+  PageData copyWith({int? id, String? pageName, int? pageNum}) => PageData(
+        id: id ?? this.id,
         pageName: pageName ?? this.pageName,
         pageNum: pageNum ?? this.pageNum,
       );
@@ -847,7 +842,7 @@ class PageData extends DataClass implements Insertable<PageData> {
 }
 
 class PageCompanion extends UpdateCompanion<PageData> {
-  final Value<int?> id;
+  final Value<int> id;
   final Value<String> pageName;
   final Value<int> pageNum;
   const PageCompanion({
@@ -874,7 +869,7 @@ class PageCompanion extends UpdateCompanion<PageData> {
   }
 
   PageCompanion copyWith(
-      {Value<int?>? id, Value<String>? pageName, Value<int>? pageNum}) {
+      {Value<int>? id, Value<String>? pageName, Value<int>? pageNum}) {
     return PageCompanion(
       id: id ?? this.id,
       pageName: pageName ?? this.pageName,
@@ -963,8 +958,6 @@ class $ButtonTable extends Button with TableInfo<$ButtonTable, ButtonData> {
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
-  static const VerificationMeta _commandMeta =
-      const VerificationMeta('command');
   @override
   late final GeneratedColumnWithTypeConverter<Command, String> command =
       GeneratedColumn<String>('command', aliasedName, false,
@@ -1033,7 +1026,6 @@ class $ButtonTable extends Button with TableInfo<$ButtonTable, ButtonData> {
       context.handle(_columnMeta,
           column.isAcceptableOrUnknown(data['column']!, _columnMeta));
     }
-    context.handle(_commandMeta, const VerificationResult.success());
     if (data.containsKey('query_string')) {
       context.handle(
           _queryStringMeta,
@@ -1418,7 +1410,6 @@ class $MediaItemTable extends MediaItem
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant('미디어 이름'));
-  static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumnWithTypeConverter<MediaType, String> type =
       GeneratedColumn<String>('type', aliasedName, false,
@@ -1435,7 +1426,6 @@ class $MediaItemTable extends MediaItem
   late final GeneratedColumn<String> fileName = GeneratedColumn<String>(
       'file_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _fromMeta = const VerificationMeta('from');
   @override
   late final GeneratedColumnWithTypeConverter<MediaFrom, String> from =
       GeneratedColumn<String>('from', aliasedName, false,
@@ -1443,7 +1433,6 @@ class $MediaItemTable extends MediaItem
               requiredDuringInsert: false,
               defaultValue: const Constant('gDrive'))
           .withConverter<MediaFrom>($MediaItemTable.$converterfrom);
-  static const VerificationMeta _fitMeta = const VerificationMeta('fit');
   @override
   late final GeneratedColumnWithTypeConverter<BoxFit?, String> fit =
       GeneratedColumn<String>('fit', aliasedName, true,
@@ -1505,7 +1494,6 @@ class $MediaItemTable extends MediaItem
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     }
-    context.handle(_typeMeta, const VerificationResult.success());
     if (data.containsKey('url')) {
       context.handle(
           _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
@@ -1516,8 +1504,6 @@ class $MediaItemTable extends MediaItem
       context.handle(_fileNameMeta,
           fileName.isAcceptableOrUnknown(data['file_name']!, _fileNameMeta));
     }
-    context.handle(_fromMeta, const VerificationResult.success());
-    context.handle(_fitMeta, const VerificationResult.success());
     if (data.containsKey('order_num')) {
       context.handle(_orderNumMeta,
           orderNum.isAcceptableOrUnknown(data['order_num']!, _orderNumMeta));
@@ -2271,12 +2257,12 @@ typedef $$BasicInfoTableProcessedTableManager = ProcessedTableManager<
     BasicInfoData,
     PrefetchHooks Function()>;
 typedef $$PageTableCreateCompanionBuilder = PageCompanion Function({
-  Value<int?> id,
+  Value<int> id,
   required String pageName,
   required int pageNum,
 });
 typedef $$PageTableUpdateCompanionBuilder = PageCompanion Function({
-  Value<int?> id,
+  Value<int> id,
   Value<String> pageName,
   Value<int> pageNum,
 });
@@ -2292,7 +2278,7 @@ final class $$PageTableReferences
 
   $$ButtonTableProcessedTableManager get buttonRefs {
     final manager = $$ButtonTableTableManager($_db, $_db.button)
-        .filter((f) => f.page.id($_item.id));
+        .filter((f) => f.page.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_buttonRefsTable($_db));
     return ProcessedTableManager(
@@ -2420,7 +2406,7 @@ class $$PageTableTableManager extends RootTableManager<
           createComputedFieldComposer: () =>
               $$PageTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<int?> id = const Value.absent(),
+            Value<int> id = const Value.absent(),
             Value<String> pageName = const Value.absent(),
             Value<int> pageNum = const Value.absent(),
           }) =>
@@ -2430,7 +2416,7 @@ class $$PageTableTableManager extends RootTableManager<
             pageNum: pageNum,
           ),
           createCompanionCallback: ({
-            Value<int?> id = const Value.absent(),
+            Value<int> id = const Value.absent(),
             required String pageName,
             required int pageNum,
           }) =>
@@ -2451,7 +2437,7 @@ class $$PageTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (buttonRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<PageData, $PageTable, ButtonData>(
                         currentTable: table,
                         referencedTable:
                             $$PageTableReferences._buttonRefsTable(db),
@@ -2511,8 +2497,10 @@ final class $$ButtonTableReferences
       db.page.createAlias($_aliasNameGenerator(db.button.page, db.page.id));
 
   $$PageTableProcessedTableManager get page {
+    final $_column = $_itemColumn<int>('page')!;
+
     final manager = $$PageTableTableManager($_db, $_db.page)
-        .filter((f) => f.id($_item.page));
+        .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_pageTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(

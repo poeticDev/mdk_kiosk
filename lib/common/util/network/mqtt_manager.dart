@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
-import 'package:mdk_kiosk/common/util/data/updaters.dart';
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/multimedia/util/media_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -12,6 +11,16 @@ import 'package:uuid/uuid.dart';
 
 const KIOSK_NAME = 'wall_hub';
 
+typedef DispatchObserver = void Function(
+  String notifierName,
+  List<Map<String, dynamic>> dataList,
+);
+
+DispatchObserver? dispatchObserver;
+
+const String _LOCAL_BROKER_IP = '192.168.219.166';
+const bool _USE_LOCAL_BROKER = false;
+
 const List<String> SUBSCRIBING_TOPICS = [
   'node-mdk/+/$KIOSK_NAME',
   'node-mdk/states',
@@ -19,8 +28,8 @@ const List<String> SUBSCRIBING_TOPICS = [
 
 final mqttManagerProvider = Provider<MqttManager>((ref) {
   return MqttManager(
-    broker: globalData.serverIp,
-    port: globalData.serverMqttPort,
+    broker: _USE_LOCAL_BROKER ? _LOCAL_BROKER_IP : globalData.serverIp,
+    port: _USE_LOCAL_BROKER ? 1883 : globalData.serverMqttPort,
     userName: globalData.serverMqttId,
     password: globalData.serverMqttPassword,
     clientId: Uuid().v4(),
@@ -71,12 +80,12 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
     for (dynamic e in parsedData) {
       final dataMap = Map<String, dynamic>.from(e);
       print('dataMap: $dataMap');
-      if (dataMap['key'].contains('message'))
+      final key = dataMap['key']?.toString() ?? '';
+      if (key.contains('messageItem')) {
         messageMapList.add(dataMap);
-      else if (dataMap['key'].contains('mediaItem'))
+      } else if (key.contains('mediaItem')) {
         mediaMapList.add(dataMap);
-      else if (dataMap['key'] == 'update')
-        updateTimetable(ref);
+      }
     }
 
     if (messageMapList.isNotEmpty) {
@@ -84,13 +93,15 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
       ref.read(messageControllerProvider.notifier).messageDataHandler(
             messageDataList: messageMapList,
           );
+      dispatchObserver?.call('messageController', messageMapList);
     }
 
     if (mediaMapList.isNotEmpty) {
       print('✅ 미디어 아이템 수신');
-      MediaController().mediaDataHandler(mediaDataList: mediaMapList, ref: ref
-          // timeRecord: timeRecord,
+      ref.read(mediaControllerProvider.notifier).mediaDataHandler(
+            mediaDataList: mediaMapList,
           );
+      dispatchObserver?.call('mediaController', mediaMapList);
     }
   }
 }
@@ -170,7 +181,7 @@ class MqttManager {
   }
 
   /// MQTT 서버 연결
-  Future<bool> connect(WidgetRef ref) async {
+  Future<bool> connect() async {
     final connMessage = MqttConnectMessage()
         .withClientIdentifier(clientId)
         .authenticateAs(userName, password)

@@ -14,7 +14,6 @@ import 'package:mdk_kiosk/common/util/data/initial/initial_media_item.dart';
 import 'package:mdk_kiosk/common/util/kiosk.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
-import 'package:mdk_kiosk/multimedia/util/download_manager.dart';
 import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
 
 class AppInitializer {
@@ -82,7 +81,7 @@ class AppInitializer {
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
     await openMqttManager(ref);
-    // subscribeTopics(ref);
+    subscribeTopics(ref);
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
@@ -294,7 +293,7 @@ class AppInitializer {
     print('MqttManager를 오픈 중입니다...');
     try {
       final mqttManager = ref.read(mqttManagerProvider);
-      await mqttManager.connect(ref);
+      await mqttManager.connect();
     } catch (e) {
       print('❌ MQTT 연결 실패: $e');
     }

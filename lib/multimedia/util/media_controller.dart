@@ -1,50 +1,37 @@
-// import 'package:riverpod_annotation/riverpod_annotation.dart';
-//
-// part 'media_controller.g.dart';
-//
-// @Riverpod(keepAlive: true)
-// class MediaController extends _$MediaController {
-//   Map<String, String> get _initialState {
-//     return {};
-//   }
-// }
-//
+import 'dart:convert';
 
 import 'package:drift/drift.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mdk_kiosk/common/util/data/drift.dart';
-import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart' show BoxFit;
 import 'package:mdk_kiosk/common/util/data/model/media_item.dart';
-import 'package:mdk_kiosk/common/util/data/updaters.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class MediaController {
-  /// 싱글턴 패턴
-  static final MediaController _instance = MediaController._internal();
-  DateTime lastModified = _nowKST();
+part 'media_controller.g.dart';
 
-  factory MediaController() => _instance;
+@Riverpod(keepAlive: true)
+class MediaController extends _$MediaController {
+  AppDatabase get _db => GetIt.I<AppDatabase>();
+  Future<void> _mediaSyncQueue = Future.value();
+  List<Map<String, dynamic>>? _pendingMediaDataList;
+  int _latestQueuedMediaSyncId = 0;
 
-  MediaController._internal();
+  @override
+  Future<List<MediaItemData>> build() async {
+    return _db.getMediaItemDataList();
+  }
 
-  final AppDatabase db = GetIt.I<AppDatabase>();
-
-  /// App -> [MQTT] -> Server
-  // BoxFit을 문자열로 변환하는 헬퍼 메서드
   String? boxFitToString(BoxFit? fit) {
     if (fit == null) return null;
-    return fit.toString().split('.').last; // BoxFit.cover -> cover
+    return fit.toString().split('.').last;
   }
 
-// MediaType을 문자열로 변환하는 헬퍼 메서드
   String mediaTypeToString(MediaType type) {
-    return type.toString().split('.').last; // MediaType.image -> image
+    return type.toString().split('.').last;
   }
 
-// MediaFrom을 문자열로 변환하는 헬퍼 메서드
   String mediaFromToString(MediaFrom from) {
-    return from.toString().split('.').last; // MediaFrom.gDrive -> gDrive
+    return from.toString().split('.').last;
   }
 
   Map<String, dynamic> mediaItemDataToJson(MediaItemData data) {
@@ -65,7 +52,7 @@ class MediaController {
     final String timeRecord = _nowKST().toString();
     final Map<String, dynamic> formattedData = {
       "timeRecord": timeRecord,
-      "mediaData": mediaItemDataList,
+      "mediaData": mediaItemDataList.map((data) => mediaItemDataToJson(data)).toList(),
     };
 
     return jsonEncode(formattedData);
@@ -85,93 +72,114 @@ class MediaController {
   BoxFit? stringToBoxFit(String? value) {
     if (value == null) return null;
     return BoxFit.values.firstWhere(
-            (e) => e.toString().split('.').last == value,
-        orElse: () => BoxFit.cover); // 기본값 cover
+      (e) => e.toString().split('.').last == value,
+      orElse: () => BoxFit.cover,
+    );
   }
 
   MediaType stringToMediaType(String value) {
-    return MediaType.values
-        .firstWhere((e) => e.toString().split('.').last == value);
+    return MediaType.values.firstWhere((e) => e.toString().split('.').last == value);
   }
 
   MediaFrom stringToMediaFrom(String value) {
-    return MediaFrom.values
-        .firstWhere((e) => e.toString().split('.').last == value);
+    return MediaFrom.values.firstWhere((e) => e.toString().split('.').last == value);
   }
 
-// 실제 Companion 변환 메서드
-//   MediaItemCompanion jsonToCompanion(Map<String, dynamic> json) {
-//     return MediaItemCompanion(
-//       key: Value(json['key'] as String),
-//       title: Value(json['title'] as String),
-//       type: Value(stringToMediaType(json['type'] as String)),
-//       url: Value(json['url'] as String),
-//       fileName: Value(json['fileName'] as String?),
-//       from: Value(stringToMediaFrom(json['from'] as String)),
-//       fit: Value(stringToBoxFit(json['fit'] as String?)),
-//       orderNum: Value(json['orderNum'] as int),
-//     );
-//   }
-
-  List<MediaItemCompanion> jsonToCompanionList(
-      List<Map<String, dynamic>> jsonList) {
+  List<MediaItemCompanion> jsonToCompanionList(List<Map<String, dynamic>> jsonList) {
     return jsonList.map((json) {
-      DateTime lastUpdated = DateTime.parse(json['lastUpdated']);
+      final parsedDate = json['lastUpdated'] != null
+          ? DateTime.tryParse(json['lastUpdated'] as String)
+          : null;
+
+      final key = _requireNonEmptyString(json, 'key');
+      final title = _requireNonEmptyString(json, 'title');
+      final type = stringToMediaType(_requireNonEmptyString(json, 'type'));
+      final url = _requireNonEmptyString(json, 'url');
+      final from = stringToMediaFrom(_requireNonEmptyString(json, 'from'));
+
       return MediaItemCompanion(
-        key: Value(json['key'] ?? 'media key'),
-        title: Value(json['title'] ?? '미디어 이름'),
-        type: Value(MediaType.values.byName(json['type'])),
-        url: Value(json['url']),
-        fileName: Value(json['fileName']),
-        from: Value(MediaFrom.values.byName(json['from'] ?? 'gDrive')),
+        key: Value(key),
+        title: Value(title),
+        type: Value(type),
+        url: Value(url),
+        fileName: Value(json['fileName'] as String?),
+        from: Value(from),
         fit: json['fit'] != null
-            ? Value(BoxFit.values.byName(json['fit']))
+            ? Value(stringToBoxFit(json['fit'] as String))
             : const Value.absent(),
-        orderNum: Value(_intParser(json['orderNum'])),
-        lastUpdated: Value(lastUpdated),
-        isDead: Value(json['isDead']),
+        orderNum: Value(_requireInt(json, 'orderNum')),
+        lastUpdated: parsedDate != null ? Value(parsedDate) : const Value.absent(),
       );
     }).toList();
   }
 
-  int _intParser(dynamic data) {
-    if (data == null) return 999;
-
-    late final int result;
-    try {
-      result = int.tryParse(data)!;
-    } catch (e) {
-      result = data;
+  String _requireNonEmptyString(Map<String, dynamic> json, String fieldName) {
+    final value = json[fieldName]?.toString().trim();
+    if (value == null || value.isEmpty) {
+      throw FormatException('Missing required media field: $fieldName');
     }
 
-    return result;
+    return value;
   }
 
-  /// MediaItemData 핸들링
-  void mediaDataHandler(
-      {required List<Map<String, dynamic>> mediaDataList,
-      required WidgetRef ref}) {
-    // 최신 데이터가 아니면 무시
-    // if (lastModified.isAfter(timeRecord)) {
-    //   print('✅ 최신 미디어아이템 데이터가 아닙니다');
-    //   return;
-    // } else {
-    //   lastModified = timeRecord;
-    // }
-
-    // MediaItemCompanion 변환
-    final List<MediaItemCompanion> mediaItemCompanionList =
-    jsonToCompanionList(mediaDataList);
-
-    // MediaItem 동기화
-    for (MediaItemCompanion mediaItemCompanion in mediaItemCompanionList) {
-      db.upsertMediaItemByUrl(mediaItemCompanion);
+  int _requireInt(Map<String, dynamic> json, String fieldName) {
+    final value = json[fieldName];
+    final parsed = value == null ? null : int.tryParse(value.toString());
+    if (parsed == null) {
+      throw FormatException('Invalid required media field: $fieldName');
     }
 
-    updateMediaItems(ref);
+    return parsed;
+  }
+
+  Future<void> mediaDataHandler({required List<Map<String, dynamic>> mediaDataList}) async {
+    _pendingMediaDataList = mediaDataList.map((item) => Map<String, dynamic>.from(item)).toList(growable: false);
+    _latestQueuedMediaSyncId++;
+
+    _mediaSyncQueue = _mediaSyncQueue.then((_) => _drainPendingMediaSyncs());
+    await _mediaSyncQueue;
+  }
+
+  Future<void> _drainPendingMediaSyncs() async {
+    while (true) {
+      final pendingMediaDataList = _pendingMediaDataList;
+      if (pendingMediaDataList == null) {
+        return;
+      }
+
+      _pendingMediaDataList = null;
+      final syncId = _latestQueuedMediaSyncId;
+      final lastGoodState = state.valueOrNull ?? [];
+
+      try {
+        final mediaItemCompanionList = jsonToCompanionList(pendingMediaDataList);
+        await _db.syncMediaItems(mediaItemCompanionList);
+        final freshState = await _db.getMediaItemDataList();
+
+        if (_hasNewerQueuedMediaSync(syncId)) {
+          print('MediaController: newer media snapshot queued, skipping stale state publish for sync $syncId');
+          continue;
+        }
+
+        state = AsyncValue.data(freshState);
+        print('MediaController: synced ${mediaItemCompanionList.length} items, state now has ${freshState.length} items');
+      } catch (e) {
+        if (_hasNewerQueuedMediaSync(syncId)) {
+          print('MediaController: stale sync failed - $e, newer snapshot already queued');
+          continue;
+        }
+
+        print('MediaController: sync failed - $e, preserving last good state (${lastGoodState.length} items)');
+        state = AsyncValue.data(lastGoodState);
+      }
+    }
+  }
+
+  bool _hasNewerQueuedMediaSync(int syncId) {
+    return _pendingMediaDataList != null && syncId != _latestQueuedMediaSyncId;
   }
 
   static DateTime _nowKST() {
-    return DateTime.now().toUtc().add(Duration(hours: 9));
+    return DateTime.now().toUtc().add(const Duration(hours: 9));
   }
 }

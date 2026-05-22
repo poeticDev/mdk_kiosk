@@ -162,7 +162,7 @@ class AppDatabase extends _$AppDatabase {
     final newUrls = newItems.map((e) => e.url.value).toSet();
 
     // 삭제할 URL 목록 (기존에는 있는데, 새 데이터엔 없는 것들)
-    final urlsToDelete = currentUrls.difference(newUrls) ?? {};
+    final urlsToDelete = currentUrls.difference(newUrls);
 
     // 삭제 작업
     await (delete(mediaItem)..where((tbl) => tbl.url.isIn(urlsToDelete))).go();
