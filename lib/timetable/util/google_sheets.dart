@@ -11,11 +11,15 @@ class GoogleSheets {
   GoogleSheets({required this.sheetName});
 
   Future<Map<String, dynamic>> loadCredentials() async {
+    print('[Timetable][GoogleSheets] loadCredentials() start. sheetName=$sheetName');
     final jsonString = await rootBundle.loadString('asset/env/credentials.json');
-    return jsonDecode(jsonString);
+    final credentials = jsonDecode(jsonString) as Map<String, dynamic>;
+    print(
+        '[Timetable][GoogleSheets] loadCredentials() done. project_id=${credentials['project_id']}, client_email=${credentials['client_email']}');
+    return credentials;
   }
 
-  static late final _credentials;
+  static late final Map<String, dynamic> _credentials;
 
   // r'''
   //   {
@@ -37,19 +41,37 @@ class GoogleSheets {
   static Worksheet? _worksheet; // 스프레드시트 중 작업 대상 시트
 
   Future<void> initialize() async {
-    _credentials = await loadCredentials();
+    print('[Timetable][GoogleSheets] initialize() start. sheetName=$sheetName');
+    try {
+      _credentials = await loadCredentials();
 
-    _worksheet = await _getWorksheet(
-      await _sheet.spreadsheet(_spreadSheetId),
-      title: sheetName.toString(),
-    );
+      _worksheet = await _getWorksheet(
+        await _sheet.spreadsheet(_spreadSheetId),
+        title: sheetName.toString(),
+      );
+      print(
+          '[Timetable][GoogleSheets] initialize() done. worksheetTitle=${_worksheet?.title}, sheetName=$sheetName');
+    } catch (e, stackTrace) {
+      print('[Timetable][GoogleSheets] initialize() failed for sheetName=$sheetName: $e');
+      print(stackTrace);
+      rethrow;
+    }
   }
 
   Future<void> reInitialize() async {
-    _worksheet = await _getWorksheet(
-      await _sheet.spreadsheet(_spreadSheetId),
-      title: sheetName.toString(),
-    );
+    print('[Timetable][GoogleSheets] reInitialize() start. sheetName=$sheetName');
+    try {
+      _worksheet = await _getWorksheet(
+        await _sheet.spreadsheet(_spreadSheetId),
+        title: sheetName.toString(),
+      );
+      print(
+          '[Timetable][GoogleSheets] reInitialize() done. worksheetTitle=${_worksheet?.title}, sheetName=$sheetName');
+    } catch (e, stackTrace) {
+      print('[Timetable][GoogleSheets] reInitialize() failed for sheetName=$sheetName: $e');
+      print(stackTrace);
+      rethrow;
+    }
   }
 
   /// 먼저 시트를 생성하고, 이미 있을 경우는 해당 시트를 가져온다.
@@ -58,6 +80,7 @@ class GoogleSheets {
     required String title,
   }) async {
     try {
+      print('[Timetable][GoogleSheets] _getWorksheet() creating worksheet: $title');
       final worksheet = await spreadsheet.addWorksheet(title);
       await worksheet.values.insertRow(1, [
         'id',
@@ -68,39 +91,69 @@ class GoogleSheets {
         'endAt',
         'colorIndex'
       ]);
+      print('[Timetable][GoogleSheets] _getWorksheet() created worksheet: ${worksheet.title}');
       return worksheet;
     } catch (e) {
-      return spreadsheet.worksheetByTitle(title)!;
+      print('[Timetable][GoogleSheets] _getWorksheet() fallback to existing worksheet for $title. error=$e');
+      final worksheet = spreadsheet.worksheetByTitle(title);
+      if (worksheet == null) {
+        throw StateError(
+            '[Timetable][GoogleSheets] _getWorksheet() could not find worksheet: $title');
+      }
+      print('[Timetable][GoogleSheets] _getWorksheet() using existing worksheet: ${worksheet.title}');
+      return worksheet;
     }
   }
 
   /// appendRow는 insert처럼 덮어씌우기가 아니라, 아래 로우에 차곡차곡 insert 된다.
   static Future<void> append() async {
+    print('[Timetable][GoogleSheets] append() start');
     await _worksheet!.values
         .appendRow(fromColumn: 1, ['test1', 'test2', 'test3']);
+    print('[Timetable][GoogleSheets] append() done');
   }
 
   Future<List<String>> getRow(int row) async {
+    print('[Timetable][GoogleSheets] getRow() start. row=$row');
     late final List<String> values;
     if (_worksheet != null) values = await _worksheet!.values.row(row);
+    print('[Timetable][GoogleSheets] getRow() done. row=$row');
 
     return values;
   }
 
   Future<void> insertLecture(Lecture lecture) async {
+    print('[Timetable][GoogleSheets] insertLecture() start. lectureId=${lecture.id}, name=${lecture.lectureName}');
     await _worksheet!.values.map
         .insertRowByKey(lecture.id, lecture.toGsheets());
+    print('[Timetable][GoogleSheets] insertLecture() done. lectureId=${lecture.id}');
   }
 
   Future<Lecture> fetchLecture(int row) async {
+    print('[Timetable][GoogleSheets] fetchLecture() start. row=$row');
     final map = await _worksheet!.values.map.row(row);
-
-    return Lecture.fromGsheets(map);
+    final lecture = Lecture.fromGsheets(map);
+    print('[Timetable][GoogleSheets] fetchLecture() done. row=$row, lectureId=${lecture.id}');
+    return lecture;
   }
 
   Future<List<Lecture>> fetchAllLectures() async {
-    final rows = await _worksheet!.values.map.allRows(fromRow: 3);
-    if (rows == null) return [];
-    return rows.map((json) => Lecture.fromGsheets(json)).toList();
+    print('[Timetable][GoogleSheets] fetchAllLectures() start. sheetName=$sheetName');
+    try {
+      final rows = await _worksheet!.values.map.allRows(fromRow: 3);
+      if (rows == null) {
+        print('[Timetable][GoogleSheets] fetchAllLectures() no rows found. sheetName=$sheetName');
+        return [];
+      }
+
+      print('[Timetable][GoogleSheets] fetchAllLectures() rows fetched: ${rows.length}');
+      final lectures = rows.map((json) => Lecture.fromGsheets(json)).toList();
+      print('[Timetable][GoogleSheets] fetchAllLectures() done. lectureCount=${lectures.length}');
+      return lectures;
+    } catch (e, stackTrace) {
+      print('[Timetable][GoogleSheets] fetchAllLectures() failed. sheetName=$sheetName, error=$e');
+      print(stackTrace);
+      rethrow;
+    }
   }
 }

@@ -1,8 +1,5 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mdk_kiosk/common/util/data/updaters.dart';
-import 'package:riverpod/riverpod.dart';
 import 'package:mdk_kiosk/common/const/colors.dart';
 import 'package:mdk_kiosk/common/const/style.dart';
 import 'package:mdk_kiosk/timetable/component/lecture_box.dart';
@@ -17,12 +14,12 @@ const weekendRowLengths = {
   WeekendOption.included: 7,
 };
 
-class TimetableLayout extends ConsumerWidget {
-  int columnLength;
-  WeekendOption weekendOption;
+class TimetableLayout extends StatelessWidget {
+  final int columnLength;
+  final WeekendOption weekendOption;
   final List<Lecture> lectures;
 
-  TimetableLayout({
+  const TimetableLayout({
     this.columnLength = 10,
     this.weekendOption = WeekendOption.none,
     super.key,
@@ -30,7 +27,7 @@ class TimetableLayout extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, ref) {
+  Widget build(BuildContext context) {
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
