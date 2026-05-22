@@ -11,8 +11,12 @@ class GoogleSheets {
   GoogleSheets({required this.sheetName});
 
   Future<Map<String, dynamic>> loadCredentials() async {
+    print('[Timetable][GoogleSheets] Loading credentials asset for sheet: $sheetName');
     final jsonString = await rootBundle.loadString('asset/env/credentials.json');
-    return jsonDecode(jsonString);
+    final credentials = jsonDecode(jsonString) as Map<String, dynamic>;
+    print(
+        '[Timetable][GoogleSheets] Credentials loaded. project_id=${credentials['project_id']}, client_email=${credentials['client_email']}');
+    return credentials;
   }
 
   static late final _credentials;
@@ -37,19 +41,37 @@ class GoogleSheets {
   static Worksheet? _worksheet; // 스프레드시트 중 작업 대상 시트
 
   Future<void> initialize() async {
-    _credentials = await loadCredentials();
+    print('[Timetable][GoogleSheets] initialize() start. sheetName=$sheetName');
+    try {
+      _credentials = await loadCredentials();
 
-    _worksheet = await _getWorksheet(
-      await _sheet.spreadsheet(_spreadSheetId),
-      title: sheetName.toString(),
-    );
+      _worksheet = await _getWorksheet(
+        await _sheet.spreadsheet(_spreadSheetId),
+        title: sheetName.toString(),
+      );
+      print(
+          '[Timetable][GoogleSheets] initialize() done. worksheetTitle=${_worksheet?.title}, sheetName=$sheetName');
+    } catch (e, stackTrace) {
+      print('[Timetable][GoogleSheets] initialize() failed for sheetName=$sheetName: $e');
+      print(stackTrace);
+      rethrow;
+    }
   }
 
   Future<void> reInitialize() async {
-    _worksheet = await _getWorksheet(
-      await _sheet.spreadsheet(_spreadSheetId),
-      title: sheetName.toString(),
-    );
+    print('[Timetable][GoogleSheets] reInitialize() start. sheetName=$sheetName');
+    try {
+      _worksheet = await _getWorksheet(
+        await _sheet.spreadsheet(_spreadSheetId),
+        title: sheetName.toString(),
+      );
+      print(
+          '[Timetable][GoogleSheets] reInitialize() done. worksheetTitle=${_worksheet?.title}, sheetName=$sheetName');
+    } catch (e, stackTrace) {
+      print('[Timetable][GoogleSheets] reInitialize() failed for sheetName=$sheetName: $e');
+      print(stackTrace);
+      rethrow;
+    }
   }
 
   /// 먼저 시트를 생성하고, 이미 있을 경우는 해당 시트를 가져온다.
@@ -58,6 +80,7 @@ class GoogleSheets {
     required String title,
   }) async {
     try {
+      print('[Timetable][GoogleSheets] Creating worksheet if needed: $title');
       final worksheet = await spreadsheet.addWorksheet(title);
       await worksheet.values.insertRow(1, [
         'id',
@@ -68,9 +91,18 @@ class GoogleSheets {
         'endAt',
         'colorIndex'
       ]);
+      print('[Timetable][GoogleSheets] Worksheet created: ${worksheet.title}');
       return worksheet;
     } catch (e) {
-      return spreadsheet.worksheetByTitle(title)!;
+      print(
+          '[Timetable][GoogleSheets] Worksheet create skipped/failed for $title. Falling back to existing worksheet. error=$e');
+      final existingWorksheet = spreadsheet.worksheetByTitle(title);
+      if (existingWorksheet == null) {
+        throw Exception(
+            '[Timetable][GoogleSheets] Worksheet not found after fallback. title=$title, error=$e');
+      }
+      print('[Timetable][GoogleSheets] Existing worksheet found: ${existingWorksheet.title}');
+      return existingWorksheet;
     }
   }
 
@@ -99,8 +131,45 @@ class GoogleSheets {
   }
 
   Future<List<Lecture>> fetchAllLectures() async {
-    final rows = await _worksheet!.values.map.allRows(fromRow: 3);
-    if (rows == null) return [];
-    return rows.map((json) => Lecture.fromGsheets(json)).toList();
+    print('[Timetable][GoogleSheets] fetchAllLectures() start. sheetName=$sheetName');
+    final worksheet = _worksheet;
+    if (worksheet == null) {
+      throw StateError(
+          '[Timetable][GoogleSheets] fetchAllLectures() called before worksheet initialization. sheetName=$sheetName');
+    }
+
+    try {
+      final rows = await worksheet.values.map.allRows(fromRow: 3);
+      final rowCount = rows?.length ?? 0;
+      print(
+          '[Timetable][GoogleSheets] fetchAllLectures() rows fetched: $rowCount from worksheet=${worksheet.title}');
+
+      if (rows == null || rows.isEmpty) {
+        print(
+            '[Timetable][GoogleSheets] No lecture rows found from row 3. worksheet=${worksheet.title}');
+        return [];
+      }
+
+      final lectures = <Lecture>[];
+      for (final row in rows) {
+        try {
+          lectures.add(Lecture.fromGsheets(row));
+        } catch (e, stackTrace) {
+          print('[Timetable][GoogleSheets] Failed to parse lecture row: $row');
+          print(e);
+          print(stackTrace);
+          rethrow;
+        }
+      }
+
+      print(
+          '[Timetable][GoogleSheets] fetchAllLectures() success. parsedLectures=${lectures.length}');
+      return lectures;
+    } catch (e, stackTrace) {
+      print('[Timetable][GoogleSheets] fetchAllLectures() failed. sheetName=$sheetName');
+      print(e);
+      print(stackTrace);
+      rethrow;
+    }
   }
 }
