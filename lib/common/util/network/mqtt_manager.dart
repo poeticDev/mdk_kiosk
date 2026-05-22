@@ -21,10 +21,16 @@ const List<String> SUBSCRIBING_TOPICS = [
   'node-mdk/states',
 ];
 
+/// 로컬 MQTT 브로커 테스트용 오버라이드
+/// mosquitto 등 로컬 브로커를 띄운 뒤 아래 주석을 해제하고 PC IP를 입력하세요.
+/// 테스트 완료 후 반드시 원복하세요.
+const String _LOCAL_BROKER_IP = '192.168.219.166'; // ← 본인 PC IP로 수정
+const bool _USE_LOCAL_BROKER = false; // ← true로 변경 시 로컬 브로커 연결
+
 final mqttManagerProvider = Provider<MqttManager>((ref) {
   return MqttManager(
-    broker: globalData.serverIp,
-    port: globalData.serverMqttPort,
+    broker: _USE_LOCAL_BROKER ? _LOCAL_BROKER_IP : globalData.serverIp,
+    port: _USE_LOCAL_BROKER ? 1883 : globalData.serverMqttPort,
     userName: globalData.serverMqttId,
     password: globalData.serverMqttPassword,
     clientId: Uuid().v4(),
