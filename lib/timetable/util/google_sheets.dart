@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gsheets/gsheets.dart';
+import 'package:mdk_kiosk/common/util/data/updaters.dart';
 import 'package:mdk_kiosk/timetable/model/lecture.dart';
 
 class GoogleSheets {
@@ -11,8 +13,11 @@ class GoogleSheets {
   GoogleSheets({required this.sheetName});
 
   Future<Map<String, dynamic>> loadCredentials() async {
-    print('[Timetable][GoogleSheets] Loading credentials asset for sheet: $sheetName');
-    final jsonString = await rootBundle.loadString('asset/env/credentials.json');
+    print(
+      '[Timetable][GoogleSheets] Loading credentials asset for sheet: $sheetName',
+    );
+    final jsonString =
+        await rootBundle.loadString('asset/env/credentials.json');
     final credentials = jsonDecode(jsonString) as Map<String, dynamic>;
     print(
         '[Timetable][GoogleSheets] Credentials loaded. project_id=${credentials['project_id']}, client_email=${credentials['client_email']}');
@@ -39,6 +44,9 @@ class GoogleSheets {
 
   static final _sheet = GSheets(_credentials); // 스프레드시트
   static Worksheet? _worksheet; // 스프레드시트 중 작업 대상 시트
+  List<Lecture> _lectureCache = [];
+
+  List<Lecture> get lectureCache => List.unmodifiable(_lectureCache);
 
   Future<void> initialize() async {
     print('[Timetable][GoogleSheets] initialize() start. sheetName=$sheetName');
@@ -51,15 +59,18 @@ class GoogleSheets {
       );
       print(
           '[Timetable][GoogleSheets] initialize() done. worksheetTitle=${_worksheet?.title}, sheetName=$sheetName');
+      await updateLectureCache();
     } catch (e, stackTrace) {
-      print('[Timetable][GoogleSheets] initialize() failed for sheetName=$sheetName: $e');
+      print(
+          '[Timetable][GoogleSheets] initialize() failed for sheetName=$sheetName: $e');
       print(stackTrace);
       rethrow;
     }
   }
 
   Future<void> reInitialize() async {
-    print('[Timetable][GoogleSheets] reInitialize() start. sheetName=$sheetName');
+    print(
+        '[Timetable][GoogleSheets] reInitialize() start. sheetName=$sheetName');
     try {
       _worksheet = await _getWorksheet(
         await _sheet.spreadsheet(_spreadSheetId),
@@ -67,8 +78,10 @@ class GoogleSheets {
       );
       print(
           '[Timetable][GoogleSheets] reInitialize() done. worksheetTitle=${_worksheet?.title}, sheetName=$sheetName');
+      await updateLectureCache();
     } catch (e, stackTrace) {
-      print('[Timetable][GoogleSheets] reInitialize() failed for sheetName=$sheetName: $e');
+      print(
+          '[Timetable][GoogleSheets] reInitialize() failed for sheetName=$sheetName: $e');
       print(stackTrace);
       rethrow;
     }
@@ -101,7 +114,9 @@ class GoogleSheets {
         throw Exception(
             '[Timetable][GoogleSheets] Worksheet not found after fallback. title=$title, error=$e');
       }
-      print('[Timetable][GoogleSheets] Existing worksheet found: ${existingWorksheet.title}');
+      print(
+        '[Timetable][GoogleSheets] Existing worksheet found: ${existingWorksheet.title}',
+      );
       return existingWorksheet;
     }
   }
@@ -120,56 +135,125 @@ class GoogleSheets {
   }
 
   Future<void> insertLecture(Lecture lecture) async {
+    print(
+        '[Timetable][GoogleSheets] insertLecture() start. lectureId=${lecture.id}, name=${lecture.lectureName}');
     await _worksheet!.values.map
         .insertRowByKey(lecture.id, lecture.toGsheets());
+    print(
+        '[Timetable][GoogleSheets] insertLecture() done. lectureId=${lecture.id}');
   }
 
   Future<Lecture> fetchLecture(int row) async {
     final map = await _worksheet!.values.map.row(row);
-
-    return Lecture.fromGsheets(map);
+    final lecture = Lecture.fromGsheets(map);
+    print(
+        '[Timetable][GoogleSheets] fetchLecture() done. row=$row, lectureId=${lecture.id}');
+    return lecture;
   }
 
   Future<List<Lecture>> fetchAllLectures() async {
-    print('[Timetable][GoogleSheets] fetchAllLectures() start. sheetName=$sheetName');
-    final worksheet = _worksheet;
-    if (worksheet == null) {
-      throw StateError(
-          '[Timetable][GoogleSheets] fetchAllLectures() called before worksheet initialization. sheetName=$sheetName');
-    }
-
+    print(
+        '[Timetable][GoogleSheets] fetchAllLectures() start. sheetName=$sheetName');
     try {
-      final rows = await worksheet.values.map.allRows(fromRow: 3);
-      final rowCount = rows?.length ?? 0;
+      await updateLectureCache();
       print(
-          '[Timetable][GoogleSheets] fetchAllLectures() rows fetched: $rowCount from worksheet=${worksheet.title}');
-
-      if (rows == null || rows.isEmpty) {
-        print(
-            '[Timetable][GoogleSheets] No lecture rows found from row 3. worksheet=${worksheet.title}');
-        return [];
-      }
-
-      final lectures = <Lecture>[];
-      for (final row in rows) {
-        try {
-          lectures.add(Lecture.fromGsheets(row));
-        } catch (e, stackTrace) {
-          print('[Timetable][GoogleSheets] Failed to parse lecture row: $row');
-          print(e);
-          print(stackTrace);
-          rethrow;
-        }
-      }
-
-      print(
-          '[Timetable][GoogleSheets] fetchAllLectures() success. parsedLectures=${lectures.length}');
-      return lectures;
+          '[Timetable][GoogleSheets] fetchAllLectures() done. lectureCount=${_lectureCache.length}');
+      return lectureCache;
     } catch (e, stackTrace) {
-      print('[Timetable][GoogleSheets] fetchAllLectures() failed. sheetName=$sheetName');
-      print(e);
+      print(
+          '[Timetable][GoogleSheets] fetchAllLectures() failed. sheetName=$sheetName, error=$e');
       print(stackTrace);
       rethrow;
     }
+  }
+
+  Future<void> updateLectureCache() async {
+    final rows = await _worksheet!.values.map.allRows(fromRow: 3);
+    _lectureCache = _parseLectureRows(rows);
+    print('✅ LectureCache 업데이트 완료 (${_lectureCache.length}개)');
+  }
+
+  Future<void> compareNFetchLectureCache(WidgetRef ref) async {
+    try {
+      final rows = await _worksheet!.values.map.allRows(fromRow: 3);
+      final tempLectureCache = _parseLectureRows(rows);
+
+      final isDifferent = !_areLectureListsEqual(
+        _lectureCache,
+        tempLectureCache,
+      );
+
+      if (isDifferent) {
+        print('🟢 변경사항 감지됨 → lectureCache 갱신');
+        _lectureCache = tempLectureCache;
+        ref.read(timetableUpdater.notifier).state = DateTime.now();
+      } else {
+        print('⚪ 변경사항 없음 → 유지');
+      }
+    } catch (e, stackTrace) {
+      print('[Timetable][GoogleSheets] compareNFetchLectureCache() failed: $e');
+      print(stackTrace);
+    }
+  }
+
+  List<Lecture> _parseLectureRows(List<Map<String, String>>? rows) {
+    if (rows == null) return [];
+
+    return rows
+        .where(_hasLectureContent)
+        .map((json) => Lecture.fromGsheets(json))
+        .toList();
+  }
+
+  bool _hasLectureContent(Map<String, String> row) {
+    const fields = [
+      'id',
+      'lectureName',
+      'instructorName',
+      'weekday',
+      'startAt',
+      'endAt',
+      'colorIndex',
+    ];
+
+    return fields.any((field) => (row[field] ?? '').trim().isNotEmpty);
+  }
+
+  List<Lecture> getLecturesForToday() {
+    final todayWeekday = Weekday.values[(DateTime.now().weekday - 1) % 7];
+    final todayLectures = _lectureCache
+        .where((lecture) => lecture.weekday == todayWeekday)
+        .toList();
+
+    todayLectures.sort((a, b) {
+      final aMinutes = a.startAt.hour * 60 + a.startAt.minute;
+      final bMinutes = b.startAt.hour * 60 + b.startAt.minute;
+      return aMinutes.compareTo(bMinutes);
+    });
+
+    print(
+      '📅 오늘 요일: ${weekdays[todayWeekday.index]} → ${todayLectures.length}개 강의',
+    );
+    return todayLectures;
+  }
+
+  bool _areLectureListsEqual(List<Lecture> list1, List<Lecture> list2) {
+    if (list1.length != list2.length) return false;
+    for (int i = 0; i < list1.length; i++) {
+      if (!_areLecturesEqual(list1[i], list2[i])) return false;
+    }
+    return true;
+  }
+
+  bool _areLecturesEqual(Lecture l1, Lecture l2) {
+    return l1.id == l2.id &&
+        l1.lectureName == l2.lectureName &&
+        l1.instructorName == l2.instructorName &&
+        l1.weekday == l2.weekday &&
+        l1.startAt.hour == l2.startAt.hour &&
+        l1.startAt.minute == l2.startAt.minute &&
+        l1.endAt.hour == l2.endAt.hour &&
+        l1.endAt.minute == l2.endAt.minute &&
+        l1.colorIndex == l2.colorIndex;
   }
 }
