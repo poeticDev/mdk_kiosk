@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mdk_kiosk/common/util/data/global_data.dart';
+import 'package:mdk_kiosk/common/util/data/updaters.dart';
+import 'package:mdk_kiosk/common/util/network/mqtt_connection_status.dart';
 import 'package:mdk_kiosk/header/message_controller.dart';
 import 'package:mdk_kiosk/multimedia/util/media_controller.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -85,6 +88,8 @@ void mqttDataHandler(WidgetRef ref, String dataJson) {
         messageMapList.add(dataMap);
       } else if (key.contains('mediaItem')) {
         mediaMapList.add(dataMap);
+      } else if (key == 'update') {
+        updateTimetable(ref);
       }
     }
 
@@ -134,6 +139,10 @@ void handleParsedData(
 }
 
 class MqttManager {
+  static const Duration _connectTimeout = Duration(seconds: 10);
+  static const Duration _initialRetryDelay = Duration(seconds: 5);
+  static const Duration _stableRetryDelay = Duration(seconds: 30);
+
   final String broker;
   final String clientId;
   int port;
@@ -144,6 +153,8 @@ class MqttManager {
   final String userName;
   final String password;
   WidgetRef? ref;
+  Timer? _retryTimer;
+  Duration _nextRetryDelay = _initialRetryDelay;
 
   MqttManager({
     required this.broker,
@@ -213,12 +224,21 @@ class MqttManager {
 
   /// 토픽 구독
   void subscribe(String topic) {
+    if (!isConnected) {
+      print('⚠️ MQTT 미연결 상태라 구독을 건너뜁니다: $topic');
+      return;
+    }
     print('📡 구독 요청: $topic');
     _client.subscribe(topic, MqttQos.atMostOnce);
   }
 
   /// 메시지 발행
   void publish(String topic, String message) {
+    if (!isConnected) {
+      print('⚠️ MQTT 미연결 상태라 발행을 건너뜁니다: $topic');
+      return;
+    }
+
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
 
@@ -228,7 +248,13 @@ class MqttManager {
 
   /// MQTT 메시지 수신 핸들러
   void listen(void Function(String topic, String message) onMessageReceived) {
-    _client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
+    final updates = _client.updates;
+    if (updates == null) {
+      print('⚠️ MQTT 수신 스트림이 없어 listen을 건너뜁니다.');
+      return;
+    }
+
+    updates.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
       final recMess = c![0].payload as MqttPublishMessage;
 
       final payload = utf8.decode(recMess.payload.message);
@@ -249,6 +275,13 @@ class MqttManager {
   /// 연결 해제 콜백
   void _onDisconnected() {
     print('❌ MQTT 서버 연결 해제됨');
+    final currentRef = ref;
+    if (currentRef == null) {
+      return;
+    }
+
+    final notifier = currentRef.read(mqttConnectionStatusProvider.notifier);
+    _handleFailure(currentRef, notifier, 'MQTT 연결이 끊어졌습니다.');
   }
 
   /// 구독 성공 콜백
@@ -269,5 +302,78 @@ class MqttManager {
   /// Ping 요청 콜백
   void _pingCallback() {
     print('🔄 Ping 요청 전송');
+  }
+
+  bool get isConnected =>
+      _client.connectionStatus?.state == MqttConnectionState.connected;
+
+  Future<MqttInitResult> connectAndHandle(WidgetRef ref) async {
+    this.ref = ref;
+    final notifier = ref.read(mqttConnectionStatusProvider.notifier);
+    notifier.setConnecting();
+
+    try {
+      final isConnected = await _connectWithTimeout();
+      if (isConnected) {
+        return _handleSuccess(ref, notifier);
+      }
+
+      return _handleFailure(ref, notifier, 'MQTT 인증 실패');
+    } on TimeoutException {
+      return _handleFailure(ref, notifier, 'MQTT 연결 타임아웃');
+    } on SocketException catch (error) {
+      return _handleFailure(ref, notifier, '소켓 예외: $error');
+    } catch (error) {
+      return _handleFailure(ref, notifier, 'MQTT 연결 실패: $error');
+    }
+  }
+
+  Future<bool> _connectWithTimeout() {
+    return connect().timeout(_connectTimeout);
+  }
+
+  MqttInitResult _handleSuccess(
+    WidgetRef ref,
+    MqttConnectionStatusNotifier notifier,
+  ) {
+    _retryTimer?.cancel();
+    _retryTimer = null;
+    _nextRetryDelay = _initialRetryDelay;
+
+    for (final topic in SUBSCRIBING_TOPICS) {
+      subscribe(topic);
+    }
+    listen((topic, message) {
+      onMqttReceived(ref, topic, message);
+    });
+
+    final result = MqttInitResult.success();
+    notifier.setResult(result);
+    return result;
+  }
+
+  MqttInitResult _handleFailure(
+    WidgetRef ref,
+    MqttConnectionStatusNotifier notifier,
+    String message,
+  ) {
+    final retryAt = DateTime.now().add(_nextRetryDelay);
+    final result = MqttInitResult.failure(
+      message: message,
+      nextRetryAt: retryAt,
+    );
+    notifier.setResult(result);
+    _scheduleRetry(ref, _nextRetryDelay);
+    _nextRetryDelay = _stableRetryDelay;
+    return result;
+  }
+
+  void _scheduleRetry(WidgetRef ref, Duration delay) {
+    _retryTimer?.cancel();
+    _retryTimer = Timer(delay, () async {
+      _retryTimer = null;
+      print('🔁 MQTT 재연결 시도 중...');
+      await connectAndHandle(ref);
+    });
   }
 }

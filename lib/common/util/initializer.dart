@@ -12,6 +12,7 @@ import 'package:mdk_kiosk/common/util/data/initial/default_pages.dart';
 import 'package:mdk_kiosk/common/util/data/initial/initial_basic_info.dart';
 import 'package:mdk_kiosk/common/util/data/initial/initial_media_item.dart';
 import 'package:mdk_kiosk/common/util/kiosk.dart';
+import 'package:mdk_kiosk/common/util/network/mqtt_connection_status.dart';
 import 'package:mdk_kiosk/common/util/network/mqtt_manager.dart';
 import 'package:mdk_kiosk/common/util/network/osc_manager.dart';
 import 'package:mdk_kiosk/timetable/util/google_sheets.dart';
@@ -80,8 +81,10 @@ class AppInitializer {
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
-    await openMqttManager(ref);
-    subscribeTopics(ref);
+    final MqttInitResult mqttResult = await openMqttManager(ref);
+    if (!mqttResult.isSuccess) {
+      yield 'MQTT 연결 실패: ${mqttResult.message}. 재시도 중...';
+    }
 
     /// 4. 시간표 연결
     yield '시간표 불러오는 중...';
@@ -110,14 +113,9 @@ class AppInitializer {
 
     /// 3.2 MQTT
     yield 'MQTT 매니저 초기화 중...';
-    try {
-      await openMqttManager(ref).then((_) {
-        subscribeTopics(ref);
-      }).timeout(
-        Duration(seconds: 10),
-      );
-    } catch (e) {
-      print(' ❌ Mqtt 매니저 초기화 실패! : $e');
+    final MqttInitResult mqttResult = await openMqttManager(ref);
+    if (!mqttResult.isSuccess) {
+      yield 'MQTT 연결 실패: ${mqttResult.message}. 재시도 중...';
     }
 
     /// 4. 시간표 연결
@@ -289,13 +287,16 @@ class AppInitializer {
 
   /// 3.2. Network
   /// 3.2.1 MqttManager 오픈
-  static Future<void> openMqttManager(WidgetRef ref) async {
+  static Future<MqttInitResult> openMqttManager(WidgetRef ref) async {
     print('MqttManager를 오픈 중입니다...');
     try {
       final mqttManager = ref.read(mqttManagerProvider);
-      await mqttManager.connect();
+      return await mqttManager.connectAndHandle(ref);
     } catch (e) {
-      print('❌ MQTT 연결 실패: $e');
+      final retryAt = DateTime.now().add(const Duration(seconds: 5));
+      final message = '예상치 못한 MQTT 오류: $e';
+      print('❌ MQTT 연결 실패: $message');
+      return MqttInitResult.failure(message: message, nextRetryAt: retryAt);
     }
   }
 

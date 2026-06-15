@@ -33,9 +33,9 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
-  // bool isLoading = false; // ✅ 중복 실행 방지
   bool isLoading = true;
   late final Stream<String> _stream;
+  bool _hasNavigated = false;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       } else {
         _stream = AppInitializer.reinitAfterEditorMode(ref);
       }
-    } else if(widget.stream != null) {
+    } else if (widget.stream != null) {
       _stream = widget.stream!;
     } else {
       _stream = Stream.value(' ');
@@ -56,20 +56,29 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _onSplashing() async {
-    if (!isLoading) return;
-
     if (widget.onSplashing != null) {
       await Future.sync(() => widget.onSplashing!());
     } else {
-      // await Future.delayed(Duration(seconds: 2)); // 기본 대기 시간
+      await Future.delayed(const Duration(seconds: 1));
     }
 
-    isLoading = false;
+    if (mounted) {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void _navigateToNextPageAfterBuild() {
+    if (_hasNavigated) return;
+    _hasNavigated = true;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.nextPagePath != null) {
+      if (!mounted) return;
+
+      final currentLocation = GoRouterState.of(context).uri.toString();
+      if (widget.nextPagePath != null &&
+          currentLocation != widget.nextPagePath) {
         context.go(widget.nextPagePath!);
       } else if (widget.nextPageName != null) {
         context.goNamed(widget.nextPageName!);
@@ -85,19 +94,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      setState(() async {
-        await Future.delayed(Duration(seconds: 1));
-      });
-    }
-
     return Scaffold(
       backgroundColor: widget.backgroundColor ?? BG_COLOR,
       body: StreamBuilder<String>(
           stream: _stream,
           initialData: '',
           builder: (context, snapshot) {
-            print('snapshot.data : ${snapshot.data}');
             if (snapshot.data == ' ' && !isLoading) {
               _navigateToNextPageAfterBuild();
             }
